@@ -1,5 +1,3 @@
-my-app/
-
 server/.idea/
 
 server/node_modules/
@@ -7,3 +5,5 @@ server/node_modules/
 safety/
 
 image/
+
+my-app/
