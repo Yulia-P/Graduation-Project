@@ -1,0 +1,9 @@
+my-app/
+
+server/.idea/
+
+server/node_modules/
+
+safety/
+
+image/
