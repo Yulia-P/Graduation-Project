@@ -1,14 +1,10 @@
-const { body, check, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
-exports.postRegister  = [
-body('email').isEmail().normalizeEmail(),
-body('passwordHash').isLength({min: 9 }),
-body('username').isLength({min: 3}),
-body('avatarUrl').optional().isURL()];
+exports.RegisterUser  = [
+    body('email', 'Неверный формат почты').isEmail().normalizeEmail(),
+    body('passwordHash', 'Слишком маленький пароль, минимум 9 символов').isLength({min: 9 }),
+    body('username', 'Укажите имя ползователя').isLength({min: 3}),
+    body('avatarUrl', 'Неверная ссылка на фото').isURL()
+];
 
-// const db = require('../config/db')
-
-// function isIdUnique (username, email) {
-//    await db.models.Users.findOne({
-//         where: {username: req.params.username || email: req.params.email}
-//   }
+exports.LoginUser  =    body('username', 'Укажите имя ползователя').isLength({min: 3});

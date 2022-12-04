@@ -7,8 +7,11 @@ global.sequelize = new sequelize('ecofuture', 'root', 'Zalesse2015!', {host:'loc
 // {password: 'RMjSK1pCVWjZARGPjtE9fOwjIbGTBQVz'})
 
 const {Users} = require('./Users')
+const {Articles} = require('./Articles')
+// const {Users} = require('./Users')
+
 
 module.exports = {
     // redisClient,
-    models: {Users}
+    models: {Users, Articles}
 }
