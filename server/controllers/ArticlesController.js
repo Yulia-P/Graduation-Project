@@ -6,14 +6,22 @@ const fs = require('fs')
 const ArticlesController = {
     getArticles: async (req, res, next) => {
         try {
-            db.models.Articles.findAll( 
-                //  {include:[{
-                //        model: db.models.Users,
-                //        required: true,
-                //        atributes:["username"] 
-                //      }],}
+            db.models.Articles.findAll({
+                    attributes: ["id", "Title", "Text", "DatePub", "ImageU"],
+                    include: [{
+                        model: db.models.Users,
+                        required: true,
+                        attributes: ["username", "avatarUrl"]
+                    }]
+                }
+
+                 // {include:[{
+                 //       model: db.models.Users,
+                 //       required: true,
+                 //       atributes:["username"]
+                 //     }],}
             )
-            .then(expense => res.send(JSON.stringify(expense)))
+            .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
 
         } catch (error) {
             console.log(error);
@@ -84,7 +92,7 @@ const ArticlesController = {
 
 
         // try {
-        //     dela = await  db.models.Articles.destroy({where: {id: req.params.id}}
+        //     dela = await  db.models.Post.destroy({where: {id: req.params.id}}
         //         ,
         //         (err, dela) => {
         //             if(err){

@@ -7,10 +7,12 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
+const cors = require('cors')
 
 app.use(cookieParser('ecofuture'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(cors());
 
 let AuthRouter = require('./routes/AuthRouter');
 let ArticlesRouter = require('./routes/ArticlesRouter');

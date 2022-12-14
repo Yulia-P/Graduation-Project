@@ -3,7 +3,7 @@ const Sequelize = require('sequelize')
 const Model = Sequelize.Model;
 
 class Users extends Model{}
-// const {Articles} = require('../config/Articles')
+// const {Post} = require('../config/Post')
 
 Users.init (
     {
@@ -17,6 +17,6 @@ Users.init (
     { sequelize, modelName:'Users', tableName:'users', timestamps: false}
 );
 
-// Articles.belongsTo(Users);
+// Post.belongsTo(Users);
 
 module.exports = {Users};

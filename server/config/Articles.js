@@ -19,5 +19,5 @@ Articles.init (
 );
 
 Users.hasMany(Articles, {foreignKey:'Author'});
-// Articles.belongsTo(Users);
+Articles.belongsTo(Users, {foreignKey: 'Author'});
 module.exports = {Articles};

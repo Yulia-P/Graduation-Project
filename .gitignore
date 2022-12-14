@@ -5,3 +5,9 @@ server/node_modules/
 image/
 
 my-app/
+
+.idea/
+
+front/node_modules/
+
+node_modules/
