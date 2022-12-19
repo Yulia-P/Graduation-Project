@@ -21,6 +21,26 @@ const RatingsController = {
 
     },
 
+    getAllRating: async(req, res, next) => {
+        try {
+            db.models.Ratings.findAll({                
+                include: [{
+                    model: db.models.Users,
+                    required: true,
+                    attributes: ["id", "username", "avatarUrl"],
+                }],
+               
+            }
+        )
+        .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+
+        } catch (error) {
+            
+        }
+
+    },
+
+
     addRatings: async(req, res, next) => {
         try {
             db.models.Ratings.create({

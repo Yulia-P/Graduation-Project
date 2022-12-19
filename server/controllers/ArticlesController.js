@@ -22,6 +22,34 @@ const ArticlesController = {
         }
     },
 
+
+    // getArticlesRating: async (req, res, next) => {
+    //     try {
+
+    //         db.models.Ratings.findAll({
+    //             attributes: ["id", "Comment", "Item", "Commentator"],
+    //             include: [{
+    //                 model: db.models.Articles,
+    //                 required: true,
+    //                 attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+    //                 include: [{
+    //                     model: db.models.Users,
+    //                     required: true,
+    //                     attributes: ["id", "username", "avatarUrl"]
+    //                 }]
+    //             }]
+
+    //         })
+    //         .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.status(500).json({
+    //             message: 'Не удалось найти статьи',
+    //         });
+    //     }
+    // },
+
     getArticle: async (req, res, next) => {
         try {
             const resp = await  db.models.Articles.findOne({

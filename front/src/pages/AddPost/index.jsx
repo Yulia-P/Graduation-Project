@@ -12,11 +12,14 @@ import axios from '../../axios';
 import { StepContext } from '@mui/material';
 
 
+
 export const AddPost = () => {
   const {id} = useParams();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
-  const [isLoading, setLoading] = React.useState(false);
+  const [
+    // isLoading, 
+    setLoading] = React.useState(false);
   const [Text, setText] = React.useState('');
   const [Title, setTitle] = React.useState('');
   const [ImageU, setImageUrl] = React.useState('');

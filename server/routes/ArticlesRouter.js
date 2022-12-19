@@ -8,6 +8,7 @@ const { route } = require('./AuthRouter');
 let router = express.Router()
 
 router.get('/Articles',  ArticlesController.getArticles);
+// router.get('/ArticlesR',  ArticlesController.getArticlesRating);
 router.get('/Articles/:id', ArticlesController.getArticle);
 router.post('/Articles', chekAuth, validator.addArticles, ValidError, ArticlesController.addArticles);
 router.put('/Articles/:id', chekAuth, validator.updateArticles, ValidError, ArticlesController.updateArticles);

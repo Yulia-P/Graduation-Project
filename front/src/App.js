@@ -2,7 +2,7 @@ import {Routes, Route} from 'react-router-dom'
 import Container from "@mui/material/Container";
 import {useDispatch, useSelector} from 'react-redux';
 import { Header } from "./components";
-import { Home, FullPost, Registration, AddPost, Login } from "./pages";
+import { Home, FullPost, Registration, AddPost, Login, Points} from "./pages";
 import React from 'react';
 import { selectIsAuth, fetchAuthMe } from './redux/slices/auth';
 
@@ -25,6 +25,7 @@ function App() {
           <Route path="/addpost" element={<AddPost/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Registration/>}/>
+          <Route path="/points" element={<Points/>}/>
         </Routes>
       </Container>
     </>
