@@ -14,6 +14,7 @@ Articles.init (
         DatePub: {type: Sequelize.DATE, allowNull: false, required: true},
         ImageU: {type: Sequelize.STRING},
         Author: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        Like: {type: Sequelize.INTEGER, required: true},
     },
     { sequelize, modelName:'Articles', tableName:'articles', timestamps: false}
 );

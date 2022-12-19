@@ -1,25 +1,16 @@
 const db = require('../config/db')
-const path = require('path')
-const fs = require('fs')
-
 
 const ArticlesController = {
     getArticles: async (req, res, next) => {
         try {
             db.models.Articles.findAll({
-                    attributes: ["id", "Title", "Text", "DatePub", "ImageU"],
+                    attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
                     include: [{
                         model: db.models.Users,
                         required: true,
-                        attributes: ["username", "avatarUrl"]
+                        attributes: ["id", "username", "avatarUrl"]
                     }]
                 }
-
-                 // {include:[{
-                 //       model: db.models.Users,
-                 //       required: true,
-                 //       atributes:["username"]
-                 //     }],}
             )
             .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
 
@@ -33,22 +24,15 @@ const ArticlesController = {
 
     getArticle: async (req, res, next) => {
         try {
-            const resp = await  db.models.Articles.findOne({where: {id: req.params.id}}
-                // проверка не работает УЗНАТЬ что за фигня
-                // ,(err, resp) => {
-                //     if(err) {
-                //         console.log(err);
-                //         return res.status(500).json({
-                //             message: 'Не удалось найти статью',
-                //         });
-                //     }                    
-                //     if(resp===null){
-                //         return res.status(404).json({
-                //             message: 'Статья не найдена',
-                //         });
-                //     }
-                // },
-                )
+            const resp = await  db.models.Articles.findOne({
+                attrutes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+                include: [{
+                    model: db.models.Users,
+                    required: true,
+                    attributes: ["username", "avatarUrl"]
+                }],
+                where: {id: req.params.id}}
+            )
                 console.log(resp)
                 res.send(JSON.stringify(resp))
         } catch (error) {
@@ -89,41 +73,6 @@ const ArticlesController = {
         .then((res) => {
             console.log(res);
         });
-
-
-        // try {
-        //     dela = await  db.models.Post.destroy({where: {id: req.params.id}}
-        //         ,
-        //         (err, dela) => {
-        //             if(err){
-        //                 console.log(err);
-        //                 res.status(500).json({
-        //                     message: 'Не удалось удалить статью',
-        //                 });
-        //             }
-        //             if(dela==0) {
-        //                 return res.status(404).json({
-        //                     message: 'Статья не найдена',
-        //                 });
-        //             }
-        //         },
-        //         res.json({
-        //             succes: true,
-        //         })
-        //         );    
-        //         console.log(dela);        
-        // } catch (error) {
-        //     console.log(err);
-        //     res.status(500).json({
-        //         message: 'Не удалось удалить статью'
-        //     });            
-        // }
-
-        // db.models.Courses.destroy({where: {courseName: req.body.courseName}}).then(()=>{res.send();})
-        // .catch((err) => console.log('Error: ' + err.message))
-        // .then((res) => {
-        //     console.log(res);
-        // });
     },
 
     updateArticles: async (req, res, next) => {
@@ -147,7 +96,55 @@ const ArticlesController = {
                 message: 'Не удалось обновить статью'
             });
         }
-    }
+    },
 
+    Like: async (req, res, next) => {
+        try {
+            //Like
+            const resp = await  db.models.Articles.findOne({
+                attributes: ["Like"],
+                where: {id: req.params.id}})
+
+                const likes = resp.Like+1;
+                console.log(resp.Like)
+                console.log(likes)
+           
+            // Update
+            const LikeArticle = await db.models.Articles.update({
+                Like: likes},
+                {
+                    where: {id: req.params.id}})
+            
+            console.log(LikeArticle);
+
+            // All Articles
+            db.models.Articles.findAll({
+                attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+                include: [{
+                    model: db.models.Users,
+                    required: true,
+                    attributes: ["id", "username", "avatarUrl"]
+                }]
+            }
+        )
+
+        .then(expense => {res.send(
+            JSON.stringify(expense)), 
+
+            console.log(JSON.stringify(expense))})
+
+            // res.json({
+            //     success: true,
+            // });
+          
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: 'Не удалось найти статью',
+            });
+        }
+    },               
+ 
 }
 module.exports = ArticlesController

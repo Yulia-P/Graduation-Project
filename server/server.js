@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const cors = require('cors')
+const chekAuth = require('./utils/checkAuth');
 
 app.use(cookieParser('ecofuture'))
 app.use(bodyParser.json())
@@ -16,9 +17,39 @@ app.use(cors());
 
 let AuthRouter = require('./routes/AuthRouter');
 let ArticlesRouter = require('./routes/ArticlesRouter');
+let RatingsRouter = require('./routes/RatingsRouter');
+let PointsRouter = require('./routes/PointsRouter');
+let DiscountsRouter = require('./routes/DiscountsRouter');
+let MarksRouter = require('./routes/MarksRouter');
+let ReceptionsRouter = require('./routes/ReceptionsRouter');
 
+
+const storage = multer.diskStorage({
+    destination: ( _, __, cb) => {
+        cb(null, 'uploads');
+    },
+    filename: ( _, file, cb) => {
+        cb(null, file.originalname);
+    },        
+});
+
+const upload = multer({storage});
+
+app.post('/upload', chekAuth, upload.single('image'), (req, res) => {
+  res.json({
+    url: `/uploads/${req.file.originalname}`,
+  });
+});
+
+app.use('/uploads', express.static('uploads'));
 app.use(AuthRouter);
 app.use(ArticlesRouter);
+app.use(RatingsRouter);
+app.use(PointsRouter);
+app.use(DiscountsRouter);
+app.use(MarksRouter);
+app.use(ReceptionsRouter);
+
 
 const options = {
     key: fs.readFileSync('certificates/key.pem', "utf8"),

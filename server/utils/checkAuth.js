@@ -14,13 +14,13 @@ module.exports = function chekAuth(req, res, next) {
         }
         catch(e){
             return res.status(403).json({
-                message: 'Нет доступа',
+                message: 'Нет доступа(не авторизован)',
             });
         }
     }
     else{
         return res.status(403).json({
-            message: 'Нет доступа',
+            message: 'Нет доступа(не авторизован)',
         });
     }
 }

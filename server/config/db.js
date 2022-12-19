@@ -6,12 +6,18 @@ global.sequelize = new sequelize('ecofuture', 'root', 'Zalesse2015!', {host:'loc
 // const redisClient = redis.createClient('//redis-10275.c124.us-central1-1.gce.cloud.redislabs.com:10275',
 // {password: 'RMjSK1pCVWjZARGPjtE9fOwjIbGTBQVz'})
 
-const {Users} = require('./Users')
 const {Articles} = require('./Articles')
-// const {Users} = require('./Users')
-
+const {Discounts} = require('./Discounts')
+const {Marks} = require('./Marks')
+const {Points} = require('./Points')
+const {Ratings} = require('./Ratings')
+const {Receptions} = require('./Receptions')
+const {Users} = require('./Users')
+// const {Wastes} = require('./Wastes')
 
 module.exports = {
     // redisClient,
-    models: {Users, Articles}
+    models: {Articles, Discounts, Marks, Points, Ratings, Receptions, Users 
+        // ,Wastes
+    }
 }

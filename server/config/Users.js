@@ -11,7 +11,8 @@ Users.init (
         username:{type: Sequelize.STRING,  allowNull: false, unique: true, required: true},    
         email: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
         passwordHash: {type: Sequelize.STRING, allowNull: false, required: true},
-        avatarUrl: {type: Sequelize.STRING, allowNull: false},   
+        points: {type: Sequelize.INTEGER},
+        avatarUrl: {type: Sequelize.STRING, allowNull: true},   
         role: {type: Sequelize.STRING,  validate: {isIn:[['user', 'admin']]} },
     },
     { sequelize, modelName:'Users', tableName:'users', timestamps: false}

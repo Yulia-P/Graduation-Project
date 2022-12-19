@@ -15,39 +15,13 @@ const AuthController = {
         const passH = await bcrypt.hash(pass, salt);            
         await global.sequelize.query(
             `insert into users(username, email, passwordHash, avatarUrl, role) values(
-                '${req.body.username}', '${req.body.email}', '${passH}', '${req.body.avatarUrl}', 'user')`);
-                res.status(200).json({ //отправляем пользователю
-                    message: 'Регистрация прошла успешно'
-                });
-            }
-        catch(err){
-            console.log(err);
-            res.status(500).json({ //отправляем пользователю
-                    message: 'Не удалось зарегистрироваться'
-                });
-        }
-    // Регистрация 
-    },
+                '${req.body.username}', '${req.body.email}', '${passH}', 'https://i.pinimg.com/564x/eb/21/85/eb21856775551fc25c28d4bf9e1665a9.jpg', 'user')`);
 
-    // Логин
-    LoginUser: async (req, res, next) => {
-        try{
         const candidate = await db.models.Users.findOne({
             where: {
                 username: req.body.username,
-            }})
+            }})   
 
-            if(!candidate){
-                return req.status(404).json({
-                    message: 'Неверный логин или пароль'
-                });
-            }
-            const isValidPass = await bcrypt.compare(req.body.passwordHash, candidate.passwordHash);
-            if (!isValidPass){
-                return req.status(404).json({
-                    message: 'Неверный логин или пароль',
-                });
-            }
             const accessToken = jwt.sign({id: candidate.id, username: candidate.username,  role: candidate.role}, accessKey, {expiresIn: 30 * 60})
             const refreshToken = jwt.sign({id: candidate.id, username: candidate.username,  role: candidate.role}, refreshKey, {expiresIn: 24 * 60 * 60})
            
@@ -59,24 +33,71 @@ const AuthController = {
                 httpOnly: true,
                 sameSite: 'strict'
             })
-            // res.redirect('/main');
+            res.status(200).json({
+                message: 'Регистрация прошла успешно',
+                accessToken,
+                user: {
+                   id: candidate.id,
+                   username: candidate.username, 
+                   role: candidate.role}
+            });
+
+        }
+            
+        catch(err){
+            console.log(err);
+            res.status(500).json({ //отправляем пользователю
+                    message: 'Не удалось зарегистрироваться'
+                });                
+        }
+    // Регистрация 
+    },
+
+    // Логин
+    LoginUser: async (req, res, next) => {
+        try{
+        const user = await db.models.Users.findOne({
+            where: {
+                username: req.body.username,
+            }})
+
+            if(!user){
+                return req.status(404).json({
+                    message: 'Неверный логин или пароль'
+                });
+            }
+            const isValidPass = await bcrypt.compare(req.body.passwordHash, user.passwordHash);
+            if (!isValidPass){
+                return req.status(404).json({
+                    message: 'Неверный логин или пароль',
+                });
+            }
+            const accessToken = jwt.sign({id: user.id, username: user.username,  role: user.role}, accessKey, {expiresIn: 30 * 60})
+            const refreshToken = jwt.sign({id: user.id, username: user.username,  role: user.role}, refreshKey, {expiresIn: 24 * 60 * 60})
+           
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                sameSite: 'strict'
+            })
+
             res.json({
                 accessToken,
-                refreshToken
+                user: {
+                   id: user.id,
+                   username: user.username, 
+                   role: user.role}
             });
         }
-    catch(err){
-        console.log(err);
-            res.status(500).json({ //отправляем пользователю
-                    message: 'Не удалось авторизоваться'
-                });
-    }
-        // else {
-        //     // res.redirect('/login')
-        //     res.json({
-        //         success: false,
-        //     });
-        // }
+         catch(err){
+            console.log(err);
+                res.status(500).json({ //отправляем пользователю
+                        message: 'Не удалось авторизоваться'
+                 });
+             }
     //Логин
     },
 
@@ -87,7 +108,6 @@ const AuthController = {
         res.json({
             success: true,
         });
-        // res.redirect('/login')
     },
 
     getMe: async (req, res, next) => {
@@ -108,24 +128,7 @@ const AuthController = {
         res.status(500).json({ //отправляем пользователю
                 message: 'Не удалось найти пользователя'
             });
-    }},
-    
-    // Получить роль
-    getRole: (req, res, next) => {
-        let userRole = 'user';
-        let adminRole = 'admin';
-        if(req.user != undefined){
-            switch(req.user.role){
-                case 'user': {
-                    res.send(JSON.stringify(userRole))
-                    break;
-                }
-                case 'admin': {
-                    res.send(JSON.stringify(adminRole))
-                    break;
-                }
-            }
-        }
-     }
+    }
+}
 }
 module.exports = AuthController

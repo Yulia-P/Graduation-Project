@@ -11,12 +11,12 @@ import { CommentsBlock } from '../components/CommentsBlock';
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.data);
   const {posts} = useSelector(state => state.posts);
   const isPostsLoading = posts.status === 'loading';
   React.useEffect(() => {
     dispatch(fetchPosts());
   }, []);
-
 
   return (
     <>
@@ -33,21 +33,19 @@ export const Home = () => {
           <Post
               id={obj.id}
               title={obj.Title}
-              imageUrl={obj.ImageU}
+              // imageUrl={obj.ImageU}
+              imageUrl={obj.ImageU ? `http://localhost:8082${obj.ImageU}` : ' '}
               user={{
                 avatarUrl: obj.User.avatarUrl,
-                fullName: obj.User.username
-              }}
+                fullName: obj.User.username}}
               createdAt={obj.DatePub}
-              // viewsCount={150}
               commentsCount={3}
-              // tags={['react', 'fun', 'typescript']}
-              isEditable
-            />
+              Like={obj.Like}
+              isEditable = {userData?.user.id===obj.User.id}
+          />
           ))}
         </Grid>
-        <Grid xs={4} item>
-          {/* <TagsBlock items={['react', 'typescript', 'заметки']} isLoading={false} /> */}
+        {/* <Grid xs={4} item>
           <CommentsBlock
             items={[
               {
@@ -67,7 +65,7 @@ export const Home = () => {
             ]}
             isLoading={false}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

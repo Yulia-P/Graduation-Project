@@ -5,4 +5,9 @@ const instance = axios.create({
     // baseURL: 'https://localhost:8443'
 });
 
+instance.interceptors.request.use((config) => {
+    config.headers.Authorization = window.localStorage.getItem('accessToken');
+    return config;
+});
+
 export default instance;

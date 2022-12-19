@@ -9,7 +9,6 @@ let router = express.Router()
 router.post('/register', validator.RegisterUser, ValidError, AuthController.RegisterUser);
 router.post('/login', validator.LoginUser, ValidError, AuthController.LoginUser);
 router.get('/logout', AuthController.Logout);
-router.get('/role', AuthController.getRole);
 router.get('/me', chekAuth, AuthController.getMe);
 
 module.exports = router
