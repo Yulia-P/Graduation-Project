@@ -3,28 +3,45 @@ import { useParams } from "react-router-dom";
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
-import axios from '../axios';
+import axios from "../axios";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export const FullPost = () => {
   const [data, setData] = React.useState();
+  const [comments, setComments] = React.useState([]);
   const [isLoading, setLoading] = React.useState(true);
 
-  const {id} = useParams();
-
+  const { id } = useParams();
+  console.log(id);
   React.useEffect(() => {
-    axios.get(`/Articles/${id}`).then(res => {
-      setData(res.data);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert('Ошибка при получении статьи');
-    });
-  }, []);
+    axios
+      .get(`/Articles/${id}`)
+      .then((res) => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Ошибка при получении статьи");
+      });
+    axios
+      .get(`/Ratings/${id}`)
+      .then((res) => {
+        setComments(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Ошибка при получении статьи");
+      });
+  }, [id]);
 
-  if(isLoading){
-    return <Post isLoading={isLoading} isFullPost/>;
+  if (isLoading) {
+    return (
+      <>
+        <Post isLoading={isLoading} isFullPost />{" "}
+      </>
+    );
   }
 
   return (
@@ -33,38 +50,25 @@ export const FullPost = () => {
         id={data.id}
         title={data.Title}
         // imageUrl={data.ImageU}
-        imageUrl= {`http://localhost:8082${data.ImageU}`}
+        imageUrl={`http://localhost:8082${data.ImageU}`}
         user={{
           avatarUrl: data.User.avatarUrl,
-          fullName: data.User.username
+          fullName: data.User.username,
         }}
         createdAt={data.DatePub}
         commentsCount={3}
         Like={data.Like}
-        isFullPost>
-        <ReactMarkdown children={data.Text}/>
-      </Post>
-      <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: "Вася Пупкин",
-              avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-            },
-            text: "Это тестовый комментарий 555555",
-          },
-          {
-            user: {
-              fullName: "Иван Иванов",
-              avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-            },
-            text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-          },
-        ]}
-        isLoading={false}
+        isFullPost
       >
-        <Index />
-      </CommentsBlock>
+        <ReactMarkdown children={data.Text} />
+      </Post>
+      {comments === [] ? (
+        <></>
+      ) : (
+        <CommentsBlock items={comments} isLoading={false}>
+          <Index />
+        </CommentsBlock>
+      )}
     </>
   );
 };

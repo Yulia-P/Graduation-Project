@@ -2,9 +2,10 @@ import {Routes, Route} from 'react-router-dom'
 import Container from "@mui/material/Container";
 import {useDispatch, useSelector} from 'react-redux';
 import { Header } from "./components";
-import { Home, FullPost, Registration, AddPost, Login, Points} from "./pages";
+import { Home, FullPost, Registration, AddPost, Login, Points, Discounts, Recept} from "./pages";
 import React from 'react';
 import { selectIsAuth, fetchAuthMe } from './redux/slices/auth';
+import { Receipt } from '@mui/icons-material';
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Registration/>}/>
           <Route path="/points" element={<Points/>}/>
+          <Route path="/discounts" element={<Discounts/>}/>
+          <Route path="/receptions" element={<Recept/>}/>
         </Routes>
       </Container>
     </>

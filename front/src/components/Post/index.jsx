@@ -1,17 +1,17 @@
-import React from 'react';
-import clsx from 'clsx';
-import IconButton from '@mui/material/IconButton';
-import {Link} from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Clear';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import EditIcon from '@mui/icons-material/Edit';
-import {useDispatch, useSelector} from 'react-redux';
+import React from "react";
+import clsx from "clsx";
+import IconButton from "@mui/material/IconButton";
+import { Link } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Clear";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import EditIcon from "@mui/icons-material/Edit";
+import { useDispatch, useSelector } from "react-redux";
 // import EyeIcon from '@mui/icons-material/RemoveRedEyeOutlined';
-import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import {fetchRemovePosts, fetchLikes} from '../../redux/slices/posts';
-import styles from './Post.module.scss';
-import { UserInfo } from '../UserInfo';
-import { PostSkeleton } from './Skeleton';
+import CommentIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import { fetchRemovePosts, fetchLikes } from "../../redux/slices/posts";
+import styles from "./Post.module.scss";
+import { UserInfo } from "../UserInfo";
+import { PostSkeleton } from "./Skeleton";
 
 export const Post = ({
   id,
@@ -29,21 +29,27 @@ export const Post = ({
   isUser,
 }) => {
   const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.auth);
+  console.log(data);
   if (isLoading) {
     return <PostSkeleton />;
   }
 
   const onClickRemove = () => {
-    if(window.confirm('Вы дествительно хотите удалить стаью?')){
+    if (window.confirm("Вы дествительно хотите удалить стаью?")) {
       dispatch(fetchRemovePosts(id));
     }
   };
 
-  const onClikLike = () =>{
-    if(window.confirm('Вы оценили статью')){
-    dispatch(fetchLikes(id));
-    window.location.reload();  
-  }
+  const onClikLike = () => {
+    if (data === null) {
+      window.alert("Авторизируйтесь для оценки записи");
+    } else {
+      if (window.confirm("Вы оценили статью")) {
+        dispatch(fetchLikes(id));
+        window.location.reload();
+      }
+    }
   };
 
   return (
@@ -70,15 +76,17 @@ export const Post = ({
       <div className={styles.wrapper}>
         <UserInfo {...user} additionalText={createdAt} />
         <div className={styles.indention}>
-          <h2 className={clsx(styles.title, { [styles.titleFull]: isFullPost })}>
+          <h2
+            className={clsx(styles.title, { [styles.titleFull]: isFullPost })}
+          >
             {isFullPost ? title : <Link to={`/posts/${id}`}>{title}</Link>}
           </h2>
           {children && <div className={styles.content}>{children}</div>}
           <ul className={styles.postDetails}>
             <li className={styles.Like}>
-                <IconButton onClick={onClikLike} color = "primary">
-                  <FavoriteIcon/>
-                </IconButton>
+              <IconButton onClick={onClikLike} color="primary">
+                <FavoriteIcon />
+              </IconButton>
               <span>{Like}</span>
             </li>
             <li className={styles.Comment}>

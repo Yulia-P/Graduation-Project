@@ -9,7 +9,7 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
 
-export const CommentsBlock = ({ items, children, isLoading = true }) => {
+export const CommentsBlock = ({ items, isLoading = true }) => {
   return (
     <SideBlock title="Комментарии">
       <List>
@@ -31,7 +31,7 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
               ) : (
                 <ListItemText
                   primary={obj.User.username}
-                  secondary={obj.Comment}
+                  secondary={obj.Сomment}
                 />
               )}
             </ListItem>
@@ -39,7 +39,6 @@ export const CommentsBlock = ({ items, children, isLoading = true }) => {
           </React.Fragment>
         ))}
       </List>
-      {children}
     </SideBlock>
   );
 };
