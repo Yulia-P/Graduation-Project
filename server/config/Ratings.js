@@ -19,7 +19,7 @@ Ratings.init (
 
 Users.hasMany(Ratings, {foreignKey: 'Commentator'});
 Ratings.belongsTo(Users, {foreignKey: 'Commentator'});
-Articles.hasMany(Ratings, {foreignKey: 'Item'});
+Articles.hasMany(Ratings, {foreignKey: 'Item', onDelete: 'cascade'});
 Ratings.belongsTo(Articles, {foreignKey: 'Item'});
 
 module.exports = {Ratings};

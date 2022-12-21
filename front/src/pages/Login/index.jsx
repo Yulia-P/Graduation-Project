@@ -16,11 +16,11 @@ export const Login = () => {
   const {
     register, 
     handleSubmit, 
-    // setError, 
+    setError, 
     formState: {errors, isValid}, 
   } = useForm({
     defaultValues: {
-      username: 'kate',
+      username: 'user',
       passwordHash: '123456789'
     },
     mode: 'all',
@@ -61,7 +61,7 @@ export const Login = () => {
       label="Пароль" 
       error ={Boolean(errors.passwordHash?.message)}
       helperText={errors.passwordHash?.message}
-      // type='password'
+      type='password'
       {...register('passwordHash', {required: 'Введите пароль'})}
       fullWidth />
       <Button disabled={!isValid} type ="submit" size="large" variant="contained" fullWidth>

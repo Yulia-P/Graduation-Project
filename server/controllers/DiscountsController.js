@@ -7,7 +7,8 @@ const DiscountsController = {
             db.models.Discounts.findAll({
             attributes: ["id", "Discount", "PointD"],
            }) 
-           .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+           .then(expense => {res.set("Content-Type", "application/json");
+           res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
         } catch (error) {
             console.log(error);
             res.status(500).json({
@@ -75,7 +76,8 @@ const DiscountsController = {
                     where: {PointD: { [Op.lte]: UsP.points}}
                 }
             )
-            .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+            .then(expense => {res.set("Content-Type", "application/json");
+            res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
     }
  }
 

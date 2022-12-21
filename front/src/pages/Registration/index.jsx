@@ -21,8 +21,8 @@ export const Registration = () => {
     formState: {errors, isValid}, 
   } = useForm({
     defaultValues: {
-      username: 'kate',
-      email: 'kate@gmail.com',
+      username: 'user',
+      email: 'user@gmail.com',
       passwordHash: '123456789'
     },
     mode: 'all',
@@ -76,7 +76,7 @@ export const Registration = () => {
         label="Пароль"
         error = {Boolean(errors.passwordHash?.message)}
         helperText={errors.passwordHash?.message}
-        // type='password'
+        type='password'
         {...register('passwordHash', {required: 'Введите пароль'})}
         fullWidth/>
 

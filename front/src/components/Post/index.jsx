@@ -89,10 +89,7 @@ export const Post = ({
               </IconButton>
               <span>{Like}</span>
             </li>
-            <li className={styles.Comment}>
-              <CommentIcon />
-              <span>{commentsCount}</span>
-            </li>
+            
           </ul>
         </div>
       </div>

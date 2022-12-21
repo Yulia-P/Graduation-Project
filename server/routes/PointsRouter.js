@@ -7,9 +7,8 @@ const ValidError = require('../utils/HandleErrors');
 
 let router = express.Router()
 
-// router.get('/Points',  chekAuth, PointsController.getPoints);
-router.get('/Points',  PointsController.getPoints);
-
+router.get('/Points',  chekAuth, PointsController.getPoints);
+// router.get('/Points',  PointsController.getPoints);
 router.post('/Points', checkRole, validator.addPoints, ValidError, PointsController.addPoints);
 router.put('/Points/:id', checkRole, validator.editPoints, ValidError, PointsController.editPoints);
 router.delete('/Points/:id', checkRole, PointsController.deletePoints);

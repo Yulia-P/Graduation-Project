@@ -17,7 +17,7 @@ export const AddPost = () => {
   const {id} = useParams();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
-  const [
+  const [loading,
     // isLoading, 
     setLoading] = React.useState(false);
   const [Text, setText] = React.useState('');
@@ -59,8 +59,8 @@ export const AddPost = () => {
         ImageU
       }
       const { data } = isEditing 
-      ? await axios.put(`/Articles/${id}`, fields) 
-      : await axios.post('/Articles', fields);
+      ? await axios.put(`http://localhost:8082/Articles/${id}`, fields) 
+      : await axios.post('http://localhost:8082/Articles', fields);
 
       navigate(`/posts`);
 

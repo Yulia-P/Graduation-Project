@@ -18,6 +18,8 @@ export const Home = () => {
     dispatch(fetchPosts());
   }, [dispatch]);
 
+  console.log('userData'+userData);
+
   React.useEffect(() => {
     dispatch(fetchComments());
   }, [dispatch]);

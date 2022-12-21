@@ -6,6 +6,8 @@ export const fetchComments = createAsyncThunk('comment/fetchComments', async() =
     return data;
 });
 
+
+
 const initialState = {
     comments: {
         items: [],
@@ -31,6 +33,7 @@ const commentsSlice = createSlice({
             state.comments.items = [];
             state.comments.status = 'error';
         },
+        
         
     },
 });

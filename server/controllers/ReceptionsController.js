@@ -53,8 +53,12 @@ const ReceptionsController = {
                 TypeWaste: Rub,
                 StationKey: StKey
             })
+
+
             
             res.status(200).json({
+                NewKgR,
+                WeightReq,
                 message: 'Ваши быллы начислены',
             });
         
@@ -64,7 +68,23 @@ const ReceptionsController = {
                 message: 'Не удалось начислить баллы'
             });
         }
-    }
+    },
+
+    // getReceptions: async(req, res, next) => {
+    //     try {
+    //         db.models.Receptions.findAll({
+    //             attributes: ["id", "Address", "SecretKey"],
+    //         })
+    //         .then(expense => {res.set("Content-Type", "application/json");
+    //             res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.status(500).json({
+    //             message: 'Не удалось найти пункт сдачи',
+    //         });
+    //     }
+    // }
 }
 
 module.exports = ReceptionsController

@@ -6,6 +6,17 @@ export const fetchDiscounts = createAsyncThunk('discounts/fetchDiscounts', async
     return data;
 });
 
+export const fetchAddDiscounts = createAsyncThunk('discounts/fetchAddDiscountsx', async (params) => {
+    const {data} = await axios.post('/Discounts', params);
+    return data;
+});
+
+export const fetchAllDiscounts = createAsyncThunk('discounts/fetchAllDiscounts', async() => {
+    const {data} = await axios.get('/Discounts');
+    return data;
+});
+
+
 const initialState = {
     discounts: {
         items: [],
@@ -30,6 +41,30 @@ const discountsSlice = createSlice({
         [fetchDiscounts.rejected]: (state, action) =>{
             state.discounts.items = [];
             state.discounts.status = 'error';
+        },
+        [fetchAllDiscounts.pending]: (state) =>{
+            state.discounts.items = [];
+            state.discounts.status = 'loading';
+        },
+        [fetchAllDiscounts.fulfilled]: (state, action) =>{
+            state.discounts.items = action.payload;
+            state.discounts.status = 'loaded';
+        },
+        [fetchAllDiscounts.rejected]: (state, action) =>{
+            state.discounts.items = [];
+            state.discounts.status = 'error';
+        },
+        [fetchAddDiscounts.pending]: (state) =>{
+            state.status = 'loading';
+            state.data = null;
+        },
+        [fetchAddDiscounts.fulfilled]: (state, action) =>{
+            state.status = 'loaded';
+            state.data= action.payload;
+        },
+        [fetchAddDiscounts.rejected]: (state, action) =>{
+            state.status = 'error';
+            state.data = null;
         },
     },
 });

@@ -7,7 +7,9 @@ const PointsController = {
             db.models.Points.findAll({
                 attributes: ["id", "Address", "SecretKey"],
             })
-            .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+            .then(expense => {res.set("Content-Type", "application/json");
+                res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+
         } catch (error) {
             console.log(error);
             res.status(500).json({

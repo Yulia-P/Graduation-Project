@@ -6,6 +6,12 @@ export const fetchPoints = createAsyncThunk('points/fetchPoints', async() => {
     return data;
 });
 
+export const fetchAddPoints = createAsyncThunk('recept/fetchRecept', async (params) => {
+    const {data} = await axios.post('/Points', params);
+    return data;
+});
+
+
 const initialState = {
     points: {
         items: [],
@@ -30,6 +36,18 @@ const pointsSlice = createSlice({
         [fetchPoints.rejected]: (state, action) =>{
             state.points.items = [];
             state.points.status = 'error';
+        },
+        [fetchAddPoints.pending]: (state) =>{
+            state.status = 'loading';
+            state.data = null;
+        },
+        [fetchAddPoints.fulfilled]: (state, action) =>{
+            state.status = 'loaded';
+            state.data= action.payload;
+        },
+        [fetchAddPoints.rejected]: (state, action) =>{
+            state.status = 'error';
+            state.data = null;
         },
     },
 });

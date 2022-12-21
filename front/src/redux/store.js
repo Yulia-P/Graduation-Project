@@ -4,6 +4,8 @@ import { authReducer } from './slices/auth';
 import { pointsReducer } from './slices/points';
 import { commentsReducer } from "./slices/comments";
 import { discountsReducer } from './slices/discounts';
+import { receptReducer } from './slices/recept';
+
 
 const store = configureStore({
     reducer:{
@@ -11,7 +13,8 @@ const store = configureStore({
         auth: authReducer,
         points: pointsReducer,
         comments: commentsReducer,
-        discounts: discountsReducer
+        discounts: discountsReducer,
+        recept: receptReducer,      
     },
 });
 

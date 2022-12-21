@@ -5,11 +5,15 @@ import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
 import { selectIsAuth, logout } from '../../redux/slices/auth';
 import {useDispatch, useSelector} from 'react-redux';
+import { AuthUserMenu } from '../AuthUserMenu';
 
 export const Header = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
-
+  const {data} = useSelector((state) => state.auth);
+   console.log(data)
+  // isAdmin={userData?.user.role === "admin"}
+  
   const onClickLogout = () => {
     if (window.confirm('Вы действительно хоти выйти?'))
     dispatch(logout());
@@ -24,14 +28,10 @@ export const Header = () => {
             <div>EcoFuture</div>
           </Link>
           <div className={styles.buttons}>
+          {/* {isAdmin={userData?.user.role === "admin"}} */}
             {isAuth ? (
               <>
-                <Link to="/addpost">
-                  <Button variant="contained">Написать статью</Button>
-                </Link>
-                <Button onClick={onClickLogout} variant="contained" color="error">
-                  Выйти
-                </Button>
+              <AuthUserMenu role={data.user.role}/>
               </>
             ) : (
               <>
@@ -41,6 +41,7 @@ export const Header = () => {
                 <Link to="/register">
                   <Button variant="contained">Создать аккаунт</Button>
                 </Link>
+
               </>
             )}
           </div>

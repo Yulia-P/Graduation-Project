@@ -15,7 +15,7 @@ const AuthController = {
         const passH = await bcrypt.hash(pass, salt);            
         await global.sequelize.query(
             `insert into users(username, email, passwordHash, avatarUrl, role) values(
-                '${req.body.username}', '${req.body.email}', '${passH}', 'https://i.pinimg.com/564x/eb/21/85/eb21856775551fc25c28d4bf9e1665a9.jpg', 'user')`);
+                '${req.body.username}', '${req.body.email}', '${passH}', 'https://i.pinimg.com/236x/32/42/7b/32427b3d3d6ea2682bba84f463ded708.jpg', 'user')`);
 
         const candidate = await db.models.Users.findOne({
             where: {
