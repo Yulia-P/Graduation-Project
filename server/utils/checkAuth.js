@@ -6,10 +6,6 @@ module.exports = function chekAuth(req, res, next) {
         try{
             const decoded = jwt.verify(token, accessKey);
             req.userId = decoded.id;
-            // req.username = decoded.username;
-            // req.role = decoded.role;
-            // console.log(req.username);
-            // console.log( req.role);
             next();
         }
         catch(e){

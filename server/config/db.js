@@ -19,9 +19,10 @@ const {Users} = require('./Users')
 const {Keys} = require('./Keys')
 const {Used_discounts} = require('./Used_discounts')
 const {Check_weights} = require('./Check_weights')
+const {Userss} = require('./Userss')
 
 
 module.exports = {
     // redisClient,
-    models: {Articles, Discounts, Marks, Points, Ratings, Receptions, Users, Keys, Used_discounts, Check_weights}
+    models: {Articles, Discounts, Marks, Points, Ratings, Receptions, Users, Keys, Used_discounts, Check_weights, Userss}
 }

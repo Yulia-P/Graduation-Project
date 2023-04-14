@@ -10,5 +10,6 @@ router.post('/register', validator.RegisterUser, ValidError, AuthController.Regi
 router.post('/login', validator.LoginUser, ValidError, AuthController.LoginUser);
 router.get('/logout', AuthController.Logout);
 router.get('/me', chekAuth, AuthController.getMe);
+// router.get('activate/"link', AuthController.activate);
 
 module.exports = router
