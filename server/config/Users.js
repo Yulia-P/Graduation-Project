@@ -14,10 +14,10 @@ Users.init (
         points: {type: Sequelize.INTEGER},
         avatar_url: {type: Sequelize.STRING, allowNull: true},   
         role: {type: Sequelize.STRING,  validate: {isIn:[['user', 'admin']]} },
+        is_activated:{type: Sequelize.BOOLEAN, default: false},
+        activation_link: {type: Sequelize.STRING}
     },
     { sequelize, modelName:'Users', tableName:'users', timestamps: false}
 );
-
-// Post.belongsTo(Users);
 
 module.exports = {Users};

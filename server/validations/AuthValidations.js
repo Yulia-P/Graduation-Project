@@ -8,4 +8,4 @@ exports.RegisterUser  = [
     body('avatar_url', 'Неверная ссылка на фото').optional().isURL()
 ];
 
-exports.LoginUser  = body('username', 'Укажите имя ползователя').isLength({min: 3});
+exports.LoginUser  = body('email', 'Укажите почту').isLength({min: 3});

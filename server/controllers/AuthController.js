@@ -17,48 +17,46 @@ const AuthController = {
         const salt = '$2b$10$qNuSSupDD53DkQfO8wqpf.';
         const o_password = await bcrypt.hash(i_password, salt);   
         
-        // const v_check_user = await db.models.Users.findOne({
-        const v_check_user = await db.models.Userss.findOne({
+        const v_check_user = await db.models.Users.findOne({
             where: {username: req.body.username}
         })
 
-        // const v_check_email = await db.models.Users.findOne({
-        const v_check_email = await db.models.Userss.findOne({
+        const v_check_email = await db.models.Users.findOne({
             where: {email: req.body.email}
         })
 
         if (v_check_user==null){
             if(v_check_email==null){
                 
-                // const v_activation_link = uuid.v4();
-
-                // const candidate = await db.models.Users.create({
-
-                // const candidate = await db.models.Userss.create({
-                //     username: req.body.username,
-                //     email: req.body.email,
-                //     password_hash: o_password,
-                //     role: 'user' 
-                // })
-
                 const v_activation_link = uuid.v4();
+
+                const candidate = await db.models.Users.create({
+                    username: req.body.username,
+                    email: req.body.email,
+                    password_hash: o_password,
+                    role: 'user',
+                    is_activated: false,
+                    activation_link: v_activation_link
+                })
+
+                // const v_activation_link = uuid.v4();
                 const send_mail=req.body.email;
                 const send_link = 'http://localhost:8082/activate/' + v_activation_link;
             
                 const transporter = nodemailer.createTransport({
-                    host: process.env.SMTP_HOST,
-                    port: process.env.SMTP_PORT,
+                    host: "smtp.gmail.com",
+                    port: 587,
                     secure: false,
                     auth:{
-                        user: process.env.SMTP_USER,
-                        pass: process.env.SMTP_PASSWORD
+                        user: 'ecofuturework@gmail.com',
+                        pass: 'culekkamqfmhmxml'
                     }
                 });
 
                 const mailOptions ={
-                    from: process.env.SMTP_USER,
+                    from: 'ecofuturework@gmail.com',
                     to: send_mail,
-                    subject: 'Активация аккаунта на ' + process.env.APP,
+                    subject: 'Активация аккаунта на http://localhost:8082/',
                     html: 
                             `
                             <div>
@@ -68,32 +66,27 @@ const AuthController = {
                             `
                         }
 
-                transporter.sendMail(mailOptions)
-                
-                
-              
-                // sendActivationMail(send_mail, send_link);          
+                let info = await transporter.sendMail(mailOptions)
 
-
-                // const accessToken = jwt.sign({id: candidate.null, username: candidate.username,  role: candidate.role}, accessKey, {expiresIn: 30 * 60})
-                // const refreshToken = jwt.sign({id: candidate.null, username: candidate.username,  role: candidate.role}, refreshKey, {expiresIn: 24 * 60 * 60})
+                const accessToken = jwt.sign({id: candidate.null, username: candidate.username,  role: candidate.role}, accessKey, {expiresIn: 30 * 60})
+                const refreshToken = jwt.sign({id: candidate.null, username: candidate.username,  role: candidate.role}, refreshKey, {expiresIn: 24 * 60 * 60})
 
                 
-                // res.cookie('accessToken', accessToken, {
-                //     httpOnly: true,
-                //     sameSite: 'strict'
-                // })
-                // res.cookie('refreshToken', refreshToken, {
-                //     httpOnly: true,
-                //     sameSite: 'strict'
-                // })
+                res.cookie('accessToken', accessToken, {
+                    httpOnly: true,
+                    sameSite: 'strict'
+                })
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    sameSite: 'strict'
+                })
                 res.status(200).json({
                     message: 'Регистрация прошла успешно',
-                    // accessToken,
-                    // user: {
-                    // id: candidate.null,
-                    // username: candidate.username, 
-                    // role: candidate.role}
+                    accessToken,
+                    user: {
+                    id: candidate.null,
+                    username: candidate.username, 
+                    role: candidate.role}
                 });                
 
             }
@@ -119,22 +112,24 @@ const AuthController = {
 
     LoginUser: async (req, res, next) => {
         try{
+
+            if(req.body.email!=null){
         const i_user = await db.models.Users.findOne({
-            where: {
-                username: req.body.username,
+            where: 
+                { [Op.and]: [{email: req.body.email}, {is_activated: 1}],
             }})
-            console.log(i_user)
+            console.log(i_user)           
 
             if(i_user==null){
                 res.status(404).json({
-                    message: 'Неверный логин или пароль'
+                    message: 'Неверная почта или пароль'
                 });
             }
             else {
                 const isValidPass = await bcrypt.compare(req.body.password, i_user.password_hash);
                 if (!isValidPass){
                     res.status(404).json({
-                        message: 'Неверный логин или пароль',
+                        message: 'Неверная почта или пароль',
                     });
                 }
                 const accessToken = jwt.sign({id: i_user.id, username: i_user.username,  role: i_user.role}, accessKey, {expiresIn: 30 * 60})
@@ -159,6 +154,48 @@ const AuthController = {
                 });
             }
         }
+        else{
+            const i_user = await db.models.Users.findOne({
+                where: 
+                    { [Op.and]: [{username: req.body.username}, {is_activated: 1}],
+                }})
+                console.log(i_user)           
+    
+                if(i_user==null){
+                    res.status(404).json({
+                        message: 'Неверный логин или пароль'
+                    });
+                }
+                else {
+                    const isValidPass = await bcrypt.compare(req.body.password, i_user.password_hash);
+                    if (!isValidPass){
+                        res.status(404).json({
+                            message: 'Неверный логин или пароль',
+                        });
+                    }
+                    const accessToken = jwt.sign({id: i_user.id, username: i_user.username,  role: i_user.role}, accessKey, {expiresIn: 30 * 60})
+                    const refreshToken = jwt.sign({id: i_user.id, username: i_user.username,  role: i_user.role}, refreshKey, {expiresIn: 24 * 60 * 60})
+                
+                    res.cookie('accessToken', accessToken, {
+                        httpOnly: true,
+                        sameSite: 'strict'
+                    })
+                    res.cookie('refreshToken', refreshToken, {
+                        httpOnly: true,
+                        sameSite: 'strict'
+                    })
+    
+                    res.json({
+                        message: 'Авторизация прошла успешно',
+                        accessToken,
+                        user: {
+                        id: i_user.id,
+                        username: i_user.username, 
+                        role: i_user.role}
+                    });
+                }
+        }
+    }
         catch(err){
             console.log(err);
             res.status(500).json({ 
@@ -193,7 +230,28 @@ const AuthController = {
         res.status(500).json({ //отправляем пользователю
                 message: 'Не удалось найти пользователя'
             });
+        }
+    },
+
+    activate: async (req, res, next) =>{
+        const v_find_user = await db.models.Users.findOne({
+            where: {activation_link: req.params.link }
+        })
+
+        if (v_find_user==null){
+            res.status(500).json({ 
+                message: 'Пользовватель не существует'
+            });
+        }
+        else{
+            await db.models.Users.update({
+                is_activated: true,
+            }, { where:{ id: v_find_user.id} })
+            
+            res.status(200).json({ 
+                message: 'Вы подтвердили свою почту'
+            });
+        }
     }
-}
 }
 module.exports = AuthController

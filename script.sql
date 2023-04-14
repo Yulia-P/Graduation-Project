@@ -20,30 +20,19 @@ drop table ecofuture.marks;
 
 # update users set `avatarUrl` = 'https://i.pinimg.com/564x/4c/41/c1/4c41c17cd8fdead090a41806f5879799.jpg' where id=2;
 
--- Пользователь 
+
+-- Пользователь
 CREATE TABLE IF NOT EXISTS `users` (  
   `id` int NOT NULL AUTO_INCREMENT UNIQUE,
   `username` VARCHAR(20) NOT NULL UNIQUE, 
-  `email` VARCHAR(60) not null unique,
-  `password_hash` VARCHAR(150) NOT NULL,
-  `points` int DEFAULT 0,
-  `avatar_url` VARCHAR(150) ,
-  `role` VARCHAR(5) NOT NULL,  
-  PRIMARY KEY (`id`));
-
-CREATE TABLE IF NOT EXISTS `userss` (
-  `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-  `username` VARCHAR(20) NOT NULL UNIQUE,
-  `email` VARCHAR(60) not null unique,
+  `email` VARCHAR(100) not null unique,
   `password_hash` VARCHAR(150) NOT NULL,
   `points` int DEFAULT 0,
   `avatar_url` VARCHAR(150) ,
   `role` VARCHAR(5) NOT NULL,
-  `is_activated` boolean default false,
+   `is_activated` boolean default false,
   `activation_link` VARCHAR(150),
   PRIMARY KEY (`id`));
-
-select * from userss;
 -- Статьи --
 CREATE TABLE IF NOT EXISTS `articles` (
     `id` int NOT NULL AUTO_INCREMENT UNIQUE,
@@ -130,4 +119,4 @@ CREATE TABLE IF NOT EXISTS `check_weight`(
 
 -- ALTER TABLE marks CHANGE Rubbish rubbish VARCHAR(50) NOT NULL;
 -- ALTER TABLE marks CHANGE PointsOKg points_per_kg  int not null;
-ALTER TABLE Userss CHANGE email   email VARCHAR(60) not null unique
+ALTER TABLE Users CHANGE email email VARCHAR(100) not null unique
