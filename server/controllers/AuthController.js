@@ -10,11 +10,11 @@ const AuthController = {
     RegisterUser: async (req, res, next) =>{
     //обработка ошибок 
     try{    
-        const pass = req.body.passwordHash;
+        const pass = req.body.password;
         const salt = '$2b$10$qNuSSupDD53DkQfO8wqpf.';
         const passH = await bcrypt.hash(pass, salt);            
         await global.sequelize.query(
-            `insert into users(username, email, passwordHash, avatarUrl, role) values(
+            `insert into users(username, email, password_hash, avatar_url, role) values(
                 '${req.body.username}', '${req.body.email}', '${passH}', 'https://i.pinimg.com/236x/32/42/7b/32427b3d3d6ea2682bba84f463ded708.jpg', 'user')`);
 
         const candidate = await db.models.Users.findOne({
@@ -66,7 +66,7 @@ const AuthController = {
                     message: 'Неверный логин или пароль'
                 });
             }
-            const isValidPass = await bcrypt.compare(req.body.passwordHash, user.passwordHash);
+            const isValidPass = await bcrypt.compare(req.body.password, user.password_hash);
             if (!isValidPass){
                 return req.status(404).json({
                     message: 'Неверный логин или пароль',

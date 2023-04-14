@@ -5,25 +5,35 @@ const Model = Sequelize.Model;
 class Receptions extends Model{}
 
 const {Users} = require('./Users')
-// const {Wastes} =require('./Wastes')
-// const {Points} = require('./Points')
+const {Marks} =require('./Marks')
+const {Keys} = require('./Keys')
+const {Check_weights} = require('./Check_weights')
 
 Receptions.init (
     {
         id:	{type: Sequelize.INTEGER, primaryKey:true, unique: true, autoIncrementIdentity: true, required: true},
-        idUser: {type: Sequelize.INTEGER, allowNull: false, required: true},
-        Accrued: {type: Sequelize.INTEGER, required: true},
-        NewKg: {type: Sequelize.INTEGER, required: true},
-        Weight: {type: Sequelize.FLOAT, allowNull: false, required: true},
-        TypeWaste: {type: Sequelize.STRING, allowNull: false, required: true},
-        StationKey: {type: Sequelize.STRING, allowNull: false, required: true},
-
+        id_user: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        accrued: {type: Sequelize.INTEGER, required: true},
+        new_kg: {type: Sequelize.INTEGER, required: true},
+        weight: {type: Sequelize.FLOAT, allowNull: false, required: true},
+        type_waste: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        station_key: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        weight_key: {type: Sequelize.INTEGER, allowNull: false, required: true},
     },
     { sequelize, modelName: 'Receptions', tableName: 'receptions', timestamps: false }
 );
 
 
-Users.hasMany(Receptions, {foreignKey: 'idUser'});
-Receptions.belongsTo(Users, {foreignKey: 'idUser'});
+Users.hasMany(Receptions, {foreignKey: 'id_user'});
+Receptions.belongsTo(Users, {foreignKey: 'id_user'});
+
+Marks.hasMany(Receptions, {foreignKey: 'type_waste'});
+Receptions.belongsTo(Marks, {foreignKey: 'type_waste'});
+
+Keys.hasMany(Receptions, {foreignKey: 'station_key'});
+Receptions.belongsTo(Keys, {foreignKey: 'station_key'});
+
+Check_weights.hasMany(Receptions, {foreignKey: 'weight_key'});
+Receptions.belongsTo(Check_weights, {foreignKey: 'weight_key'});
 
 module.exports = {Receptions};

@@ -5,10 +5,12 @@ const DiscountsController = {
     getDiscounts: async(req, res, next) => {
         try {
             db.models.Discounts.findAll({
-            attributes: ["id", "Discount", "PointD"],
+            attributes: ["id", "discount", "count_for_dnt"],
            }) 
-           .then(expense => {res.set("Content-Type", "application/json");
-           res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+           .then(expense => {
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify(expense)), 
+            console.log(JSON.stringify(expense))})
         } catch (error) {
             console.log(error);
             res.status(500).json({
@@ -18,14 +20,25 @@ const DiscountsController = {
     },
 
     addDiscounts: async(req, res, next) => {
-        try{
-            db.models.Discounts.create({
-                Discount: req.body.Discount,
-                PointD: req.body.PointD,
+        try{           
+            const v_check_discount = await db.models.Discounts.findOne({
+                where: {discount: req.body.discount}
             })
-            res.status(200).json({
-                message: 'Скидка добавлена'
-         });
+
+            if (v_check_discount==null){
+                db.models.Discounts.create({
+                    discount: req.body.discount,
+                    count_for_dnt: req.body.count_for_dnt,
+                })
+                res.status(200).json({
+                    message: 'Скидка добавлена'
+             });
+            }
+            else{
+                res.status(500).json({
+                    message: 'Такая скидка уже существует'
+                });
+            }            
         } catch (err) {
          console.log(err);
          res.status(500).json({
@@ -36,14 +49,14 @@ const DiscountsController = {
     
     editDiscounts: async(req, res, next) => {
         try {
-            const ArticleUp = await db.models.Discounts.update({
-                Discount: req.body.Discount,
-                PointD: req.body.PointD,
+            const v_discount_up = await db.models.Discounts.update({
+                discount: req.body.discount,
+                count_for_dnt: req.body.count_for_dnt,
             }, {
                 where:{ id: req.params.id}
             })
-            res.json({
-                success: true,
+            res.status(200).json({
+                message: 'Статья изменена'
             });
         } catch (error) {
             console.log(err);
@@ -54,31 +67,53 @@ const DiscountsController = {
     },
 
     deleteDiscounts: async (req, res, next) => {
-        db.models.Discounts.destroy({where: {id: req.params.id}}).then(()=>{res.send();})
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({message: 'Не удалось удалить статью',});}
-            )
-        .then((res) => {
-            console.log(res);
-        });
+        try {
+            const v_check_id_discounts = await db.models.Discounts.findOne({
+                where: { id: req.params.id},
+            })
+
+            if (v_check_id_discounts!=null){
+                db.models.Discounts.destroy({where: {id: req.params.id}})
+                res.status(200).json({
+                    message: 'Скидка удалена'
+                });
+            }
+            else{
+                res.status(500).json({
+                    message: 'Не удалось удалить скидку',
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: 'Не удалось удалить скидку',
+            });
+        }
     },
-    getDiscountsU : async (req, res, next) => {
-        const UsP = await db.models.Users.findOne({
-            attributes: ["points"],
-            where: {id: req.userId}
-        })
 
-        console.log("Баллы пользователя " + UsP.points);
+    // getDiscountsU : async (req, res, next) => {
+    //     const UsP = await db.models.Users.findOne({
+    //         attributes: ["points"],
+    //         where: {id: req.userId}
+    //     })
 
-        db.models.Discounts.findAll({
-                    attributes: ["id", "Discount", "PointD"],
-                    where: {PointD: { [Op.lte]: UsP.points}}
-                }
-            )
-            .then(expense => {res.set("Content-Type", "application/json");
-            res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
-    }
+    //     console.log(UsP.points);
+
+    //     if (UsP.points!=0){
+    //          db.models.Discounts.findAll({
+    //                 attributes: ["id", "discount", "count_for_dnt"],
+    //                 where: {count_for_dnt: { [Op.lte]: UsP.points}}
+    //             }
+    //         )
+    //         .then(expense => {res.set("Content-Type", "application/json");
+    //         res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+    //     }
+    //     else {
+    //         res.status(200).json({
+    //             message: 'У вас нет скидок',
+    //         });
+    //     }      
+    // }
  }
 
 module.exports = DiscountsController

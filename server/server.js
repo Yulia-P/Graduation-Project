@@ -22,6 +22,10 @@ let PointsRouter = require('./routes/PointsRouter');
 let DiscountsRouter = require('./routes/DiscountsRouter');
 let MarksRouter = require('./routes/MarksRouter');
 let ReceptionsRouter = require('./routes/ReceptionsRouter');
+let KeysRouter = require('./routes/KeysRouter');
+let Check_weightsRouter = require('./routes/Check_weightsRouter');
+let Used_discountsRouter = require('./routes/Used_discountsRouter');
+
 
 
 const storage = multer.diskStorage({
@@ -49,6 +53,10 @@ app.use(PointsRouter);
 app.use(DiscountsRouter);
 app.use(MarksRouter);
 app.use(ReceptionsRouter);
+app.use(KeysRouter);
+app.use(Check_weightsRouter);
+app.use(Used_discountsRouter);
+
 
 
 const options = {

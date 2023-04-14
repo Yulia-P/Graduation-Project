@@ -2,9 +2,10 @@ const { body } = require('express-validator');
 
 exports.RegisterUser  = [
     body('email', 'Неверный формат почты').isEmail().normalizeEmail(),
-    body('passwordHash', 'Слишком маленький пароль, минимум 9 символов').isLength({min: 9 }),
+    body('email', 'Почта слишком длинная').isLength({max: 20}),
+    body('password', 'Слишком маленький пароль, минимум 9 символов').isLength({min: 9 }),
     body('username', 'Укажите имя ползователя').isLength({min: 3}),
-    body('avatarUrl', 'Неверная ссылка на фото').optional().isURL()
+    body('avatar_url', 'Неверная ссылка на фото').optional().isURL()
 ];
 
-exports.LoginUser  =    body('username', 'Укажите имя ползователя').isLength({min: 3});
+exports.LoginUser  = body('username', 'Укажите имя ползователя').isLength({min: 3});

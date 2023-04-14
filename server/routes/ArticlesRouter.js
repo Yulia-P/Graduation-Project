@@ -13,7 +13,7 @@ router.get('/Articles/:id', ArticlesController.getArticle);
 router.post('/Articles', chekAuth, validator.addArticles, ValidError, ArticlesController.addArticles);
 router.put('/Articles/:id', chekAuth, validator.updateArticles, ValidError, ArticlesController.updateArticles);
 router.delete('/Articles/:id', chekAuth, ArticlesController.deleteArticles);
-router.put('/Like/:id', chekAuth, ArticlesController.Like);
+router.put('/Like/:id', chekAuth, ArticlesController.like);
 
 
 module.exports = router

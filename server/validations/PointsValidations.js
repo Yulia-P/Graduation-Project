@@ -1,11 +1,13 @@
 const { body } = require('express-validator');
 
 exports.addPoints  = [
-    body('Address', 'Введите вид отходы').isLength({min: 3}),
-    body('SecretKey', 'Ключ слишком короткий').isLength({min: 8}),
+    body('address', 'Введите адрес').isLength({min: 3}).isString(),
+    body('secret_key', 'Ключ слишком короткий').isLength({min: 8}).isString(),
 ];
 
 exports.editPoints  = [
-    body('Address', 'Введите вид отходы').isLength({min: 3}),
-    body('SecretKey', 'Ключ слишком короткий').isLength({min: 8}),
+    body('address', 'Введите адрес').isLength({min: 3}).isString(),
+    body('secret_key', 'Ключ слишком короткий').isLength({min: 8}).isString(),
 ];
+
+

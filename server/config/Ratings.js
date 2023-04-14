@@ -10,16 +10,16 @@ const {Articles} = require('../config/Articles')
 Ratings.init (
     {
         id:	{type: Sequelize.INTEGER, primaryKey:true, unique: true, autoIncrementIdentity: true, required: true},
-        Item: {type: Sequelize.INTEGER, allowNull: false, required: true},
-        Commentator: {type: Sequelize.INTEGER, allowNull: false, required: true},
-        Сomment: {type: Sequelize.STRING, required: true},
+        article_id: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        commentator: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        comment: {type: Sequelize.STRING, required: true},
     },
     { sequelize, modelName: 'Ratings', tableName: 'ratings', timestamps: false }
 );
 
-Users.hasMany(Ratings, {foreignKey: 'Commentator'});
-Ratings.belongsTo(Users, {foreignKey: 'Commentator'});
-Articles.hasMany(Ratings, {foreignKey: 'Item', onDelete: 'cascade'});
-Ratings.belongsTo(Articles, {foreignKey: 'Item'});
+Users.hasMany(Ratings, {foreignKey: 'commentator'});
+Ratings.belongsTo(Users, {foreignKey: 'commentator'});
+Articles.hasMany(Ratings, {foreignKey: 'article_id', onDelete: 'cascade'});
+Ratings.belongsTo(Articles, {foreignKey: 'article_id'});
 
 module.exports = {Ratings};

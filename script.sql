@@ -1,108 +1,120 @@
-
-SELECT * FROM ecofuture.users;
-SELECT * FROM ecofuture.articles;
-SELECT * FROM ecofuture.ratings;
-SELECT * FROM ecofuture.points;
-SELECT * FROM ecofuture.receptions;
-SELECT * FROM ecofuture.discounts;
-SELECT * FROM ecofuture.marks;
-
-insert into ecofuture.ratings  (`Item`, `Commentator`, `Сomment`) values(1, 1, 'TEST COMMENTTEST COMMENTTEST COMMENTTEST COMMENTTEST COMMENTTEST COMMENT');
-
-select * from  ecofuture.discounts where (PointD=300) or (PointD<300)
-
-
-update ecofuture.users set `role` = 'admin' where id=3;
+SELECT * FROM ecofuture.users; -- переписано
+SELECT * FROM ecofuture.articles; -- переписано
+SELECT * FROM ecofuture.ratings; -- переписано
+SELECT * FROM ecofuture.points; -- переписано
+SELECT * FROM ecofuture.s_keys; -- переписано
+SELECT * FROM ecofuture.receptions; -- переписано
+SELECT * FROM ecofuture.marks; -- переписано
+SELECT * FROM ecofuture.check_weight; -- переписано
+SELECT * FROM ecofuture.discounts; -- переписано
+SELECT * FROM ecofuture.used_discounts; -- переписано
 
 drop table ecofuture.points;
-drop table ecofuture.rating;
+drop table ecofuture.s_keys;
+drop table ecofuture.ratings;
 drop table ecofuture.articles;
 drop table ecofuture.users;
 drop table ecofuture.receptions;
 drop table ecofuture.discounts;
 drop table ecofuture.marks;
 
-delete from ecofuture.users where id=23;
-delete from ecofuture.articles where id=2;
-
-update articles set `Like` = 10 where id=1;
-
 update users set `avatarUrl` = 'https://i.pinimg.com/564x/4c/41/c1/4c41c17cd8fdead090a41806f5879799.jpg' where id=2;
 
-update ecofuture.articles set `Like`= `Like`+1 where Author=1;
-SELECT * FROM ecofuture.articles;
-
- 
-use ecofuture;
 -- Пользователь 
 CREATE TABLE IF NOT EXISTS `users` (  
   `id` int NOT NULL AUTO_INCREMENT UNIQUE,
   `username` VARCHAR(20) NOT NULL UNIQUE, 
   `email` VARCHAR(20) not null unique,
-  `passwordHash` VARCHAR(150) NOT NULL,
+  `password_hash` VARCHAR(150) NOT NULL,
   `points` int DEFAULT 0,
-  `avatarUrl` VARCHAR(150) ,
+  `avatar_url` VARCHAR(150) ,
   `role` VARCHAR(5) NOT NULL,  
   PRIMARY KEY (`id`));
-
-use ecofuture;
 -- Статьи --
 CREATE TABLE IF NOT EXISTS `articles` (
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`Title` VARCHAR(100) NOT NULL UNIQUE,
-`Text` VARCHAR(500) not null unique,
-`DatePub` DATE NOT NULL,
-`ImageU` VARCHAR(150) NOT NULL,
-`Author` int NOT NULL,
-`Like` int default 0,
+`title` VARCHAR(100) NOT NULL UNIQUE,
+`text` VARCHAR(600) not null,
+`date_of_pub` DATE NOT NULL,
+`image_url` VARCHAR(150) NOT NULL,
+`author` int NOT NULL,
+`like` int default 0,
 PRIMARY KEY (`id`),
 foreign key (Author) references users(id));
-
-use ecofuture;
 -- Комменты --
 CREATE TABLE IF NOT EXISTS `ratings` (
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`Item` int NOT NULL,
-`Commentator` int NOT NULL,
-`Сomment` VARCHAR(500),
+`article_id` int NOT NULL,
+`commentator` int NOT NULL,
+`comment` VARCHAR(500),
 PRIMARY KEY (`id`),
 foreign key (Commentator) references users(id),
-foreign key (Item) references articles(id));
-
-use ecofuture;
+foreign key (article_id) references articles(id));
 -- Пункт сдачи --
 CREATE TABLE IF NOT EXISTS `points`(
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`Address` VARCHAR(100) NOT NULL UNIQUE,
-`SecretKey` VARCHAR(250) NOT NULL UNIQUE, -- тайный ключ
+`address` VARCHAR(100) NOT NULL UNIQUE,
+`time_of_work` VARCHAR(100) NOT NULL,
+`key_id` int not null unique,
+`admin_id` int not null,
+foreign key (admin_id) references users(id),
+foreign key (key_id) references s_keys(id),
 PRIMARY KEY (`id`));
-
-use ecofuture;
+-- Секретный ключ --
+create table IF NOT EXISTS `s_keys`(
+`id` int NOT NULL AUTO_INCREMENT UNIQUE,
+`secret_key` VARCHAR(100) NOT NULL UNIQUE,
+`used` int not null default 0,
+CONSTRAINT ck_used CHECK (used IN (1,0)),
+PRIMARY KEY (`id`));
 -- Сдача --
 CREATE TABLE IF NOT EXISTS `receptions`(
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`idUser` int NOT NULL,
-`Weight` float not null,
-`Accrued` int,
-`NewKg` int,
-`TypeWaste` VARCHAR(50) NOT NULL,
-`StationKey` VARCHAR(250) NOT NULL,
+`id_user` int NOT NULL,
+`weight` float not null,
+`accrued` int,
+`new_kg` int,
+`type_waste` int NOT NULL,
+`station_key` int NOT NULL,
+`weight_key` int NOT NULL,
 PRIMARY KEY (`id`),
-foreign key (idUser) references users(id));
-
-use ecofuture;
--- Товары --
+foreign key (id_user) references users(id),
+foreign key (type_waste) references marks(id),
+foreign key (station_key) references s_keys(id),
+foreign key (weight_key) references check_weight(id)
+);
+-- Скидки --
 CREATE TABLE IF NOT EXISTS `discounts`(
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`Discount` VARCHAR(50) NOT NULL UNIQUE,
-`PointD` int NOT NULL,
+`discount` VARCHAR(50) NOT NULL UNIQUE,
+`count_for_dnt` int NOT NULL,
 PRIMARY KEY (`id`));
-
-use ecofuture;
--- Покупки 
+-- Используемые скидки --
+CREATE TABLE IF NOT EXISTS `used_discounts`(
+`id` int NOT NULL AUTO_INCREMENT UNIQUE,
+`discount_id` int NOT NULL,
+`user_id` int not null,
+`used` int not null default 0,
+PRIMARY KEY (`id`),
+CONSTRAINT check_used CHECK (used IN (1,0)),
+foreign key (user_id) references users(id),
+foreign key (discount_id) references discounts(id));
+-- Покупки --
 CREATE TABLE IF NOT EXISTS `marks`(
 `id` int NOT NULL AUTO_INCREMENT UNIQUE,
-`Rubbish` VARCHAR(50) NOT NULL,
-`PointsOKg` int not null,
-`NewOKg` float not null,
-PRIMARY KEY (`id`))
+`rubbish` VARCHAR(50) NOT NULL,
+`points_per_kg` int not null,
+`new_from_kg` float not null,
+PRIMARY KEY (`id`));
+-- Проверка веса --
+CREATE TABLE IF NOT EXISTS `check_weight`(
+    `id` int NOT NULL AUTO_INCREMENT UNIQUE,
+    `id_rubbish` int not null,
+    `weight` int not null,
+    `key_of_weight` VARCHAR(100) NOT NULL UNIQUE,
+    PRIMARY KEY (`id`),
+    foreign key (id_rubbish) references marks(id));
+
+-- ALTER TABLE marks CHANGE Rubbish rubbish VARCHAR(50) NOT NULL;
+-- ALTER TABLE marks CHANGE PointsOKg points_per_kg  int not null;
+-- ALTER TABLE marks CHANGE NewOKg new_from_kg  float not null

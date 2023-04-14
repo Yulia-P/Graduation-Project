@@ -9,16 +9,16 @@ const {Users} = require('../config/Users')
 Articles.init (
     {
         id:	{type: Sequelize.INTEGER, primaryKey:true, unique: true, autoIncrementIdentity: true, required: true},
-        Title:{type: Sequelize.STRING,  allowNull: false, unique: true, required: true},
-        Text: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
-        DatePub: {type: Sequelize.DATE, allowNull: false, required: true},
-        ImageU: {type: Sequelize.STRING},
-        Author: {type: Sequelize.INTEGER, allowNull: false, required: true},
-        Like: {type: Sequelize.INTEGER, required: true},
+        title:{type: Sequelize.STRING,  allowNull: false, unique: true, required: true},
+        text: {type: Sequelize.STRING, allowNull: false, required: true},
+        date_of_pub: {type: Sequelize.DATE, allowNull: false, required: true},
+        image_url: {type: Sequelize.STRING},
+        author: {type: Sequelize.INTEGER, allowNull: false, required: true},
+        like: {type: Sequelize.INTEGER, required: true},
     },
     { sequelize, modelName:'Articles', tableName:'articles', timestamps: false}
 );
 
-Users.hasMany(Articles, {foreignKey:'Author'});
-Articles.belongsTo(Users, {foreignKey: 'Author'});
+Users.hasMany(Articles, {foreignKey:'author'});
+Articles.belongsTo(Users, {foreignKey: 'author'});
 module.exports = {Articles};

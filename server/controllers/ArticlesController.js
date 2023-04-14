@@ -1,18 +1,22 @@
 const db = require('../config/db')
+const { Op } = require('sequelize')
 
 const ArticlesController = {
+   
     getArticles: async (req, res, next) => {
         try {
             db.models.Articles.findAll({
-                    attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+                    attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
                     include: [{
                         model: db.models.Users,
                         required: true,
-                        attributes: ["id", "username", "avatarUrl"]
+                        attributes: ["id", "username", "avatar_url"]
                     }]
                 }
             )
-            .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+            .then(expense => {res.set("Content-Type", "application/json");
+                res.send(JSON.stringify(expense)), 
+                console.log(JSON.stringify(expense))})
 
         } catch (error) {
             console.log(error);
@@ -22,7 +26,6 @@ const ArticlesController = {
         }
     },
 
-
     // getArticlesRating: async (req, res, next) => {
     //     try {
 
@@ -31,11 +34,11 @@ const ArticlesController = {
     //             include: [{
     //                 model: db.models.Articles,
     //                 required: true,
-    //                 attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+    //                 attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
     //                 include: [{
     //                     model: db.models.Users,
     //                     required: true,
-    //                     attributes: ["id", "username", "avatarUrl"]
+    //                     attributes: ["id", "username", "avatar_url"]
     //                 }]
     //             }]
 
@@ -53,16 +56,24 @@ const ArticlesController = {
     getArticle: async (req, res, next) => {
         try {
             const resp = await  db.models.Articles.findOne({
-                attrutes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+                attrutes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
                 include: [{
                     model: db.models.Users,
                     required: true,
-                    attributes: ["username", "avatarUrl"]
+                    attributes: ["username", "avatar_url"]
                 }],
                 where: {id: req.params.id}}
             )
-                console.log(resp)
+            if (resp==null){
+                res.status(500).json({
+                    message: 'Не удалось найти статью',
+                });
+            }
+            else{
+                res.set("Content-Type", "application/json")
                 res.send(JSON.stringify(resp))
+                console.log(JSON.stringify(resp))
+            }
         } catch (error) {
             console.log(error);
             res.status(500).json({
@@ -72,18 +83,28 @@ const ArticlesController = {
     },
 
     addArticles: async (req, res, next) => {
-        try {            
-            db.models.Articles.create({
-                Author: req.userId,
-                Title: req.body.Title,
-                Text: req.body.Text, 
-                ImageU: req.body.ImageU,                
-                DatePub: Date.now(),
-            })    
-            res.status(200).json({
-                message: 'Статья добавлена'
-            });
-
+        try {
+            const v_check_title = await db.models.Articles.findOne({
+                where: { title: req.body.title},
+            })
+            
+            if (v_check_title==null){
+                db.models.Articles.create({
+                    author: req.userId,
+                    title: req.body.title,
+                    text: req.body.text, 
+                    image_url: req.body.image_url,                
+                    date_of_pub: Date.now(),
+                })
+                res.status(200).json({
+                    message: 'Статья добавлена'
+                });
+            }
+            else {
+                res.status(500).json({
+                    message: 'Статья с таким названием уже существует'
+                });
+            }
         } catch (err) {
             console.log(err);
             res.status(500).json({
@@ -92,66 +113,98 @@ const ArticlesController = {
         }
     },
 
-    deleteArticles:  (req, res, next) => {
-        db.models.Articles.destroy({where: {id: req.params.id}}).then(()=>{res.send();})
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({message: 'Не удалось удалить статью',});}
-            )
-        .then((res) => {
-            console.log(res);
-        });
-    },
-
-    updateArticles: async (req, res, next) => {
+    deleteArticles: async (req, res, next) => {
         try {
-            const ArticleUp = await db.models.Articles.update({
-                Title: req.body.Title,
-                Text:  req.body.Text,
-                DatePub: Date.now(),
-                ImageU:  req.body.ImageU
-            }, {
-                where:{ id: req.params.id}
+            const v_check_id_articles = await db.models.Articles.findOne({
+                where: { id: req.params.id},
             })
-            res.json({
-                success: true,
-            });
-            // .then((res) => {console.log(res);
-            
-        } catch (err) {
-            console.log(err);
+
+            if (v_check_id_articles!=null){           
+                db.models.Articles.destroy({where: {id: req.params.id}})
+                res.status(200).json({
+                    message: 'Статья удалена'
+                });
+            }
+            else {
+                res.status(500).json({
+                    message: 'Не удалось удалить статью',
+                });
+            }
+        } catch (error) {
+            console.log(error);
             res.status(500).json({
-                message: 'Не удалось обновить статью'
+                message: 'Не удалось удалить статью',
             });
         }
     },
 
-    Like: async (req, res, next) => {
+    updateArticles: async (req, res, next) => {
         try {
-            //Like
+            const v_check_u_title = await db.models.Articles.findOne({
+                where: { title: req.body.title},
+            })
+            if (v_check_u_title==null){
+                const v_check_u_text = await db.models.Articles.findOne({
+                    where: {text: req.body.text},
+                })
+                if(v_check_u_text==null){
+                    const ArticleUp = await db.models.Articles.update({
+                        title: req.body.title,
+                        text:  req.body.text,
+                        date_of_pub: Date.now(),
+                        image_url:  req.body.image_url
+                    }, {
+                        where:{ id: req.params.id}
+                    })
+                    res.status(200).json({
+                        message: 'Статья изменена'
+                    });
+                }
+                else {
+                    res.status(500).json({
+                        message: 'Статья с таким текстом уже существует'
+                    });
+                }
+            }
+            else {
+                res.status(500).json({
+                    message: 'Статья с таким названием уже существует'
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: 'Не удалось изменить статью'
+            });
+        }
+    },
+
+    like: async (req, res, next) => {
+        try {
+            //like
             const resp = await  db.models.Articles.findOne({
-                attributes: ["Like"],
+                attributes: ["like"],
                 where: {id: req.params.id}})
 
-                const likes = resp.Like+1;
-                console.log(resp.Like)
+                const likes = resp.like+1;
+                console.log(resp.like)
                 console.log(likes)
            
             // Update
-            const LikeArticle = await db.models.Articles.update({
-                Like: likes},
+            const likeArticle = await db.models.Articles.update({
+                like: likes},
                 {
                     where: {id: req.params.id}})
             
-            console.log(LikeArticle);
+            console.log(likeArticle);
 
-            // All Articles
+            // All Articles ?? ОСТАВЛЯТЬ ??
             db.models.Articles.findAll({
-                attributes: ["id", "Title", "Text", "DatePub", "ImageU", "Like"],
+                attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
                 include: [{
                     model: db.models.Users,
                     required: true,
-                    attributes: ["id", "username", "avatarUrl"]
+                    attributes: ["id", "username", "avatar_url"]
                 }]
             }
         )
