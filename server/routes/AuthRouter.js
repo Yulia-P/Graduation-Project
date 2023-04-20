@@ -6,7 +6,8 @@ const ValidError = require('../utils/HandleErrors');
 
 let router = express.Router()
 
-router.post('/register', validator.RegisterUser, ValidError, AuthController.RegisterUser);
+// router.post('/register', validator.RegisterUser, ValidError, AuthController.RegisterUser);
+router.post('/register', AuthController.RegisterUser);
 router.post('/login',  AuthController.LoginUser);
 router.get('/logout', AuthController.Logout);
 router.get('/me', chekAuth, AuthController.getMe);

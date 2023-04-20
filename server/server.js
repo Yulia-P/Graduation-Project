@@ -8,12 +8,15 @@ const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const cors = require('cors')
-const chekAuth = require('./utils/checkAuth');
+const checkAuth = require('./utils/checkAuth');
+// const fileUpload = require('express-fileupload')
 
 app.use(cookieParser('ecofuture'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
+// app.use(fileUpload(undefined));
+app.use(express.static('uploads'))
 
 let AuthRouter = require('./routes/AuthRouter');
 let ArticlesRouter = require('./routes/ArticlesRouter');
@@ -26,23 +29,25 @@ let KeysRouter = require('./routes/KeysRouter');
 let Check_weightsRouter = require('./routes/Check_weightsRouter');
 let Used_discountsRouter = require('./routes/Used_discountsRouter');
 
-
-
 const storage = multer.diskStorage({
     destination: ( _, __, cb) => {
         cb(null, 'uploads');
     },
     filename: ( _, file, cb) => {
         cb(null, file.originalname);
-    },        
+    },
 });
 
 const upload = multer({storage});
 
-app.post('/upload', chekAuth, upload.single('image'), (req, res) => {
-  res.json({
-    url: `/uploads/${req.file.originalname}`,
-  });
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+    try {
+        res.json({
+            url: `/uploads/${req.file.originalname}`,
+        });
+    }catch(e){
+        console.log(e);
+    }
 });
 
 app.use('/uploads', express.static('uploads'));

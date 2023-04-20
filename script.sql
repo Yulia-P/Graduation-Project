@@ -9,6 +9,8 @@ SELECT * FROM ecofuture.check_weight; -- переписано
 SELECT * FROM ecofuture.discounts; -- переписано
 SELECT * FROM ecofuture.used_discounts; -- переписано
 
+delete from users where id=8;
+
 drop table ecofuture.points;
 drop table ecofuture.s_keys;
 drop table ecofuture.ratings;
@@ -119,4 +121,6 @@ CREATE TABLE IF NOT EXISTS `check_weight`(
 
 -- ALTER TABLE marks CHANGE Rubbish rubbish VARCHAR(50) NOT NULL;
 -- ALTER TABLE marks CHANGE PointsOKg points_per_kg  int not null;
-ALTER TABLE Users CHANGE email email VARCHAR(100) not null unique
+ALTER TABLE articles CHANGE image_url `image_url` VARCHAR(150)
+
+insert articles(title, text, date_of_pub, author) values('sjdisjdijs', 'dfgijhugytrddfghbjkhjk', '2023-04-02', 7)
