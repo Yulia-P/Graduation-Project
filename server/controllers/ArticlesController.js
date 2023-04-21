@@ -175,7 +175,6 @@ const ArticlesController = {
                 where: { title: req.body.title },
             })
             const v_u_image_url = req.body.image_url
-            if (v_check_u_title == null) {
                 if (v_u_image_url == undefined) {
                     const article = await db.models.Articles.update({
                         title: req.body.title,
@@ -204,12 +203,6 @@ const ArticlesController = {
                         message: 'Статья изменена'
                     });
                 }
-            }
-            else {
-                res.status(500).json({
-                    message: 'Статья с таким названием уже существует'
-                });
-            }
         } catch (err) {
             console.log(err);
             res.status(500).json({

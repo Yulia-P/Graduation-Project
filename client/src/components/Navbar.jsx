@@ -1,14 +1,23 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIsAuth, logout } from '../redux/features/auth/authSlice'
+import {checkIsAuth, logout} from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 
 export const Navbar = () => {
 
     const isAuth = useSelector(checkIsAuth)
-    console.log(isAuth)
     const dispatch = useDispatch()
+
+    // test
+    // const isAuth = () => {
+    //     return window.localStorage.getItem('accessToken')
+    // }
+    // useEffect(() => {
+    //     dispatch(setIsAuth(isAuth()))
+    //     console.log('setIsAuth'+setIsAuth)
+    // }, [dispatch])
+    // test
 
     const activeStyles = {
         color: 'white',
@@ -25,6 +34,7 @@ export const Navbar = () => {
             <span className='flex justify-center items-center w-6 h-6 bg-gray-600 text-xs text-white rounded-sm'>
                 E
             </span>
+            {/*{setIsAuth && (*/}
 
             {isAuth && (
                 <ul className='flex gap-8'>

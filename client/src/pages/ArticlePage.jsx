@@ -35,8 +35,6 @@ export const ArticlePage = () => {
     fetchArticle()
   }, [fetchArticle])
 
-
-
   if (!articles) {
     return (
       <div className={'text-xl text-center text-white py-10'}>

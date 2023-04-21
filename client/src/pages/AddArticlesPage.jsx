@@ -1,20 +1,29 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { createArticles } from '../redux/features/articles/articleSlice'
 import axios from "../utils/axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { checkIsAuth, logout } from '../redux/features/auth/authSlice'
+import {checkIsAuth} from '../redux/features/auth/authSlice'
 
 
 export const AddArticlesPage = () => {
     const isAuth = useSelector(checkIsAuth)
 
+    const dispatch = useDispatch()
+    // test
+    // const isAuth = () => {
+    //     return window.localStorage.getItem('accessToken')
+    // }
+    // useEffect(() => {
+    //     dispatch(setIsAuth(isAuth()))
+    //     console.log('1 ' + setIsAuth())
+    // }, [dispatch])
+    // test
+
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
     const [image_url, setImage_url] = useState('')
-
-    const dispatch = useDispatch()
 
     const handleChangeFile = async (event) => {
         try {

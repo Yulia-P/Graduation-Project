@@ -98,7 +98,7 @@ export const authSlice = createSlice({
             state.isLoading = false
             state.status = action.payload.message
             state.user = action.payload.user
-            state.accessToken = state.accessToken ? null : action.payload.accessToken
+            state.accessToken = window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : action.payload.accessToken
         },
         [loginUser.rejected]: (state, action) => {
             state.status = action.payload.message
@@ -123,7 +123,6 @@ export const authSlice = createSlice({
 })
 
 export const checkIsAuth = state => Boolean(state.auth.accessToken)
-// export const checkIsAuth = state => Boolean(state.accessToken)
 
 export const { logout } = authSlice.actions
 export const { setIsAuth } = authSlice.actions

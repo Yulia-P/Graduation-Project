@@ -46,7 +46,10 @@ const RatingsController = {
                
             }
         )
-        .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
+        .then(expense => {
+            res.set("Content-Type", "application/json");
+            res.send(JSON.stringify(expense)),
+                console.log(JSON.stringify(expense))})
 
         } catch (error) {
             
@@ -56,29 +59,42 @@ const RatingsController = {
 
     addRatings: async(req, res, next) => {
         try {
-            const v_check_a_article = await db.models.Articles.findOne({
-                where: {id: req.params.article_id}
-            })
-            // console.log(v_check_a_article);
-
-            if(v_check_a_article!=null){
-                db.models.Ratings.create({
-                    article_id: req.params.article_id,
-                    commentator: req.userId,
-                    comment: req.body.comment,
-                })
-                res.status(200).json({
-                    message: 'Комментарий добавлен'
+            const v_check_body = req.body.comment
+            if (!v_check_body){
+                res.
+                status(418).
+                json({
+                    message: 'Введите текст комментария'
                 });
             }
-            else{
-                res.status(500).json({
-                    message: 'Статья не существует'
-                });
-            } 
+            else {
+                const v_check_a_article = await db.models.Articles.findOne({
+                    where: {id: req.params.article_id}
+                })
+                if(v_check_a_article!=null){
+                    db.models.Ratings.create({
+                        article_id: req.params.article_id,
+                        commentator: req.userId,
+                        comment: req.body.comment,
+                    })
+                    res.status(200).json({
+                        message: 'Комментарий добавлен'
+                    });
+                }
+                else{
+                    res.
+                    status(418).
+                    json({
+                        message: 'Статья не существует'
+                    });
+                    //    501 Not Implemented («не реализовано»)
+                }
+            }
         } catch (err ) {
             console.log(err);
-            res.status(500).json({
+            res.
+            status(418).
+            json({
                 message: 'Не удалось добавить комментарий'
             });
         }
