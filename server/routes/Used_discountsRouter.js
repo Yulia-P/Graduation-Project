@@ -5,7 +5,7 @@ const checkAuth = require('../utils/checkAuth');
 
 let router = express.Router()
 
-router.get("/UDiscounts", checkAuth, Used_discountsController.showMyDiscounts)
-router.put("/UDiscounts/:id", checkAuth, Used_discountsController.usedDiscounts)
+// router.get("/discounts/used",     checkAuth, Used_discountsController.showMyDiscounts)
+// router.put("/discounts/used/:id", checkAuth, Used_discountsController.usedDiscounts)
 
 module.exports = router

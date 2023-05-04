@@ -14,9 +14,11 @@ export const Recept = () => {
   // const [body, setBody] = useState(""); 
   const [response, setResponse] = useState();
   const dispatch = useDispatch();
+
   React.useEffect(() => {
     console.log(response);
   }, [response]);
+
   const{
     register, 
     handleSubmit,

@@ -11,7 +11,7 @@ const nodemailer = require('nodemailer');
 
 const AuthController = {
 
-    RegisterUser: async (req, res, next) => {
+    RegisterUser: async (req, res) => {
         try {
             const i_password = req.body.password;
             const salt = '$2b$10$qNuSSupDD53DkQfO8wqpf.';
@@ -79,16 +79,16 @@ const AuthController = {
                         httpOnly: true,
                         sameSite: 'strict'
                     })
-                    res.status(200).json({
-                            message: 'Регистрация прошла успешно',
-                            accessToken,
-                            user: {
-                                id: candidate.null,
-                                username: candidate.username,
-                                role: candidate.role
-                            }
-                        });
-                    }
+                    res.json({
+                        message: 'Регистрация прошла успешно',
+                        accessToken,
+                        user: {
+                            id: candidate.null,
+                            username: candidate.username,
+                            role: candidate.role
+                        }
+                    });
+                }
                 else {
                     res.json({
                         message: 'Почта занята, введите другую'
@@ -103,13 +103,13 @@ const AuthController = {
         }
         catch (err) {
             console.log(err);
-            res.json({ 
+            res.json({
                 message: 'Не удалось зарегистрироваться'
             });
         }
     },
 
-    LoginUser: async (req, res, next) => {
+    LoginUser: async (req, res) => {
         try {
 
             const i_user = await db.models.Users.findOne({
@@ -120,12 +120,12 @@ const AuthController = {
             console.log(i_user)
 
             if (i_user == null) {
-                res.status(404).json({ message: 'Неверная почта или пароль' })
+                res.json({ message: 'Неверная почта или пароль' })
             }
             else {
                 const isValidPass = await bcrypt.compare(req.body.password, i_user.password_hash);
                 if (!isValidPass) {
-                    res.status(404).json({ message: 'Неверная почта или пароль' })
+                    res.json({ message: 'Неверная почта или пароль' })
                 }
                 else {
                     const accessToken = jwt.sign({ id: i_user.id, username: i_user.username, role: i_user.role }, accessKey, { expiresIn: 30 * 60 })
@@ -145,7 +145,8 @@ const AuthController = {
                         user: {
                             id: i_user.id,
                             username: i_user.username,
-                            role: i_user.role
+                            role: i_user.role,
+                            points: i_user.points
                         }
                     });
                 }
@@ -158,7 +159,7 @@ const AuthController = {
         }
     },
 
-    Logout: (req, res, next) => {
+    Logout: (req, res) => {
         res.clearCookie('accessToken')
         res.clearCookie('refreshToken')
         res.json({
@@ -166,7 +167,7 @@ const AuthController = {
         });
     },
 
-    getMe: async (req, res, next) => {
+    getMe: async (req, res) => {
         try {
             const user = await db.models.Users.findByPk(req.userId)
             if (!user) {
@@ -184,7 +185,7 @@ const AuthController = {
         }
     },
 
-    activate: async (req, res, next) => {
+    activate: async (req, res) => {
         const v_find_user = await db.models.Users.findOne({
             where: { activation_link: req.params.link }
         })
@@ -200,9 +201,9 @@ const AuthController = {
             }, { where: { id: v_find_user.id } })
             return res.redirect('http://localhost:3000/')
 
-            res.status(200).json({
-                    message: 'Вы подтвердили свою почту'
-                });
+            res.json({
+                message: 'Вы подтвердили свою почту'
+            });
         }
     }
 }

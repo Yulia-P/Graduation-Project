@@ -1,43 +1,44 @@
 const db = require('../config/db')
-// const { Op } = require('sequelize')
+const { Op } = require("sequelize");
+
 // const { dirname } = require('path')
 // const path = require('path')
 // const { fileURLToPath } = require('url')
 
 const ArticlesController = {
 
-    getArticles: async (req, res, next) => {
+    getArticles: async (req, res) => {
         try {
-           const article = await db.models.Articles.findAll({
-                attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
+            const article = await db.models.Articles.findAll({
+                attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
                 include: [{
                     model: db.models.Users,
                     required: true,
-                    attributes: ["id", "username", "avatar_url"]
+                    attributes: ["id", "username"]
                 }]
             }
             )
-            if(!article){
-                return res.json({message: 'Статей нет'})
+            if (!article) {
+                return res.json({ message: 'Статей нет' })
             }
-            else{
-                res.json({article})
+            else {
+                res.json({ article })
             }
-                // .then(expense => {
-                //     res.set("Content-Type", "application/json");
-                //     res.send(JSON.stringify(expense)),
-                //         console.log(JSON.stringify(expense))
-                // })
+            // .then(expense => {
+            //     res.set("Content-Type", "application/json");
+            //     res.send(JSON.stringify(expense)),
+            //         console.log(JSON.stringify(expense))
+            // })
 
         } catch (error) {
             console.log(error);
-            res.status(500).json({
+            res.json({
                 message: 'Не удалось найти статьи',
             });
         }
     },
 
-    // getArticlesRating: async (req, res, next) => {
+    // getArticlesRating: async (req, res) => {
     //     try {
     //         db.models.Ratings.findAll({
     //             attributes: ["id", "Comment", "Item", "Commentator"],
@@ -48,33 +49,33 @@ const ArticlesController = {
     //                 include: [{
     //                     model: db.models.Users,
     //                     required: true,
-    //                     attributes: ["id", "username", "avatar_url"]
+    //                     attributes: ["id", "username"]
     //                 }]
     //             }]
     //         })
     //         .then(expense => {res.send(JSON.stringify(expense)), console.log(JSON.stringify(expense))})
     //     } catch (error) {
     //         console.log(error);
-    //         res.status(500).json({
+    //         res.json({
     //             message: 'Не удалось найти статьи',
     //         });
     //     }
     // },
 
-    getArticle: async (req, res, next) => {
+    getArticle: async (req, res) => {
         try {
             const article = await db.models.Articles.findOne({
-                attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
+                attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
                 include: [{
                     model: db.models.Users,
                     required: true,
-                    attributes: ["id", "username", "avatar_url"]
+                    attributes: ["id", "username"]
                 }],
                 where: { id: req.params.id }
             }
             )
             if (article == null) {
-                res.status(500).json({
+                res.json({
                     message: 'Не удалось найти статью',
                 });
             }
@@ -85,13 +86,13 @@ const ArticlesController = {
             }
         } catch (error) {
             console.log(error);
-            res.status(500).json({
+            res.json({
                 message: 'Не удалось найти статью',
             });
         }
     },
 
-    addArticles: async (req, res, next) => {
+    addArticles: async (req, res) => {
         try {
             const v_check_title = await db.models.Articles.findOne({
                 where: { title: req.body.title },
@@ -99,166 +100,233 @@ const ArticlesController = {
 
             const v_b_image_url = req.body.image_url;
             if (v_check_title == null) {
-                if (v_b_image_url!=undefined) {
-                    db.models.Articles.create({
+                if (v_b_image_url != undefined) {
+                    const article = await db.models.Articles.create({
                         author: req.userId,
                         title: req.body.title,
                         text: req.body.text,
                         image_url: req.body.image_url,
                         date_of_pub: Date.now(),
                     })
-                    res.status(200).json({
+                    res.json({
+                        article,
                         message: 'Статья добавлена с картинкой'
                     });
                 }
                 else {
-                    db.models.Articles.create({
+                    const article = await db.models.Articles.create({
                         author: req.userId,
-                        author: 7,
                         title: req.body.title,
                         text: req.body.text,
                         image_url: '',
                         date_of_pub: Date.now(),
                     })
-                    res.status(200).json({
+                    res.json({
+                        article,
                         message: 'Статья добавлена без картинки'
                     });
                 }
             }
             else {
-                res.status(500).json({
+                res.json({
                     message: 'Статья с таким названием уже существует'
                 });
             }
         } catch (err) {
             console.log(err);
-            res.status(500).json({
+            res.json({
                 message: 'Не удалось добавить статью'
             });
         }
     },
 
-    deleteArticles: async (req, res, next) => {
+    deleteArticles: async (req, res) => {
         try {
             const v_check_id_articles = await db.models.Articles.findOne({
                 where: { id: req.params.id },
             })
 
             if (v_check_id_articles != null) {
-                const article = db.models.Articles.destroy({ where: { id: req.params.id } })
+                const article = await db.models.Articles.destroy({ where: { id: req.params.id } })
                 res.
-                // status(200).
-                json({
-                    message: 'Статья удалена'
-                });
+                    // status(200).
+                    json({
+                        message: 'Статья удалена'
+                    });
             }
             else {
                 res.
-                // status(500).
-                json({
-                    message: 'Не удалось удалить статью',
-                });
+                    // status(500).
+                    json({
+                        message: 'Не удалось удалить статью',
+                    });
             }
         } catch (error) {
             console.log(error);
             res.
-            // status(500).
-            json({
-                message: 'Не удалось удалить статью',
-            });
+                // status(500).
+                json({
+                    message: 'Не удалось удалить статью',
+                });
         }
     },
 
-    updateArticles: async (req, res, next) => {
+    deleteArticlesAdmin: async (req, res) => {
+        try {
+            const v_check_id_articles = await db.models.Articles.findOne({
+                where: { id: req.params.id },
+            })
+
+            if (v_check_id_articles != null) {
+                const article = await db.models.Articles.destroy({ where: { id: req.params.id } })
+                res.
+                    // status(200).
+                    json({
+                        message: 'Статья удалена'
+                    });
+            }
+            else {
+                res.
+                    // status(500).
+                    json({
+                        message: 'Не удалось удалить статью',
+                    });
+            }
+        } catch (error) {
+            console.log(error);
+            res.
+                // status(500).
+                json({
+                    message: 'Не удалось удалить статью',
+                });
+        }
+    },
+
+    updateArticles: async (req, res) => {
         try {
             const v_check_u_title = await db.models.Articles.findOne({
                 where: { title: req.body.title },
             })
             const v_u_image_url = req.body.image_url
-                if (v_u_image_url == undefined) {
-                    const article = await db.models.Articles.update({
-                        title: req.body.title,
-                        text: req.body.text,
-                        date_of_pub: Date.now(),
-                        image_url: ''
-                    }, {
-                        where: {id: req.params.id}
-                    })
-                    res.status(200).json({
-                        article,
-                        message: 'Статья изменена'
-                    });
-                }
-                else {
-                    const article = await db.models.Articles.update({
-                        title: req.body.title,
-                        text: req.body.text,
-                        date_of_pub: Date.now(),
-                        image_url: req.body.image_url
-                    }, {
-                        where: {id: req.params.id}
-                    })
-                    res.status(200).json({
-                        article,
-                        message: 'Статья изменена'
-                    });
-                }
+            if (v_u_image_url == undefined) {
+                const article = await db.models.Articles.update({
+                    title: req.body.title,
+                    text: req.body.text,
+                    date_of_pub: Date.now(),
+                    image_url: req.body.image_url,
+                }, {
+                    where: { id: req.params.id }
+                })
+                res.json({
+                    article,
+                    message: 'Статья изменена'
+                });
+            }
+            else {
+                const article = await db.models.Articles.update({
+                    title: req.body.title,
+                    text: req.body.text,
+                    date_of_pub: Date.now(),
+                    image_url: req.body.image_url
+                }, {
+                    where: { id: req.params.id }
+                })
+                res.json({
+                    article,
+                    message: 'Статья изменена'
+                });
+            }
         } catch (err) {
             console.log(err);
-            res.status(500).json({
+            res.json({
                 message: 'Не удалось изменить статью'
             });
         }
     },
 
-    like: async (req, res, next) => {
+    like: async (req, res) => {
         try {
             //like
-            const resp = await db.models.Articles.findOne({
-                attributes: ["like"],
-                where: { id: req.params.id }
+            const i_user = req.userId
+            const i_article = req.params.id
+
+            const v_likes = await db.models.Likes.findOne({
+                where: {
+                    [Op.and]: [{ user_id: i_user }, { article_id: i_article }],
+                }
             })
 
-            const likes = resp.like + 1;
-            console.log(resp.like)
-            console.log(likes)
+            if (!v_likes) {
+                const likes = await db.models.Likes.create({
+                    user_id: i_user,
+                    article_id: i_article,
+                })
 
-            // Update
-            const likeArticle = await db.models.Articles.update({
-                like: likes
-            },
-                {
+                const count_of_likes = await db.models.Likes.findAndCountAll({
+                    attributes: ['article_id'],
+                    where: { article_id: i_article }
+                })
+
+                // console.log(count_of_likes.count)
+
+                const update_like = await db.models.Articles.update({
+                    likes: count_of_likes.count
+                }, {
                     where: { id: req.params.id }
                 })
 
-            console.log(likeArticle);
-
-            // All Articles ?? ОСТАВЛЯТЬ ??
-            db.models.Articles.findAll({
-                attributes: ["id", "title", "text", "date_of_pub", "image_url", "like"],
-                include: [{
-                    model: db.models.Users,
-                    required: true,
-                    attributes: ["id", "username", "avatar_url"]
-                }]
-            }
-            )
-
-                .then(expense => {
-                    res.send(
-                        JSON.stringify(expense)),
-
-                        console.log(JSON.stringify(expense))
+                db.models.Articles.findAll({
+                    attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
+                    include: [{
+                        model: db.models.Users,
+                        required: true,
+                        attributes: ["id", "username"]
+                    }]
+                }).then(expense => {
+                    res.json({
+                        message: "Вы поставили лайк",
+                        expense
+                    });
                 })
 
-            // res.json({
-            //     success: true,
-            // });
+            }
+            else {
+                const likes = await db.models.Likes.destroy({
+                    where: {
+                        [Op.and]: [{ user_id: i_user }, { article_id: i_article }],
+                    }
+                })
 
+                const count_of_likes = await db.models.Likes.findAndCountAll({
+                    attributes: ['article_id'],
+                    where: { article_id: i_article }
+                })
 
+                // console.log(count_of_likes.count)
+
+                const update_like = await db.models.Articles.update({
+                    likes: count_of_likes.count
+                }, {
+                    where: { id: req.params.id }
+                })
+
+                db.models.Articles.findAll({
+                    attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
+                    include: [{
+                        model: db.models.Users,
+                        required: true,
+                        attributes: ["id", "username"]
+                    }]
+                }).then(expense => {
+                    res.json({
+                        message: "Вы убрали лайк",
+                        expense
+                    });
+                })
+            }
         } catch (error) {
             console.log(error);
-            res.status(500).json({
+            res.json({
                 message: 'Не удалось найти статью',
             });
         }

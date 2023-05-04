@@ -1,15 +1,19 @@
 const express = require('express')
 const RatingsController = require("../controllers/RatingsController");
-const validator = require('../validations/RatingsValidations');
-const chekAuth = require('../utils/checkAuth');
-const ValidError = require('../utils/HandleErrors');
+const checkAuth = require('../utils/checkAuth');
+const checkRole = require("../utils/checkRole");
+
+// const ValidError = require('../utils/HandleErrors');
+// const validator = require('../validations/RatingsValidations');
 
 let router = express.Router()
 
-router.get('/Ratings/:article_id',  RatingsController.getRatings);
+router.get   ('/ratings/:article_id',            RatingsController.getRatings);
+router.get   ('/ratings',                        RatingsController.getAllRating);
+router.post  ('/ratings/:article_id', checkAuth, RatingsController.addRatings);
+router.delete('/ratings/:id',         checkAuth, RatingsController.deleteRatings);
+router.delete('/ratings/admin/:id',   checkRole, RatingsController.deleteRatingsAdmin);
+
 // router.post('/Ratings/:article_id', chekAuth, validator.addRatings, ValidError, RatingsController.addRatings);
-router.post('/Ratings/:article_id', chekAuth, RatingsController.addRatings);
-router.delete('/Ratings/:id', chekAuth, RatingsController.deleteRatings);
-router.get('/Ratings', RatingsController.getAllRating);
 
 module.exports = router

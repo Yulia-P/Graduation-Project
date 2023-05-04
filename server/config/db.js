@@ -1,13 +1,10 @@
 const sequelize = require('sequelize');
-// const redis = require('redis')
 
-global.sequelize = new sequelize('ecofuture', 'root', 'Zalesse2015!', {host:'localhost', dialect:'mysql'}) 
+// global.sequelize = new sequelize('ecofuture', 'root', 'Zalesse2015!', {host:'localhost', dialect:'mysql'})
+global.sequelize = new sequelize('test_ecofuture', 'root', 'Zalesse2015!', {host:'localhost', dialect:'mysql'})
 
 // докер
 //global.sequelize = new sequelize('ecofuture', 'root', 'Zalesse2015!', {host:'host.docker.internal', dialect:'mysql'}) 
-
-// const redisClient = redis.createClient('//redis-10275.c124.us-central1-1.gce.cloud.redislabs.com:10275',
-// {password: 'RMjSK1pCVWjZARGPjtE9fOwjIbGTBQVz'})
 
 const {Articles} = require('./Articles')
 const {Discounts} = require('./Discounts')
@@ -17,11 +14,10 @@ const {Ratings} = require('./Ratings')
 const {Receptions} = require('./Receptions')
 const {Users} = require('./Users')
 const {Keys} = require('./Keys')
-const {Used_discounts} = require('./Used_discounts')
 const {Check_weights} = require('./Check_weights')
-
+const {Likes} = require('./Likes')
+const {Points_marks} = require('./Points_marks')
 
 module.exports = {
-    // redisClient,
-    models: {Articles, Discounts, Marks, Points, Ratings, Receptions, Users, Keys, Used_discounts, Check_weights}
+    models: {Articles, Discounts, Marks, Points, Ratings, Receptions, Users, Keys, Check_weights, Likes, Points_marks}
 }

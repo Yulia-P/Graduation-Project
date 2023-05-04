@@ -12,7 +12,6 @@ Users.init (
         email: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
         password_hash: {type: Sequelize.STRING, allowNull: false, required: true},
         points: {type: Sequelize.INTEGER},
-        avatar_url: {type: Sequelize.STRING, allowNull: true},   
         role: {type: Sequelize.STRING,  validate: {isIn:[['user', 'admin']]} },
         is_activated:{type: Sequelize.BOOLEAN, default: false},
         activation_link: {type: Sequelize.STRING}

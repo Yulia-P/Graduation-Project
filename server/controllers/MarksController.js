@@ -1,98 +1,131 @@
 const db = require('../config/db')
 
-const MarksController = { 
-    
-    getMarks: async(req, res, next) => {
+const MarksController = {
+
+    getMarks: async (req, res) => {
         try {
-            db.models.Marks.findAll({
-                attributes: ["id", "rubbish", "points_per_kg", "new_from_kg"],
+            const marks = await db.models.Marks.findAll({
+                attributes: ["id", "rubbish", "points_per_kg", "new_from_kg", "image_link"],
             })
-            .then(expense => {
-                res.set("Content-Type", "application/json");
-                res.send(JSON.stringify(expense)), 
-                console.log(JSON.stringify(expense))})
+            if (!marks) {
+                return res.json({ message: "Отходов нет" })
+            }
+            else {
+                res.json({ marks })
+            }
+            // .then(expense => {
+            //     res.set("Content-Type", "application/json");
+            //     res.send(JSON.stringify(expense)),
+            //     console.log(JSON.stringify(expense))})
         } catch (error) {
             console.log(error);
-            res.status(500).json({
-                message: 'Не удалось найти цену',
+            res.json({
+                message: 'Не удалось найти отходы',
             });
         }
     },
 
-    addMarks: async(req, res, next) => {
-        try{
-            const v_check_marks = await db.models.Marks.findOne({
-                where: { rubbish: req.body.rubbish},
+    getMark: async (req, res) => {
+        try {
+            const marks = await db.models.Marks.findOne({
+                attributes: ["id", "rubbish", "points_per_kg", "new_from_kg", "image_link"],
+                where: { id: req.params.id }
             })
 
-            if(v_check_marks==null){
-                db.models.Marks.create({
-                    rubbish: req.body.rubbish,
-                    points_per_kg: req.body.points_per_kg,
-                    new_from_kg: req.body.new_from_kg,
-                })
-                res.status(200).json({
-                    message: 'Цена добавлена'
-             });
-            }
-            else{
-                res.status(500).json({
-                    message: 'Такой вид отхожов уже есть, введите новый',
+            if (marks == null) {
+                res.json({
+                    message: 'Не удалось найти скидку',
                 });
-            }           
-        } catch (err) {
-         console.log(err);
-         res.status(500).json({
-            message: 'Не удалось добавить цену'
-             });
+            }
+            else {
+                res.set("Content-Type", "application/json")
+                res.send(JSON.stringify(marks))
+                console.log(JSON.stringify(marks))
+            }
+        }
+        catch (error) {
+            console.log(error);
+            res.json({
+                message: 'Не удалось найти отходы',
+            });
         }
     },
 
-    editMarks: async(req, res, next) => {
+    addMarks: async (req, res) => {
+        try {
+            const v_check_marks = await db.models.Marks.findOne({
+                where: { rubbish: req.body.rubbish },
+            })
+
+            if (v_check_marks == null) {
+                await db.models.Marks.create({
+                    rubbish: req.body.rubbish,
+                    points_per_kg: req.body.points_per_kg,
+                    new_from_kg: req.body.new_from_kg,
+                    image_link: req.body.image_link,
+                })
+                res.json({
+                    message: 'Цена добавлена'
+                });
+            }
+            else {
+                res.json({
+                    message: 'Такой вид отхожов уже есть, введите новый',
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            res.json({
+                message: 'Не удалось добавить отходы'
+            });
+        }
+    },
+
+    editMarks: async (req, res) => {
         try {
             await db.models.Marks.update({
                 points_per_kg: req.body.points_per_kg,
                 new_from_kg: req.body.new_from_kg,
-            }, { where:{ id: req.params.id} })
-            
-            res.status(200).json({
+                image_link: req.body.image_link,
+            }, { where: { id: req.params.id } })
+
+            res.json({
                 message: 'Цена обновлена'
             });
         } catch (error) {
             console.log(error);
-            res.status(500).json({
-                message: 'Не удалось обновить цену'
+            res.json({
+                message: 'Не удалось обновить отходы'
             });
         }
     },
 
-    deleteMarks: async (req, res, next) => {
+    deleteMarks: async (req, res) => {
         try {
             const v_check_id_marks = await db.models.Marks.findOne({
-                where: { id: req.params.id},
+                where: { id: req.params.id },
             })
 
-            if (v_check_id_marks!=null){
-                db.models.Marks.destroy({where: {id: req.params.id}})
-                res.status(200).json({
+            if (v_check_id_marks != null) {
+                await db.models.Marks.destroy({ where: { id: req.params.id } })
+                res.json({
                     message: 'Цена удалена'
                 });
             }
             else {
-                res.status(500).json({
-                    message: 'Не удалось удалить цену',
+                res.json({
+                    message: 'Не удалось удалить отходы',
                 });
             }
 
         } catch (error) {
             console.log(error);
-            res.status(500).json({
-                message: 'Не удалось удалить цену',
+            res.json({
+                message: 'Не удалось удалить отходы',
             });
-            
+
         }
     }
-
 }
 
 module.exports = MarksController

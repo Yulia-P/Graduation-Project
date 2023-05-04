@@ -2,13 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    font-family: 'Didact Gothic', sans-serif;
-    background: #141E30;
-    background: -webkit-linear-gradient(to right, #243855, #141E38);
-    background: linear-gradient(to right, #243855, #121E30);
-    max-height: 100vh;
 
-  }
+@font-face {
+  font-family: 'Didact Gothic', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*@layer base {*/
+body {
+  font-family: 'Didact Gothic', sans-serif;
+  margin: 0;
+  background-color: rgb(199, 253, 218);
+
+  /*background: -webkit-linear-gradient(to right, #6DB960, #60B683, #558288);*/
+  /*background: linear-gradient(to right, #6DB960, #60B683, #558288);*/
+  max-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*}*/
+
+svg{
+  display: flex;
+  align-items: center;
+}
+
+code {
+  font-family: 'Didact Gothic', sans-serif, monospace;
+
 }

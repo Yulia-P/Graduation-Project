@@ -2,16 +2,18 @@ const express = require('express')
 const DiscountsController = require("../controllers/DiscountsController");
 const validator = require('../validations/DiscountsValidations');
 const checkRole = require('../utils/checkRole');
-const chekAuth = require('../utils/checkAuth');
 const ValidError = require('../utils/HandleErrors');
+const checkAuth = require("../utils/checkAuth");
 
 let router = express.Router()
 
-router.get('/Discounts',  checkRole, DiscountsController.getDiscounts);
+router.get   ('/discounts',          checkRole, DiscountsController.getDiscounts);
+router.get   ('/discounts/:id',      checkRole, DiscountsController.getDiscount);
+router.get   ('/used/discounts',     checkAuth, DiscountsController.showMyDiscounts)
+router.put   ('/discounts/:id',      checkRole, DiscountsController.editDiscounts);
+router.put   ("/used/discounts/:id", checkAuth, DiscountsController.usedMyDiscounts)
+router.delete('/discounts/:id',      checkRole, DiscountsController.deleteDiscounts);
+router.post  ('/discounts',          checkRole, validator.addDiscounts, ValidError, DiscountsController.addDiscounts);
+
 // router.get('/DiscountU',  chekAuth, DiscountsController.getDiscountsU);
-router.post('/Discounts', checkRole, validator.addDiscounts, ValidError, DiscountsController.addDiscounts);
-router.put('/Discounts/:id', checkRole, validator.editDiscounts, ValidError, DiscountsController.editDiscounts);
-router.delete('/Discounts/:id', checkRole, DiscountsController.deleteDiscounts);
-
-
 module.exports = router
