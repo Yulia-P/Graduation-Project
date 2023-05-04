@@ -2,11 +2,11 @@ import {Layout} from './components/Layout.jsx'
 import {Routes, Route} from 'react-router-dom'
 import {MainPage} from './pages/MainPage.jsx'
 import {ArticlePage} from './pages/ArticlePage.jsx'
-import {AddArticlesPage} from './pages/AddArticlesPage.jsx'
+import {NOAddArticlesPage} from './pages/NOAddArticlesPage.jsx'
 import {RegisterPage} from "./pages/RegisterPage";
 import {LoginPage} from "./pages/LoginPage";
 import {PointPage} from "./pages/PointPage.jsx";
-import {UpdateArticlesPage} from "./pages/UpdateArticlesPage";
+import {NOUpdateArticlesPage} from "./pages/NOUpdateArticlesPage";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {useDispatch} from "react-redux";
@@ -28,6 +28,8 @@ import {UpdateMarkPage} from "./pages/UpdateMarkPage";
 import {Wrapper} from "./components/Wrapper";
 import {Header} from "./components/Header";
 import {AllArticlesPage} from "./pages/AllArticlesPage";
+import {TestAddArticles} from "./pages/TestAddArticles";
+import {TestUpArticles} from "./pages/TestUpArticles";
 
 function App() {
 
@@ -55,9 +57,11 @@ function App() {
                 <Route path='register' element={<RegisterPage/>}/>
                 <Route path='/' element={<MainPage/>}/>
                 <Route path='articles' element={<AllArticlesPage/>}/>
-                <Route path='new' element={<AddArticlesPage/>}/>
+                {/*<Route path='new' element={<NOAddArticlesPage/>}/>*/}
+                <Route path='addarticle' element={<TestAddArticles/>}/>
                 <Route path=':id' element={<ArticlePage/>}/>
-                <Route path=':id/edit' element={<UpdateArticlesPage/>}/>
+                {/*<Route path=':id/edit' element={<NOUpdateArticlesPage/>}/>*/}
+                <Route path=':id/edit' element={<TestUpArticles/>}/>
                 <Route path='reception' element={<ReceptionPage/>}/>
 
                 <Route path='mark' element={<MarksPage/>}/>

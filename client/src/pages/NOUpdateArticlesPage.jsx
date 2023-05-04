@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 import axios from '../utils/axios'
 
-export const UpdateArticlesPage = () => {
+export const NOUpdateArticlesPage = () => {
     // const isAuth = useSelector(checkIsAuth)
     const { user } = useSelector((state) => state.auth)
 
@@ -41,9 +41,7 @@ export const UpdateArticlesPage = () => {
             // setOldImage('')
             setImage_url(data.url)
             console.log(image_url)
-
             toast(`Файл загружен`)
-
         } catch (e) {
             console.log(e)
             toast('Ошибка при загрузке изображения')

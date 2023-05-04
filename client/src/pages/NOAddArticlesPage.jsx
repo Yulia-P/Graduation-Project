@@ -7,8 +7,7 @@ import {Link, useNavigate} from "react-router-dom";
 // import { checkIsAuth } from '../redux/features/auth/authSlice'
 
 
-export const AddArticlesPage = () => {
-    // const isAuth = useSelector(checkIsAuth)
+export const NOAddArticlesPage = () => {
     const { user } = useSelector((state) => state.auth)
     // const navigate = useNavigate()
 
