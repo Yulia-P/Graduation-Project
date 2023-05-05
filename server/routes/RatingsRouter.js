@@ -12,7 +12,7 @@ router.get   ('/ratings/:article_id',            RatingsController.getRatings);
 router.get   ('/ratings',                        RatingsController.getAllRating);
 router.post  ('/ratings/:article_id', checkAuth, RatingsController.addRatings);
 router.delete('/ratings/:id',         checkAuth, RatingsController.deleteRatings);
-router.delete('/ratings/admin/:id',   checkRole, RatingsController.deleteRatingsAdmin);
+// router.delete('/ratings/admin/:id',   checkRole, RatingsController.deleteRatingsAdmin);
 
 // router.post('/Ratings/:article_id', chekAuth, validator.addRatings, ValidError, RatingsController.addRatings);
 

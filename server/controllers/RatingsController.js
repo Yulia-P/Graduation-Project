@@ -134,30 +134,30 @@ const RatingsController = {
         }
     },
 
-    deleteRatingsAdmin: async (req, res) => {
-        try {
-            const v_check_comment = await db.models.Ratings.findOne({
-                where: { id: req.params.id },
-            })
-
-            if (v_check_comment != null) {
-                db.models.Ratings.destroy({ where: { id: req.params.id } })
-                res.json({
-                    message: 'Комментарий удален'
-                });
-            }
-            else {
-                res.json({
-                    message: 'Не удалось удалить комментарий',
-                });
-            }
-        } catch (error) {
-            console.log(error);
-            res.json({
-                message: 'Не удалось удалить комментарий',
-            });
-        }
-    },
+    // deleteRatingsAdmin: async (req, res) => {
+    //     try {
+    //         const v_check_comment = await db.models.Ratings.findOne({
+    //             where: { id: req.params.id },
+    //         })
+    //
+    //         if (v_check_comment != null) {
+    //             db.models.Ratings.destroy({ where: { id: req.params.id } })
+    //             res.json({
+    //                 message: 'Комментарий удален'
+    //             });
+    //         }
+    //         else {
+    //             res.json({
+    //                 message: 'Не удалось удалить комментарий',
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.json({
+    //             message: 'Не удалось удалить комментарий',
+    //         });
+    //     }
+    // },
 
 }
 

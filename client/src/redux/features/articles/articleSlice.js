@@ -46,18 +46,6 @@ export const removeArticles = createAsyncThunk(
     }
 )
 
-export const removeArticlesAdm = createAsyncThunk(
-    'articles/removeArticlesAdm',
-    async(id) => {
-        try {
-            const { data } = await axios.delete(`/articles/admin/${id}`, id)
-            return data
-        } catch (error) {
-            console.log(error)
-        }
-    }
-)
-
 export const updateArticles  = createAsyncThunk(
     'articles/updateArticles',
     async (updatedArticles ) => {
@@ -165,21 +153,7 @@ export const articleSlice = createSlice({
             state.status = action.payload.message
             state.loading = false
         },
-        // Удаление статьи администратором
-        [removeArticlesAdm.pending]: (state) => {
-            state.loading = true
-            state.status = null
-        },
-        [removeArticlesAdm.fulfilled]: (state, action) => {
-            state.loading = false
-            state.status = action.payload.message
-            state.article = state.article.filter(
-                (articles) => articles.id !== action.payload.id)
-        },
-        [removeArticlesAdm.rejected]: (state, action) => {
-            state.status = action.payload.message
-            state.loading = false
-        },
+
 
     },
 })

@@ -1,20 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import TextField from '@mui/material/TextField';
+import React, {useCallback, useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
 import {useDispatch, useSelector} from 'react-redux';
-import { useNavigate} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import 'easymde/dist/easymde.min.css';
 import axios from "../utils/axios";
 import {toast} from "react-toastify";
-import {createArticles} from "../redux/features/articles/articleSlice";
+import {updateArticles} from "../redux/features/articles/articleSlice";
 
-// import {Button} from "../components/Button";
-
-
-export const TestAddArticles = () => {
-    const { user } = useSelector((state) => state.auth)
+export const UpArticlesPage = () => {
+    // const { user } = useSelector((state) => state.auth)
 
     const { status } = useSelector((state) => state.articles)
 
@@ -24,11 +19,21 @@ export const TestAddArticles = () => {
     const [text, setText] = useState('')
     const [image_url, setImage_url] = useState('')
 
-    const navigate = useNavigate();
+    const params = useParams()
 
-    const [loading,
-        // isLoading,
-        setLoading] = React.useState(false);
+    const fetchArticles = useCallback(async () => {
+        const { data } = await axios.get(`/Articles/${params.id}`)
+        setTitle(data.title)
+        setText(data.text)
+        setImage_url(data.image_url)
+
+    }, [params.id])
+
+    // const navigate = useNavigate();
+    //
+    // const [loading,
+    //     // isLoading,
+    //     setLoading] = React.useState(false);
 
 
     const inputFileRef = React.useRef(null);
@@ -60,12 +65,11 @@ export const TestAddArticles = () => {
 
     const submitHandler = () => {
         try {
-            dispatch(createArticles({ title, text, image_url }))
-            console.log(title);
-            console.log(text);
-            console.log(image_url);
-            setText('')
+            const updatedArticles = { 'title': title, 'text': text, 'id': params.id, 'image_url': image_url }
+            console.log(updatedArticles)
+            dispatch(updateArticles(updatedArticles))
             setTitle('')
+            setText('')
             setImage_url('')
         } catch (error) {
             console.log(error)
@@ -77,6 +81,10 @@ export const TestAddArticles = () => {
             toast(status)
         }
     }, [status])
+
+    useEffect(() => {
+        fetchArticles()
+    }, [fetchArticles])
 
     const options = React.useMemo(
         () => ({
@@ -104,7 +112,10 @@ export const TestAddArticles = () => {
                 Загрузить превью
             </button>
 
-            <input  ref={inputFileRef} type="file" onChange={handleChangeFile} hidden />
+            <input  ref={inputFileRef}
+                    type="file"
+                    onChange={handleChangeFile}
+                    hidden />
 
             {image_url && (
                 <>
@@ -131,19 +142,20 @@ export const TestAddArticles = () => {
 
             <SimpleMDE
                 // className={styles.editor}
-                value={text} onChange={onChange}
+                value={text}
+                onChange={onChange}
                 options={options} />
             <div
                 className={'flex mr-3'}
             >
                 <button className={' my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black'}
-                    onClick={submitHandler}
-                    size="large"
-                    variant="contained">
+                        onClick={submitHandler}
+                        size="large"
+                        variant="contained">
                     Сохранить </button>
                 <a href="/">
                     <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
-                        size="large">Отмена</button>
+                            size="large">Отмена</button>
                 </a>
             </div>
         </Paper>

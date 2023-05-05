@@ -2,11 +2,9 @@ import {Layout} from './components/Layout.jsx'
 import {Routes, Route} from 'react-router-dom'
 import {MainPage} from './pages/MainPage.jsx'
 import {ArticlePage} from './pages/ArticlePage.jsx'
-import {NOAddArticlesPage} from './pages/NOAddArticlesPage.jsx'
 import {RegisterPage} from "./pages/RegisterPage";
 import {LoginPage} from "./pages/LoginPage";
 import {PointPage} from "./pages/PointPage.jsx";
-import {NOUpdateArticlesPage} from "./pages/NOUpdateArticlesPage";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {useDispatch} from "react-redux";
@@ -28,8 +26,8 @@ import {UpdateMarkPage} from "./pages/UpdateMarkPage";
 import {Wrapper} from "./components/Wrapper";
 import {Header} from "./components/Header";
 import {AllArticlesPage} from "./pages/AllArticlesPage";
-import {TestAddArticles} from "./pages/TestAddArticles";
-import {TestUpArticles} from "./pages/TestUpArticles";
+import {AddArticlesPage} from "./pages/AddArticlesPage";
+import {UpArticlesPage} from "./pages/UpArticlesPage";
 
 function App() {
 
@@ -55,24 +53,23 @@ function App() {
             <Routes>
                 <Route path='login' element={<LoginPage/>}/>
                 <Route path='register' element={<RegisterPage/>}/>
+
                 <Route path='/' element={<MainPage/>}/>
+
                 <Route path='articles' element={<AllArticlesPage/>}/>
-                {/*<Route path='new' element={<NOAddArticlesPage/>}/>*/}
-                <Route path='addarticle' element={<TestAddArticles/>}/>
+                <Route path='addarticle' element={<AddArticlesPage/>}/>
                 <Route path=':id' element={<ArticlePage/>}/>
-                {/*<Route path=':id/edit' element={<NOUpdateArticlesPage/>}/>*/}
-                <Route path=':id/edit' element={<TestUpArticles/>}/>
+                <Route path=':id/edit' element={<UpArticlesPage/>}/>
+
                 <Route path='reception' element={<ReceptionPage/>}/>
 
                 <Route path='mark' element={<MarksPage/>}/>
                 <Route path='newmark' element={<AddMarksPage/>}/>
                 <Route path='newweight' element={<AddWeightPage/>}/>
 
-
                 <Route path='point' element={<PointPage/>}/>
                 <Route path='newpoint' element={<AddPointPage/>}/>
                 <Route path='newkey' element={<AddSecretKeyPage/>}/>
-
 
                 <Route path='mydiscount' element={<MyDiscountPage/>}/>
                 <Route path='alldisсount' element={<AllDiscointPage/>}/>

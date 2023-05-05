@@ -7,7 +7,7 @@ export const NavItem = ({text = '', children}) => {
     return (
         <div className={'relative'}>
             <div className={'flex space-x-2 cursor-pointer items-center'}>
-                <span className={'text-medium-gray hover:text-almost-black'}
+                <span className={'text-medium-gray text-xl hover:text-almost-black'}
                       onClick={() => children && setSelected(text !== selected ? text:'')}>
                       {text}
                 </span>

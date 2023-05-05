@@ -46,17 +46,18 @@ export const removeComment = createAsyncThunk(
         }
     }
 );
-export const removeCommentAdm = createAsyncThunk(
-    'comments/removeCommentAdm',
-    async (id) => {
-        try {
-            const { data } = await axios.delete(`/ratings/admin/${id}`);
-            return data;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-);
+
+// export const removeCommentAdm = createAsyncThunk(
+//     'comments/removeCommentAdm',
+//     async (id) => {
+//         try {
+//             const { data } = await axios.delete(`/ratings/admin/${id}`);
+//             return data;
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+// );
 
 export const commentSlice = createSlice({
     name: 'comment',
@@ -107,21 +108,21 @@ export const commentSlice = createSlice({
             state.status = action.payload.message
             state.loading = false
         },
-        //Удаление комментариев администратором
-        [removeCommentAdm.pending]: (state) => {
-            state.loading = true
-            state.status = null
-        },
-        [removeCommentAdm.fulfilled]: (state, action) => {
-            state.loading = false;
-            state.comments = state.comments.filter(
-                (comment) => comment.id !== action.payload.id
-            );
-        },
-        [removeCommentAdm.rejected]: (state, action) => {
-            state.status = action.payload.message
-            state.loading = false
-        },
+        ////Удаление комментариев администратором
+        // [removeCommentAdm.pending]: (state) => {
+        //     state.loading = true
+        //     state.status = null
+        // },
+        // [removeCommentAdm.fulfilled]: (state, action) => {
+        //     state.loading = false;
+        //     state.comments = state.comments.filter(
+        //         (comment) => comment.id !== action.payload.id
+        //     );
+        // },
+        // [removeCommentAdm.rejected]: (state, action) => {
+        //     state.status = action.payload.message
+        //     state.loading = false
+        // },
     }
 })
 

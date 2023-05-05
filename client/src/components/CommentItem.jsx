@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect} from 'react';
-import {getComment, removeComment, removeCommentAdm} from "../redux/features/comment/commentSlice";
+import {getComment, removeComment} from "../redux/features/comment/commentSlice";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete } from "react-icons/ai";
 import {useParams} from "react-router-dom";
+import {ReactMarkdown} from "react-markdown/lib/react-markdown";
+import Moment from "react-moment";
 
 export const CommentItem = ({ cmt }) => {
 
@@ -21,16 +23,16 @@ export const CommentItem = ({ cmt }) => {
             console.log(e)
         }
     }
-    const removeCommentAdmHandler = () => {
-        try {
-            dispatch(removeCommentAdm(cmt.id))
-            toast('Комментарий был удален')
-            window.location.reload();
-            // navigate('/')
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    // const removeCommentAdmHandler = () => {
+    //     try {
+    //         dispatch(removeCommentAdm(cmt.id))
+    //         toast('Комментарий был удален')
+    //         window.location.reload();
+    //         // navigate('/')
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
+    // }
 
     // useEffect(() => {
     //     if (status) {
@@ -41,25 +43,27 @@ export const CommentItem = ({ cmt }) => {
 
 
     return (
-        <div className={'flex items-center break-all gap-3 mt-3'}>
-            {/*<div className={'text-xs text-white opacity-50'}>{cmt.User.username}</div>*/}
-            <div className={'flex text-gray-300 text-[20px]'}>
-                {cmt.comment}
+        <div className={'flex flex-col break-all gap-3 mt-2 bg-green-100'}>
+            <div className={' flex flex-wrap'}>
+                <div className={'flex text-xl text-lime-900 ml-3 opacity-50'}>{cmt.User.username}</div>
+                {user?.id === cmt.commentator || user?.role === "admin" ?  (
+                    <button
+                        onClick={removeCommentHandler}
+                        className={'flex flex-wrap justify-center gap-2 ml-5 mt-1.5 text-xl text-lime-900 opacity-50'}>
+                        <AiFillDelete />
+                    </button>
+                ): null
+                }
             </div>
-            {user?.id === cmt.commentator && (
-                <button
-                    onClick={removeCommentHandler}
-                    className={'flex items-center justify-center gap-2 text-white opacity-50'}>
-                    <AiFillDelete />
-                </button>
-            )}
-            {user?.role === "admin" && (
-                <button
-                    onClick={removeCommentAdmHandler}
-                    className={'flex items-center justify-center gap-2 text-white opacity-50'}>
-                    <AiFillDelete />
-                </button>
-            )}
+            <div className={'flex flex-col text-lime-900 ml-2 mb-1 text-3xl'}>
+                <ReactMarkdown children={cmt.comment} />
+            </div>
+
+            {/*<div className={'flex text-gray-300 text-[20px]'}>*/}
+            {/*    {cmt.comment}*/}
+            {/*</div>*/}
+
+
 
         </div>
     )

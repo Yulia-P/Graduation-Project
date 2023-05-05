@@ -171,37 +171,6 @@ const ArticlesController = {
         }
     },
 
-    deleteArticlesAdmin: async (req, res) => {
-        try {
-            const v_check_id_articles = await db.models.Articles.findOne({
-                where: { id: req.params.id },
-            })
-
-            if (v_check_id_articles != null) {
-                const article = await db.models.Articles.destroy({ where: { id: req.params.id } })
-                res.
-                    // status(200).
-                    json({
-                        message: 'Статья удалена'
-                    });
-            }
-            else {
-                res.
-                    // status(500).
-                    json({
-                        message: 'Не удалось удалить статью',
-                    });
-            }
-        } catch (error) {
-            console.log(error);
-            res.
-                // status(500).
-                json({
-                    message: 'Не удалось удалить статью',
-                });
-        }
-    },
-
     updateArticles: async (req, res) => {
         try {
             const v_check_u_title = await db.models.Articles.findOne({

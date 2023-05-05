@@ -14,7 +14,6 @@ router.get   ('/articles/:id',                  ArticlesController.getArticle);
 router.post  ('/articles',           cheсkAuth, ArticlesController.addArticles);
 router.put   ('/articles/:id',       cheсkAuth, ArticlesController.updateArticles);
 router.delete('/articles/:id',       cheсkAuth, ArticlesController.deleteArticles);
-router.delete('/articles/admin/:id', checkRole, ArticlesController.deleteArticlesAdmin);
 router.put   ('/like/:id',           cheсkAuth, ArticlesController.like);
 
 
