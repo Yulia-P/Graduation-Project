@@ -8,7 +8,7 @@ const MarksController = {
                 attributes: ["id", "rubbish", "points_per_kg", "new_from_kg", "image_link"],
             })
             if (!marks) {
-                return res.json({ message: "Отходов нет" })
+                return res.json({ message: "Вротсырья нет" })
             }
             else {
                 res.json({ marks })
@@ -20,7 +20,7 @@ const MarksController = {
         } catch (error) {
             console.log(error);
             res.json({
-                message: 'Не удалось найти отходы',
+                message: 'Не удалось найти вротсырье',
             });
         }
     },
@@ -34,7 +34,7 @@ const MarksController = {
 
             if (marks == null) {
                 res.json({
-                    message: 'Не удалось найти скидку',
+                    message: 'Не удалось найти вротсырье',
                 });
             }
             else {
@@ -46,7 +46,7 @@ const MarksController = {
         catch (error) {
             console.log(error);
             res.json({
-                message: 'Не удалось найти отходы',
+                message: 'Не удалось найти вротсырье',
             });
         }
     },
@@ -65,18 +65,18 @@ const MarksController = {
                     image_link: req.body.image_link,
                 })
                 res.json({
-                    message: 'Цена добавлена'
+                    message: 'Вторсырье добавлено'
                 });
             }
             else {
                 res.json({
-                    message: 'Такой вид отхожов уже есть, введите новый',
+                    message: 'Такое вротсырье уже есть, введите новое',
                 });
             }
         } catch (err) {
             console.log(err);
             res.json({
-                message: 'Не удалось добавить отходы'
+                message: 'Не удалось добавить вротсырье'
             });
         }
     },
@@ -90,12 +90,12 @@ const MarksController = {
             }, { where: { id: req.params.id } })
 
             res.json({
-                message: 'Цена обновлена'
+                message: 'Вротсырье обновлено'
             });
         } catch (error) {
             console.log(error);
             res.json({
-                message: 'Не удалось обновить отходы'
+                message: 'Не удалось обновить вротсырье'
             });
         }
     },
@@ -109,19 +109,19 @@ const MarksController = {
             if (v_check_id_marks != null) {
                 await db.models.Marks.destroy({ where: { id: req.params.id } })
                 res.json({
-                    message: 'Цена удалена'
+                    message: 'Вротсырье удалено'
                 });
             }
             else {
                 res.json({
-                    message: 'Не удалось удалить отходы',
+                    message: 'Не удалось удалить вротсырье',
                 });
             }
 
         } catch (error) {
             console.log(error);
             res.json({
-                message: 'Не удалось удалить отходы',
+                message: 'Не удалось удалить вротсырье',
             });
 
         }

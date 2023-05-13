@@ -4,6 +4,10 @@ import axios from '../../../utils/axios'
 const initialState = {
     alldiscounts:[],
     loading:false,
+    status: null,
+    valid: null,
+
+
 }
 
 export const getAllDiscounts= createAsyncThunk(
@@ -33,10 +37,10 @@ export const removeAllDiscount = createAsyncThunk(
 
 export const addDiscount = createAsyncThunk(
     'discount/addDiscount',
-    async ({discount, count_for_dnt}) => {
+    async ({discount, count_for_dnt, promo_code}) => {
         try {
             const { data } = await axios.post('/Discounts', {
-                discount, count_for_dnt
+                discount, count_for_dnt, promo_code
             })
             return data
         } catch (error) {
@@ -51,7 +55,7 @@ export const updateDiscount  = createAsyncThunk(
         try {
             console.log(updatedDiscount)
             const { data } = await axios.put(
-                `/Discounts/${updatedDiscount.id}`,
+                `/discounts/${updatedDiscount.id}`,
                 updatedDiscount ,
             )
             return data
@@ -95,43 +99,57 @@ export const alldiscountSlice = createSlice({
         // Получить все скидки
         [getAllDiscounts.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [getAllDiscounts.fulfilled]: (state, action) => {
             state.loading = false
             state.alldiscounts = action.payload.alldiscounts
+            // state.status = action.payload.message
         },
-        [getAllDiscounts.rejected]: (state) => {
+        [getAllDiscounts.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         //Удаление скидки
         [removeAllDiscount.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [removeAllDiscount.fulfilled]: (state, action) => {
             state.loading = false;
             state.alldiscounts = state.alldiscounts.filter(
                 (alldiscount) => alldiscount.id !== action.payload.id
             );
+            state.status = action.payload.message
         },
-        [removeAllDiscount.rejected]: (state) => {
+        [removeAllDiscount.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Добавление скидки
         [addDiscount.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [addDiscount.fulfilled]: (state, action) => {
             state.loading = false
             // state.articles.push(action.payload)
             state.discount = action.payload.discount
             state.count_for_dnt = action.payload.count_for_dnt
+            state.promo_code = action.payload.promo_code
+            state.status = action.payload.message
+            state.valid = action.payload.msg
         },
-        [addDiscount.rejected]: (state) => {
+        [addDiscount.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
+            state.valid = action.payload.msg
+
         },
         // Обновление скидки
         [updateDiscount.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [updateDiscount.fulfilled]: (state, action) => {
             state.loading = false
@@ -139,31 +157,39 @@ export const alldiscountSlice = createSlice({
                 (alldiscount) => alldiscount.id === action.payload.id,
             )
             state.alldiscounts[index] = action.payload
+            state.status = action.payload.message
         },
-        [updateDiscount.rejected]: (state) => {
+        [updateDiscount.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Получить мои скидки
         [myDiscount.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [myDiscount.fulfilled]: (state, action) => {
             state.loading = false
             state.alldiscounts = action.payload.alldiscounts
+            // state.status = action.payload.message
         },
-        [myDiscount.rejected]: (state) => {
+        [myDiscount.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Использовать скидку
         [myUsedDiscount.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [myUsedDiscount.fulfilled]: (state, action) => {
             state.loading = false
             state.alldiscounts = action.payload
+            state.status = action.payload.message
         },
-        [myUsedDiscount.rejected]: (state) => {
+        [myUsedDiscount.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
     }
 })

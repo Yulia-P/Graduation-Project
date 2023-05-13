@@ -23,7 +23,7 @@ export const ArticlePage = () => {
   const { comments } = useSelector((state) => state.comment)
 
   const { status } = useSelector((state) => state.articles)
-  const { statuscom } = useSelector((state) => state.comment)
+  const { status_com } = useSelector((state) => state.comment)
 
 
   const dispatch = useDispatch()
@@ -53,8 +53,8 @@ export const ArticlePage = () => {
     try {
       dispatch(removeArticles(params.id))
       toast('Статья была удалена')
-      navigate('/')
-      window.location.reload();
+      navigate('/articles')
+      // window.location.reload();
     } catch (e) {
       console.log(e)
     }
@@ -67,11 +67,16 @@ export const ArticlePage = () => {
       dispatch(createComment({ article_id, comment }))
       setComment('')
       // toast('Комментарий успешно добавлен')
-      window.location.reload();
+      // window.location.reload();
     } catch (e) {
       console.log(e)
     }
   }
+
+  const clearComment = () =>{
+    setComment('')
+  }
+
   // Получение комментариев
   const fetchComments = useCallback(async () => {
     try {
@@ -89,7 +94,7 @@ export const ArticlePage = () => {
 
   const onClickLike = () => {
     if (!user) {
-      window.alert("Авторизируйтесь для оценки записи");
+      toast('Авторизируйтесь для оценки статьи')
     } else {
         dispatch(Likes(params.id));
         // window.location.reload();
@@ -99,12 +104,9 @@ export const ArticlePage = () => {
   useEffect(() => {
     fetchComments()
     fetchArticle()
-    if (status) {
-      toast(status)
-    }if (statuscom) {
-      toast(statuscom)
-    }
-  }, [status, statuscom, fetchArticle, fetchArticle])
+    if (status) toast(status)
+    if (status_com)toast(status_com)
+  }, [status, status_com, fetchArticle, fetchArticle])
 
   // useEffect(() => {
   //   fetchArticle()
@@ -148,7 +150,8 @@ export const ArticlePage = () => {
               <div className={'text-2xl text-lime-900 opacity-50'}>{articles.User.username}</div>
               {/*ДАТА СОЗДАНИЯ*/}
               <div className={'text-xl text-lime-900 opacity-50'}>
-                <Moment date={articles.date_of_pub} format={'D MMM YYYY'} /></div>
+                <Moment date={articles.date_of_pub} format={'D MMM YYYY'} />
+              </div>
             </div>
 
             {/*НАЗВАНИЕ*/}
@@ -178,7 +181,6 @@ export const ArticlePage = () => {
               </div>
 
               {/*КНОПКИ УДАЛЕНИЯ И ИЗМЕНЕНИЯ*/}
-
               {user?.id === articles.User.id && (
                   <div className={'flex gap-3 mt-4'}>
                     <button className={'flex items-center justify-center gap-2 text-xl text-lime-900 opacity-50'}>
@@ -187,8 +189,7 @@ export const ArticlePage = () => {
                       </Link>
                     </button>
                   </div>
-              )
-              }
+              )}
 
               {user?.id === articles.User.id || user?.role === "admin" ? (
                 <div className={'flex gap-3 mt-4'}>
@@ -216,17 +217,17 @@ export const ArticlePage = () => {
                       size="large"
                       variant="contained">
                 Сохранить </button>
-              <a href="/">
+              {/*<a href="/">*/}
                 <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
+                        onClick={clearComment}
                         size="large">Отмена</button>
-              </a>
+              {/*</a>*/}
             </div>
           </div>
           )}
 
           <div className={'flex flex-col border-t-4 border-lime-900'}>
             <h2 className={'text-lime-900 text-xl font-bold ml-3 my-4'}>Комментарии</h2>
-
             {comments?.map((cmt) => (
                   <CommentItem key={cmt.id} cmt={cmt} />
               ))}

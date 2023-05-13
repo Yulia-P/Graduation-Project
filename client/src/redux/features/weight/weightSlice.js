@@ -4,14 +4,15 @@ import axios from '../../../utils/axios'
 const initialState = {
     weights:[],
     loading:false,
+    status_weight: null,
 }
 
 export const addWeight = createAsyncThunk(
     'point/addPoint',
-    async ({rubbish, weight, key_of_weight}) => {
+    async ({rubbish_w, weight, key_of_weight}) => {
         try {
             const { data } = await axios.post('/weight', {
-                rubbish, weight, key_of_weight
+                rubbish_w, weight, key_of_weight
             })
             return data
         } catch (error) {
@@ -28,6 +29,7 @@ export const weightSlice = createSlice({
         //Добавление ключа для проверки веса
         [addWeight.pending]: (state) => {
             state.loading = true
+            state.status_weight = null
         },
         [addWeight.fulfilled]: (state, action) => {
             state.loading = false
@@ -35,9 +37,11 @@ export const weightSlice = createSlice({
             state.rubbish = action.payload.rubbish
             state.weight = action.payload.weight
             state.key_of_weight = action.payload.key_of_weight
+            state.status_weight = action.payload.message
         },
-        [addWeight.rejected]: (state) => {
+        [addWeight.rejected]: (state, action) => {
             state.loading = false
+            state.status_weight = action.payload.message
         },
     }
 })

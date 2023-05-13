@@ -1,61 +1,146 @@
-import React, {useState} from 'react'
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import React, {useState, useEffect} from 'react'
+// import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {addPoint} from "../redux/features/point/pointSlice";
-
+import {addSecretKey} from "../redux/features/secretkey/secretkeySlice";
+import { toast } from 'react-toastify'
+import { useNavigate} from "react-router-dom";
 
 export const AddPointPage = () => {
 
     const dispatch = useDispatch()
 
+    const { status } = useSelector((state) => state.point)
+    const { status_sk } = useSelector((state) => state.secretkey)
+    const navigate = useNavigate();
+
     const [address, setAddress] = useState('')
     const [time_of_work, setTimeOfWork] = useState('')
+    const [rubbish, setRubbish] = useState('')
+    const [link_to_map, setLinkToMap] = useState('')
+    const [point_name, setPointName] = useState('')
+    const [disabled, setDisabled] = useState(true)
+
+    const [secret_key, setSecretKey] = useState('')
+    const [disabled_s, setDisabledS] = useState(true)
+
 
     const submitHandler = async () => {
         try {
-            dispatch(addPoint({ address, time_of_work}))
+            dispatch(addPoint({ address, time_of_work, rubbish, link_to_map, point_name}))
             console.log(address);
             console.log(time_of_work);
+            console.log(rubbish);
+            console.log(link_to_map);
+            console.log(point_name);
             setAddress('')
             setTimeOfWork('')
+            setRubbish('')
+            setLinkToMap('')
+            setPointName('')
+            // navigate('/point')
         } catch (error) {
             console.log(error)
         }
     }
 
+    const submitHandlerKey = async () => {
+        try {
+            dispatch(addSecretKey({ secret_key}))
+            console.log(secret_key);
+            setSecretKey('')
+            // navigate('/point')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     const clearFormHandler = () => {
         setAddress('')
         setTimeOfWork('')
+        setRubbish('')
+        setLinkToMap('')
+        setPointName('')
     }
 
+    const clearFormHandlerKey = () => {
+        setSecretKey('')
+    }
+
+    useEffect(() => {
+        if (status) toast(status)
+        if (status_sk) toast(status_sk)
+        if (address.trim() && time_of_work.trim() && rubbish.trim() && link_to_map.trim() && point_name.trim()) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
+        }
+        if (secret_key.trim()) {
+            setDisabledS(false)
+        } else {
+            setDisabledS(true)
+        }
+    }, [status, status_sk, address, time_of_work, rubbish, link_to_map, point_name, secret_key])
+
     return (
-        <div>
-            <button className={'flex lex-wrap justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4 ml-20 mt-1'}>
-                <Link className={'flex'} to={'/point'}>Назад</Link>
-            </button>
+        <section className={'w-full flex-col xl:flex-row flex  justify-between'}>
+        {/*<div className={'flex items-center  justify-center '}>*/}
+            <div className={'relative items-center justify-center pl-20 xl:pl-48 order-1 text-center w-full xl:w-2/4 xl:text-left xl:mt-0 mt-8'}>
+                <form
+                    className='flex flex-col xl:w-96 pt-5 pb-5 w-80 mt-16 border-2 border-green-500  rounded-lg '
+                    onSubmit={(e) => e.preventDefault()}>
 
-            <form
-                className='w-1/3 mx-auto py-10'
-                onSubmit={(e) => e.preventDefault()}>
+                <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Добавление пункта приема</h1>
 
-                <label className='text-xs text-white '>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Имя:
+                        <input
+                            type='text'
+                            value={point_name}
+                            onChange={(e) => setPointName(e.target.value)}
+                            placeholder='Введите имя...'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
                     Адрес:
                     <input
                         type='text'
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        placeholder='Введите адресс'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        placeholder='Введите адресс...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                 </label>
 
-                <label className='text-xs text-white '>
-                    Время работы:
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                    Виды вторсырья:
+                    <input
+                        type='text'
+                        value={rubbish}
+                        onChange={(e) => setRubbish(e.target.value)}
+                        placeholder='Введите вторсырье...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                </label>
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                Время работы:
                     <input
                         type='text'
                         value={time_of_work}
                         onChange={(e) => setTimeOfWork(e.target.value)}
-                        placeholder='Введите время работы'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        placeholder='Введите время работы...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                </label>
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                Ссылка на карту:
+                    <input
+                        type='text'
+                        value={link_to_map}
+                        onChange={(e) => setLinkToMap(e.target.value)}
+                        placeholder='Введите ссылку...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
@@ -63,7 +148,9 @@ export const AddPointPage = () => {
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className='flex justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4'>
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
+                            disabled={disabled}
+                        >
                             Добавить
                         </button>
                     }
@@ -71,13 +158,51 @@ export const AddPointPage = () => {
                     <button
                         type={'button'}
                         onClick={clearFormHandler}
-                        className='flex justify-center items-center bg-pink-950 text-xs text-white rounded-sm py-2 px-4'>
+                        className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
                         Отменить
                     </button>
                 </div>
-
             </form>
-
         </div>
+
+
+            <div className={'relative order-2 text-center pl-20 xl:pl-36 w-full xl:w-2/4 xl:text-left xl:mt-0 mt-8'}>
+                <form
+                    className='flex flex-col xl:w-96 pt-5 pb-5 w-80 mt-16 border-2 border-green-500  rounded-lg '
+                    onSubmit={(e) => e.preventDefault()}>
+
+                    <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Добавление секретного ключа</h1>
+
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                    Секретный ключ:
+                        <input
+                            type='text'
+                            value={secret_key}
+                            onChange={(e) => setSecretKey(e.target.value)}
+                            placeholder='Введите ключ...'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
+
+                    <div className='flex gap-8 items-center justify-center mt-4'>
+                        {
+                            <button
+                                type={'button'}
+                                onClick={submitHandlerKey}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled_s ? 'invisible' : ''}`}
+                                disabled={disabled_s}>
+                                Добавить
+                            </button>
+                        }
+
+                        <button
+                            type={'button'}
+                            onClick={clearFormHandlerKey}
+                            className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
+                            Отменить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
     )
 }

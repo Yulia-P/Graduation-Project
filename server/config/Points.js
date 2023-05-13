@@ -9,11 +9,13 @@ const {Keys} = require('./Keys')
 
 Points.init (
     {
-        id:	{type: Sequelize.INTEGER, primaryKey:true, unique: true, autoIncrementIdentity: true, required: true},
-        address: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
-        time_of_work: {type: Sequelize.STRING, allowNull: false, required: true},
-        key_id: {type: Sequelize.INTEGER, allowNull: false, unique: true, required: true},
-        admin_id: {type: Sequelize.INTEGER, allowNull: true, required: true },
+            id:	{type: Sequelize.INTEGER, primaryKey:true, unique: true, autoIncrementIdentity: true, required: true},
+            address: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
+            point_name: {type: Sequelize.STRING, allowNull: false, unique: true, required: true},
+            time_of_work: {type: Sequelize.STRING, allowNull: false, required: true},
+            key_id: {type: Sequelize.INTEGER, allowNull: false, unique: true, required: true},
+            admin_id: {type: Sequelize.INTEGER, allowNull: true, required: true },
+            link_to_map: {type: Sequelize.TEXT, required:true},
     },
     {sequelize, modelName: 'Points', tableName: 'points', timestamps: false}
 );

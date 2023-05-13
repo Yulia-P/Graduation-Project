@@ -20,13 +20,11 @@ export const MARKS = [
 export const MARKSAdmin = [
     {text: 'Виды вторсырья', icon: <BiRecycle/>, link: '/mark' },
     {text: 'Добавить вторсырье', icon: <BiPlusCircle/>, link: '/newmark' },
-    {text: 'Добавить проверку веса', icon: <GiScales/>, link: '/newweight' } // иконка
 ];
 
 export const POINTSAdmin = [
     {text: 'Пункты приема', icon: <BiMap/>, link: '/point'}, // иконка
-    {text: 'Добавить пункт сбора', icon: <BsBuildingAdd/>, link: '/newpoint' }, // иконка
-    {text: 'Добавить секретный кдюч', icon: <BiKey/>, link: '/newkey' } // иконка
+    {text: 'Добавить пункт приема', icon: <BsBuildingAdd/>, link: '/newpoint' }, // иконка
 ];
 
 export const DISCOUNTS = [

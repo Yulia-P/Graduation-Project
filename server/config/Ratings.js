@@ -13,6 +13,7 @@ Ratings.init (
         article_id: {type: Sequelize.INTEGER, allowNull: false, required: true},
         commentator: {type: Sequelize.INTEGER, allowNull: false, required: true},
         comment: {type: Sequelize.STRING, required: true},
+        date_of_add: {type: Sequelize.DATE, allowNull: false, required: true}
     },
     { sequelize, modelName: 'Ratings', tableName: 'ratings', timestamps: false }
 );

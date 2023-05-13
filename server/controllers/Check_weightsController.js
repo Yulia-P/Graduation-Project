@@ -15,7 +15,7 @@ const Check_weightsController = {
 
             const o_rubbish = await db.models.Marks.findOne({
                 attributes: ["id"],
-                where: { rubbish: req.body.rubbish }
+                where: { rubbish: req.body.rubbish_w}
             })
 
             if (v_check_key_w == null) {

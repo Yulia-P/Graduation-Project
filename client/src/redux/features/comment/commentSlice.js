@@ -4,6 +4,8 @@ import axios from '../../../utils/axios'
 const initialState = {
     comments:[],
     loading:false,
+    status_com: null,
+
 }
 
 export const createComment = createAsyncThunk(
@@ -67,18 +69,18 @@ export const commentSlice = createSlice({
         // Создание коммантария
         [createComment.pending]: (state) => {
             state.loading = true
-            state.status = null
+            state.status_com = null
         },
         [createComment.fulfilled]: (state, action) => {
             state.loading = false
-            state.status = action.payload.message
+            state.status_com = action.payload.message
             // state.comments.push(action.payload)
             state.comment = action.payload.comment
             // state.commentator = action.payload.commentator
             state.article_id = action.payload.article_id
         },
         [createComment.rejected]: (state, action) => {
-            state.status = action.payload.message
+            state.status_com = action.payload.message
             state.loading = false
         },
         // Получение комментариев
@@ -88,30 +90,32 @@ export const commentSlice = createSlice({
         [getComment.fulfilled]: (state, action) => {
             state.loading = false
             state.comments = action.payload
+            // state.status_com = action.payload.message
         },
-        [getComment.rejected]: (state) => {
+        [getComment.rejected]: (state, action) => {
             state.loading = false
+            state.status_com = action.payload.message
         },
         //Удаление коммантария
         [removeComment.pending]: (state) => {
             state.loading = true
-            state.status = null
+            state.status_com = null
         },
         [removeComment.fulfilled]: (state, action) => {
             state.loading = false;
-            state.status = action.payload.message
+            state.status_com = action.payload.message
             state.comments = state.comments.filter(
                 (comment) => comment.id !== action.payload.id
             );
         },
         [removeComment.rejected]: (state, action) => {
-            state.status = action.payload.message
+            state.status_com = action.payload.message
             state.loading = false
         },
         ////Удаление комментариев администратором
         // [removeCommentAdm.pending]: (state) => {
         //     state.loading = true
-        //     state.status = null
+        //     state.status_com = null
         // },
         // [removeCommentAdm.fulfilled]: (state, action) => {
         //     state.loading = false;
@@ -120,7 +124,7 @@ export const commentSlice = createSlice({
         //     );
         // },
         // [removeCommentAdm.rejected]: (state, action) => {
-        //     state.status = action.payload.message
+        //     state.status_com = action.payload.message
         //     state.loading = false
         // },
     }

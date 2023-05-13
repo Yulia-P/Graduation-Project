@@ -8,12 +8,12 @@ import { toast } from 'react-toastify'
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [disabled, setDisabled] = useState(true)
 
     const { status } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { user } = useSelector((state) => state.auth)
-
 
     // const isAuth = useSelector(checkIsAuth)
 
@@ -29,30 +29,39 @@ export const LoginPage = () => {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        if (email.trim() && password.trim()) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
+        }
+    }, [email, password])
+
     return (
         <form
             onSubmit={(e) => e.preventDefault()}
-            className='w-1/4 h-60 mx-auto mt-40'>
-            <h1 className='text-lg text-white text-center'>Авторизация</h1>
-            <label className='text-xs text-white'>
-                email:
+            className='xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-14 pt-20 rounded-lg '>
+            <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Авторизация</h1>
+            <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                Почта
                 <input
                     type='text'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder='Email'
-                    className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950 py-1 px-2 text-xs outline-none placeholder:text-zinc-300'
+                    placeholder='Введите почту...'
+                    className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-sm xl:placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50'
                 />
             </label>
 
-            <label className='text-xs text-white'>
-                password:
+            <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                Пароль
                 <input
                     type='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder='Password'
-                    className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950 py-1 px-2 text-xs outline-none placeholder:text-zinc-300'
+                    placeholder='Введите пароль...'
+                    className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-sm xl:placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50'
                 />
             </label>
 
@@ -60,13 +69,15 @@ export const LoginPage = () => {
                 <button
                     type='submit'
                     onClick={handleSubmit}
-                    className='flex justify-center items-center text-xs bg-cyan-950 text-white rounded-sm py-2 px-4'
+                    className={`text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 border-cyan-950 ${disabled ? 'invisible' : ''}`}
+                    disabled={disabled}
                 >
                     Войти
                 </button>
+
                 <Link
                     to='/register'
-                    className='flex justify-center items-center text-xs text-white'
+                    className='flex justify-center items-center text-sm xl:text-xl text-lime-700'
                 >
                     Нет аккаунта ?
                 </Link>

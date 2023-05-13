@@ -6,7 +6,7 @@ const PointsController = {
     getPoints: async (req, res) => {
         try {
             const points = await db.models.Points.findAll({
-                attributes: ["id", "address", "time_of_work", "key_id", "admin_id"],
+                attributes: ["id", "address", "time_of_work", "key_id", "admin_id", "link_to_map", "point_name"],
             })
 
             if (!points) {
@@ -55,34 +55,39 @@ const PointsController = {
             const i_mark_id = req.params.marks_id;
             console.log(i_mark_id)
 
-            const v_points = await db.models.Points_marks.findAll({
+            const points_marks = await db.models.Points_marks.findAll({
                 attributes: ["id", "marks_id", "points_id"],
                 include: [{
                     model: db.models.Points,
                     required: true,
-                    attributes: ["id", "address", "time_of_work", "key_id", "admin_id"]
+                    attributes: ["id", "address", "time_of_work", "key_id", "admin_id", "link_to_map", "point_name"]
                 }],
                 where: { marks_id: i_mark_id }
             })
 
-            const v_marks = await db.models.Points_marks.findOne({
-                attributes: ["id", "marks_id"],
-                include: [{
-                    model: db.models.Marks,
-                    required: true,
-                    attributes: ["id", "rubbish"]
-                }],
-                where: { marks_id: i_mark_id }
-            })
+            // const v_marks = await db.models.Points_marks.findOne({
+            //     attributes: ["id", "marks_id"],
+            //     include: [{
+            //         model: db.models.Marks,
+            //         required: true,
+            //         attributes: ["id", "rubbish"]
+            //     }],
+            //     where: { marks_id: i_mark_id }
+            // })
 
-            if (!v_points || !v_marks) {
+            if (!points_marks
+                // || !v_marks
+            ) {
                 return res.json({ message: 'Пунктов нет' })
             }
             else {
-                res.json({ v_points, v_marks })
+                res.json({
+                    points_marks
+                    // , v_marks
+                })
             }
-            console.log('Points' + v_points)
-            console.log('Marks' + v_marks)
+            console.log('Points' + points_marks)
+            // console.log('Marks' + v_marks)
         }
         catch (error) {
             console.log(error);
@@ -97,6 +102,7 @@ const PointsController = {
             function splitString(stringToSplit, separator) {
                 return stringToSplit.split(separator);
             }
+
             const comma = ',';
             const i_rubbish = req.body.rubbish;
             const arrayOfStrings = splitString(i_rubbish, comma);
@@ -105,48 +111,61 @@ const PointsController = {
                 where: { address: req.body.address }
             })
 
+            const v_check_point_name = await db.models.Points.findOne({
+                where: { point_name: req.body.point_name }
+            })
+
+
             if (v_check_address == null) {
-                const v_find_used = await db.models.Keys.findOne({
-                    where: { is_used: 0 }
-                })
-
-                if (v_find_used != null) {
-
-                    const c_point = await db.models.Points.create({
-                        address: req.body.address,
-                        time_of_work: req.body.time_of_work,
-                        key_id: v_find_used.id,
-                        admin_id: req.userId,
+                if (v_check_point_name == null) {
+                    const v_find_used = await db.models.Keys.findOne({
+                        where: { is_used: 0 }
                     })
 
-                    await db.models.Keys.update({
-                        is_used: 1,
-                    }, {
-                        where: { id: v_find_used.id }
-                    })
-                    const v_point_id = c_point.null
-                    console.log(v_point_id)
+                    if (v_find_used != null) {
 
-                    for (let j = 0; j < o_length; j++) {
-                        const i_rubbish = await db.models.Marks.findOne({
-                            where: { rubbish: arrayOfStrings[j] }
+                        const c_point = await db.models.Points.create({
+                            address: req.body.address,
+                            time_of_work: req.body.time_of_work,
+                            key_id: v_find_used.id,
+                            admin_id: req.userId,
+                            link_to_map: req.body.link_to_map,
+                            point_name: req.body.point_name,
                         })
-                        const o_rubbish_id = i_rubbish.id
-                        console.log(o_rubbish_id)
 
-                        await db.models.Points_marks.create({
-                            points_id: v_point_id,
-                            marks_id: o_rubbish_id,
+                        await db.models.Keys.update({
+                            is_used: 1,
+                        }, {
+                            where: { id: v_find_used.id }
                         })
+                        const v_point_id = c_point.null
+                        console.log(v_point_id)
+
+                        for (let j = 0; j < o_length; j++) {
+                            const i_rubbish = await db.models.Marks.findOne({
+                                where: { rubbish: arrayOfStrings[j] }
+                            })
+                            const o_rubbish_id = i_rubbish.id
+                            console.log(o_rubbish_id)
+
+                            await db.models.Points_marks.create({
+                                points_id: v_point_id,
+                                marks_id: o_rubbish_id,
+                            })
+                        }
+
+                        res.json({
+                            message: 'Пунк сдачи отходов добавлен'
+                        });
+                    } else {
+                        res.json({
+                            message: 'Пунк сдачи отходов не может быть добавлен, нет свободных ключей'
+                        });
                     }
-
-                    res.json({
-                        message: 'Пунк сдачи отходов добавлен'
-                    });
                 }
                 else {
                     res.json({
-                        message: 'Пунк сдачи отходов не может быть добавлен, нет свободных ключей'
+                        message: 'Имя пункта приема уже используется, введите новоес'
                     });
                 }
             }

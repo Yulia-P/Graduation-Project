@@ -115,7 +115,7 @@ const DiscountsController = {
             })
 
             if (v_check_id_discounts != null) {
-                db.models.Discounts.destroy({ where: { id: req.params.id } })
+                await db.models.Discounts.destroy({where: {id: req.params.id}})
                 res.json({
                     message: 'Скидка удалена'
                 });
@@ -133,7 +133,7 @@ const DiscountsController = {
         }
     },
 
-    //User
+    //User DONT USE
     showMyDiscounts: async (req, res) => {
         try{
 
@@ -168,22 +168,66 @@ const DiscountsController = {
                 where: {id: req.userId}
             })
 
-            console.log(v_user.points);
+            // console.log(v_user.points);
 
             const i_discounts = await db.models.Discounts.findOne({
                 attributes: ["id", "discount", "count_for_dnt", "promo_code"],
                 where: {id: req.params.id}
             })
 
-            console.log(i_discounts.count_for_dnt);
+            // console.log(i_discounts.count_for_dnt);
 
             const o_new_points = v_user.points - i_discounts.count_for_dnt
 
-            console.log(o_new_points);
+            // console.log(o_new_points);
 
             await db.models.Users.update({
-                points: o_new_points
+                points: o_new_points,
             }, {where: {id: req.userId}})
+
+            const v_check_promo_codes = await   db.models.Promo_codes.findOne({
+                where: {
+                    [Op.and]: [{ user_id: req.userId }, { discount_id: i_discounts.id }],
+                }
+            })
+
+            console.log(v_check_promo_codes)
+            if (v_check_promo_codes!=null) {
+                await db.models.Promo_codes.update({
+                        promo_code: i_discounts.promo_code,
+                        date_of_add: Date.now()},
+                    {where: {
+                            [Op.and]: [{ user_id: req.userId }, { discount_id: i_discounts.id }],
+                        }
+                    })
+            }
+            else{
+                await db.models.Promo_codes.create({
+                    promo_code: i_discounts.promo_code,
+                    user_id: req.userId,
+                    discount_id: i_discounts.id,
+                    date_of_add: Date.now(),
+                })
+            }
+
+            function generateString(length) {
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * characters.length);
+                    result += characters.charAt(randomIndex);
+                }
+                return result;
+            }
+
+            const generatedString = generateString(8);
+            // console.log(generatedString);
+
+            await db.models.Discounts.update({
+                promo_code: generatedString},
+                {where: {id: req.params.id}
+            })
 
             res.json({
                 o_new_points,

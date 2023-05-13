@@ -4,6 +4,7 @@ import axios from '../../../utils/axios'
 const initialState = {
     users:[],
     loading:false,
+    status: null,
 }
 
 export const getUser = createAsyncThunk(
@@ -40,24 +41,30 @@ export const userSlice = createSlice({
         // Получить пользователей
         [getUser.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [getUser.fulfilled]: (state, action) => {
             state.loading = false
             state.users = action.payload.users
+            // state.status = action.payload.message
         },
-        [getUser.rejected]: (state) => {
+        [getUser.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Получить пользователя
         [getUserM.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [getUserM.fulfilled]: (state, action) => {
             state.loading = false
             state.users = action.payload.users
+            // state.status = action.payload.message
         },
-        [getUserM.rejected]: (state) => {
+        [getUserM.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
     }
 })

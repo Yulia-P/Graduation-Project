@@ -1,7 +1,7 @@
 import React from 'react';
 
-const borderStyles = 'border-2 border-almost-black rounded-lg';
-const filledStyles = 'text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black';
+const borderStyles = 'border-2 border-cyan-950 rounded-lg';
+const filledStyles = 'text-white bg-cyan-950 rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-cyan-950';
 
 export const Button = ({
     children = '',

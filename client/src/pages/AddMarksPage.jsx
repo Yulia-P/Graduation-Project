@@ -1,9 +1,13 @@
-import React, {useState} from 'react'
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import React, {useState, useEffect} from 'react'
+// import {Link} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+
+import {useDispatch, useSelector} from "react-redux";
 import {addMark} from "../redux/features/mark/markSlice";
 import axios from "../utils/axios";
 import {toast} from "react-toastify";
+import {addWeight} from "../redux/features/weight/weightSlice";
+
 
 export const AddMarksPage = ( ) => {
 
@@ -13,6 +17,35 @@ export const AddMarksPage = ( ) => {
     const [points_per_kg, setPointsPerKg] = useState('')
     const [new_from_kg, setNewFromKg] = useState('')
     const [image_link, setImageLink] = useState('')
+
+    const [rubbish_w, setRubbishW] = useState('')
+    const [weight, setWeight] = useState('')
+    const [key_of_weight, setKeyOfWeight] = useState('')
+
+    const [disabled, setDisabled] = useState(true)
+    const [disabled_s, setDisabledS] = useState(true)
+
+
+    const { status } = useSelector((state) => state.mark)
+    const { status_weight } = useSelector((state) => state.weight)
+
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (status) toast(status)
+        if (status_weight) toast(status_weight)
+        if (rubbish.trim() && points_per_kg.trim() && new_from_kg.trim() ) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
+        }
+        if (rubbish_w.trim() && weight.trim() && key_of_weight.trim()  ) {
+            setDisabledS(false)
+        } else {
+            setDisabledS(true)
+        }
+    }, [status, status_weight, rubbish, points_per_kg, new_from_kg, rubbish_w, weight, key_of_weight])
 
     const handleChangeFile = async (event) => {
         try {
@@ -41,10 +74,27 @@ export const AddMarksPage = ( ) => {
             setPointsPerKg('')
             setNewFromKg('')
             setImageLink('')
+            // navigate('/mark')
         } catch (error) {
             console.log(error)
         }
     }
+
+    const submitHandlerWeight = async () => {
+        try {
+            dispatch(addWeight({ rubbish_w, weight, key_of_weight}))
+            console.log(rubbish_w);
+            console.log(weight);
+            console.log(key_of_weight);
+            setRubbishW('')
+            setWeight('')
+            setKeyOfWeight('')
+            // navigate('/mark')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const clearFormHandler = () => {
         setRubbish('')
         setPointsPerKg('')
@@ -52,81 +102,154 @@ export const AddMarksPage = ( ) => {
         setImageLink('')
     }
 
+    const clearFormHandlerWeight = () => {
+        setRubbishW('')
+        setWeight('')
+        setKeyOfWeight('')
+    }
+
+    const onClickRemoveImage = () => {
+        setImageLink('');
+    };
+
     return(
-        <div>
-            <button className={'flex lex-wrap justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4 ml-20 mt-1'}>
-                <Link className={'flex'} to={'/mark'}>Назад</Link>
-            </button>
+        <section className={'w-full flex-col xl:flex-row flex mt-6 justify-between'}>
+            <div className={'relative items-center justify-center pl-20 xl:pl-48 order-1 text-center w-full xl:w-2/4 xl:text-left xl:mt-0 mt-12'}>
+                <form
+                    className='flex flex-col xl:w-96 pt-5 pb-5 w-80 mt-16 border-2 border-green-500 rounded-lg '
+                    onSubmit={(e) => e.preventDefault()}>
+                    <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Добавление вторсырья</h1>
+                    <label className='flex flex-col xl:text-xl xl:w-80 w-64 ml-8 text-xs xl:text-2xl text-lime-900 border-2 border-dotted border-cyan-950 rounded-lg items-center justify-center mt-3 cursor-pointer'>
+                        Прикрепить изорбажение:
+                        <input
+                            type='file'
+                            className='hidden '
+                            onChange={handleChangeFile}
+                        />
+                    </label>
+                    <div className='flex flex-col object-cover py-1'>
+                        {image_link && (
+                            <>
+                            <button
+                                className='bg-pink-950 text-medium-gray w-32 ml-24 xl:ml-32 px-2 py-1 xl:px-2 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'
+                                onClick={onClickRemoveImage}>
+                                Удалить
+                            </button>
+                            <img src={`http://localhost:8082${image_link}`} alt={'uploaded'} className={'rounded-lg pt-2'}/>
+                            </>
+                        )}
+                    </div>
 
-            <form
-                className='w-1/3 mx-auto py-10'
-                onSubmit={(e) => e.preventDefault()}>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center'>
+                        Вторсырье:
+                        <input
+                            type='text'
+                            value={rubbish} onChange={(e) => setRubbish(e.target.value)}
+                            placeholder='Введите вид отхода'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
 
-                <label
-                    className='text-gray-300 py-2 bg-cyan-950 text-xs mt-2 flex items-center justify-center border-2 border-dotted cursor-pointer'>
-                    Прикрепить изорбажение:
-                    <input
-                        type='file'
-                        className='hidden'
-                        // onChange={(e) => setImage_url(e.target.files[0])}
-                        onChange={handleChangeFile}
-                    />
-                </label>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Баллы начислеемые за 1 кг:
+                        <input
+                            type='text'
+                            value={points_per_kg}
+                            onChange={(e) => setPointsPerKg(e.target.value)}
+                            placeholder='Введите баллы'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
 
-                <div className='flex object-cover py-2'>
-                    {image_link && (
-                        <img src={`http://localhost:8082${image_link}`} alt={'uploaded'} />
-                        // <img src={URL.createObjectURL(image_url)} alt={image_url.name} />
-                    )}
-                </div>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Новая продукция из 1 кг:
+                        <input
+                            type='text'
+                            value={new_from_kg}
+                            onChange={(e) => setNewFromKg(e.target.value)}
+                            placeholder='Введите вес новой продукции'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
 
-                <label className='text-xs text-white '>
-                    Вид отхожа:
-                    <input
-                        type='text'
-                        value={rubbish}
-                        onChange={(e) => setRubbish(e.target.value)}
-                        placeholder='Введите вид отхода'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
-                </label>
-                <label className='text-xs text-white '>
-                    Сколько баллов начислется за 1 кг:
-                    <input
-                        type='text'
-                        value={points_per_kg}
-                        onChange={(e) => setPointsPerKg(e.target.value)}
-                        placeholder='Введите баллы'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
-                </label>
-                <label className='text-xs text-white '>
-                    Сколько новой продукции будет произведено из 1 кг сданных отходов:
-                    <input
-                        type='text'
-                        value={new_from_kg}
-                        onChange={(e) => setNewFromKg(e.target.value)}
-                        placeholder='Введите вес новой продукции'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
-                </label>
+                    <div className='flex gap-8 items-center justify-center mt-4'>
+                        {
+                            <button
+                                type={'button'}
+                                onClick={submitHandler}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
+                                disabled={disabled}
+                            >
+                                Добавить
+                            </button>
+                        }
 
-                <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
                         <button
                             type={'button'}
-                            onClick={submitHandler}
-                            className='flex justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4'>
-                            Добавить
+                            onClick={clearFormHandler}
+                            className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
+                            Отменить
                         </button>
-                    }
+                    </div>
+                </form>
+            </div>
+            <div className={'relative order-2 text-center pl-20 xl:pl-36 w-full xl:w-2/4 xl:text-left xl:mt-0 mt-12'}>
+                <form
+                    className='flex flex-col xl:w-96 pt-5 pb-5 w-80 mt-16 border-2 border-green-500  rounded-lg '
+                    onSubmit={(e) => e.preventDefault()}>
 
-                    <button
-                        type={'button'}
-                        onClick={clearFormHandler}
-                        className='flex justify-center items-center bg-pink-950 text-xs text-white rounded-sm py-2 px-4'>
-                        Отменить
-                    </button>
-                </div>
-            </form>
+                    <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Добавление проверки веса</h1>
 
-        </div>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Вид отхода:
+                        <input
+                            type='text'
+                            value={rubbish_w}
+                            onChange={(e) => setRubbishW(e.target.value)}
+                            placeholder='Введите вид отхода'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
+
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Вес:
+                        <input
+                            type='text'
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            placeholder='Введите вес'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
+
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Ключ для проверки:
+                        <input
+                            type='text'
+                            value={key_of_weight}
+                            onChange={(e) => setKeyOfWeight(e.target.value)}
+                            placeholder='Введите ключ'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
+
+                    <div className='flex gap-8 items-center justify-center mt-4'>
+                        {
+                            <button
+                                type={'button'}
+                                onClick={submitHandlerWeight}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled_s ? 'invisible' : ''}`}
+                                disabled={disabled_s}
+                            >
+                                Добавить
+                            </button>
+                        }
+
+                        <button
+                            type={'button'}
+                            onClick={clearFormHandlerWeight}
+                            className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
+                            Отменить
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </section>
     )
 }

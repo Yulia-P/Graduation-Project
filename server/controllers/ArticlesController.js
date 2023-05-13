@@ -11,6 +11,7 @@ const ArticlesController = {
         try {
             const article = await db.models.Articles.findAll({
                 attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
+                order: [['id', 'DESC']],
                 include: [{
                     model: db.models.Users,
                     required: true,

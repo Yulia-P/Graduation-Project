@@ -4,6 +4,7 @@ import axios from '../../../utils/axios'
 const initialState = {
     receptions: [],
     loading: false,
+    status: null,
 }
 
 export const createReception = createAsyncThunk(
@@ -28,6 +29,7 @@ export const receptionSlice = createSlice({
         // Прием отходов
         [createReception.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [createReception.fulfilled]: (state, action) => {
             state.loading = false
@@ -36,9 +38,11 @@ export const receptionSlice = createSlice({
             state.type_waste = action.payload.type_waste
             state.station_key = action.payload.station_key
             state.key_of_weight = action.payload.key_of_weight
+            state.status = action.payload.message
         },
-        [createReception.rejected]: (state) => {
+        [createReception.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
     },
 })

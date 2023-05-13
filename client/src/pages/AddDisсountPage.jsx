@@ -1,24 +1,34 @@
-import React, {useState} from 'react'
-import {Link, useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import React, {useState, useEffect} from 'react'
+// import {Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {addDiscount} from "../redux/features/alldiscount/alldiscountSlice";
+import { toast } from 'react-toastify'
 
 
 export const AddDisсountPage = () => {
 
     const dispatch = useDispatch()
 
+    const { status } = useSelector((state) => state.alldiscount)
+
     // const navigate = useNavigate()
     const [discount, setDiscount] = useState('')
     const [count_for_dnt, setCountForDnt] = useState('')
+    const [promo_code, setPromoCode] = useState('')
+    const [disabled, setDisabled] = useState(true)
+    const navigate = useNavigate();
 
     const submitHandler = async () => {
         try {
-            dispatch(addDiscount({ discount, count_for_dnt}))
+            dispatch(addDiscount({ discount, count_for_dnt, promo_code}))
             console.log(discount);
             console.log(count_for_dnt);
+            console.log(promo_code);
             setDiscount('')
             setCountForDnt('')
+            setPromoCode('')
+            // navigate('/alldisсount')
         } catch (error) {
             console.log(error)
         }
@@ -27,45 +37,66 @@ export const AddDisсountPage = () => {
     const clearFormHandler = () => {
         setDiscount('')
         setCountForDnt('')
+        setPromoCode('')
         // navigate('/alldisсount')
     }
 
+    useEffect(() => {
+        if (status) toast(status)
+        if (promo_code.trim() && count_for_dnt.trim() && discount.trim()) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
+        }
+    }, [status, promo_code, count_for_dnt, discount])
+
     return(
         <div>
-            <button className={'flex lex-wrap justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4 ml-20 mt-1'}>
-                <Link className={'flex'} to={'/alldisсount'}>Назад</Link>
-            </button>
-
             <form
-                className='w-1/3 mx-auto py-10'
+                className='xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-4 pt-12 rounded-lg '
                 onSubmit={(e) => e.preventDefault()}>
+                <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Добавление скидки</h1>
 
-                <label className='text-xs text-white '>
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
                     Скидка:
                     <input
                         type='text'
                         value={discount}
                         onChange={(e) => setDiscount(e.target.value)}
-                        placeholder='Введите скидку'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        placeholder='Введите скидку...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                 </label>
 
-                <label className='text-xs text-white '>
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
                     Баллы:
                     <input
                         type='number'
                         value={count_for_dnt}
                         onChange={(e) => setCountForDnt(e.target.value)}
-                        placeholder='Введите баллы необходимы для начисления скидки'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        placeholder='Введите баллы...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                 </label>
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                    Промокод:
+                    <input
+                        type='text'
+                        value={promo_code}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        placeholder='Введите промокод...'
+                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                </label>
+
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
                     {
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className='flex justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4'>
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
+                            disabled={disabled}
+                        >
+
                             Добавить
                         </button>
                     }
@@ -73,7 +104,7 @@ export const AddDisсountPage = () => {
                     <button
                         type={'button'}
                         onClick={clearFormHandler}
-                        className='flex justify-center items-center bg-pink-950 text-xs text-white rounded-sm py-2 px-4'>
+                        className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
                         Отменить
                     </button>
                 </div>

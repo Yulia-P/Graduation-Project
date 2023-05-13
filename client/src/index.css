@@ -17,10 +17,10 @@
 body {
   font-family: 'Didact Gothic', sans-serif;
   margin: 0;
-  background-color: rgb(199, 253, 218);
+  /* background-color: rgb(199, 253, 218); */
 
-  /*background: -webkit-linear-gradient(to right, #6DB960, #60B683, #558288);*/
-  /*background: linear-gradient(to right, #6DB960, #60B683, #558288);*/
+  background: -webkit-linear-gradient(to right, #c8ffbf, #c4ffdc, #caf5fa);
+  background: linear-gradient(to right, #c8ffbf, #c4ffdc, #caf5fa);
   max-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,7 +28,7 @@ body {
 
 /*}*/
 
-svg{
+svg {
   display: flex;
   align-items: center;
 }

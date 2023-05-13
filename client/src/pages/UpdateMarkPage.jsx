@@ -1,18 +1,24 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {Link, useParams} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import { useNavigate} from "react-router-dom";
+
 import axios from "../utils/axios";
-import {toast} from "react-toastify";
 import {updateMark} from "../redux/features/mark/markSlice";
+import { toast } from 'react-toastify'
+
 
 export const UpdateMarkPage = () => {
 
     const dispatch = useDispatch()
-
+    const navigate = useNavigate();
+    const { status } = useSelector((state) => state.mark)
     const [rubbish, setRubbish] = useState('')
     const [points_per_kg, setPointsPerKg] = useState('')
     const [new_from_kg, setNewFromKg] = useState('')
     const [image_link, setImageLink] = useState('')
+    const [disabled, setDisabled] = useState(true)
+
 
     const params = useParams()
 
@@ -22,7 +28,6 @@ export const UpdateMarkPage = () => {
         setPointsPerKg(data.points_per_kg)
         setNewFromKg(data.new_from_kg)
         setImageLink(data.image_link)
-
     }, [params.id])
 
     const handleChangeFile = async (event) => {
@@ -34,14 +39,23 @@ export const UpdateMarkPage = () => {
             console.log(data)
             setImageLink(data.url)
             console.log(image_link)
-
             toast(`Файл загружен`)
-
         } catch (e) {
             console.log(e)
             toast('Ошибка при загрузке изображения')
         }
     }
+
+    useEffect(() => {
+        if (rubbish.trim() && typeof points_per_kg === 'string' && typeof new_from_kg === 'string' && new_from_kg.trim()) {
+            setDisabled(false);
+        } else {
+            setDisabled(true);
+        }
+    }, [rubbish, points_per_kg, new_from_kg]);
+
+
+
 
     const submitHandler = () => {
         try {
@@ -52,6 +66,7 @@ export const UpdateMarkPage = () => {
             setPointsPerKg('')
             setNewFromKg('')
             setImageLink('')
+            // navigate('/mark')
         } catch (error) {
             console.log(error)
         }
@@ -66,80 +81,92 @@ export const UpdateMarkPage = () => {
 
     useEffect(() => {
         fetchMark()
-    }, [fetchMark])
+        if (status) toast(status)
+    }, [fetchMark, status])
+
+    const onClickRemoveImage = () => {
+        setImageLink('');
+    };
 
     return (
         <div>
-            <button className={'flex justify-center items-center bg-cyan-950 text-xs text-white rounded-sm py-2 px-4 ml-20 mt-1'}>
-                <Link className={'flex'} to={'/mark'}>Назад</Link>
-            </button>
-
             <form
-                className='w-1/3 mx-auto py-10'
+                className='xl:w-96 w-80 mx-auto mt-8 border-2 border-green-500 xl:pt-5 pt-12 rounded-lg pb-5'
                 onSubmit={(e) => e.preventDefault()}>
+                <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Изменение вторсырья</h1>
 
-                <label
-                    className='text-gray-300 py-2 bg-cyan-950 text-xs mt-2 flex items-center justify-center border-2 border-dotted cursor-pointer'>
-                    Прикрепить изорбажение:
+                <label className='flex flex-col xl:text-xl xl:w-80 w-64 ml-8 text-xs xl:text-2xl text-lime-900 border-2 border-dotted border-cyan-950 rounded-lg items-center justify-center mt-3 cursor-pointer'>
+                Прикрепить изорбажение:
                     <input
                         type='file'
                         className='hidden'
-                        // onChange={(e) => setImage_url(e.target.files[0])}
                         onChange={handleChangeFile}
                     />
                 </label>
 
-                <div className='flex object-cover py-2'>
+                <div className='flex flex-col object-cover py-1'>
                     {image_link && (
-                        <img src={`http://localhost:8082${image_link}`} alt={'uploaded'} />
-                        // <img src={URL.createObjectURL(image_url)} alt={image_url.name} />
+                        <>
+                            <button
+                                className='bg-pink-950 text-medium-gray w-32 ml-24 xl:ml-32 px-2 py-1 xl:px-2 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'
+                                onClick={onClickRemoveImage}>
+                                Удалить
+                            </button>
+                            <img src={`http://localhost:8082${image_link}`} alt={'uploaded'} className={'rounded-lg pt-2 w-full h-72  '}/>
+                        </>
                     )}
                 </div>
 
-                <label className='text-xs text-white '>
-                    Вид отхожа:
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center'>
+                    Вторсырье:
                     <input
                         type='text'
                         value={rubbish}
                         onChange={(e) => setRubbish(e.target.value)}
                         placeholder='Введите вид отхода'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        className='flex mt-1 text-lime-400 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-cyan-950 py-1 px-2 outline-none placeholder:text-almost-white placeholder:text-xl focus:border-emerald-700 focus:bg-transparent focus:text-cyan-950 focus:placeholder:text-cyan-950' />
                 </label>
-                <label className='text-xs text-white '>
-                    Сколько баллов начислется за 1 кг:
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center'>
+                    Баллы начислеемые за 1 кг:
                     <input
                         type='text'
                         value={points_per_kg}
                         onChange={(e) => setPointsPerKg(e.target.value)}
                         placeholder='Введите баллы'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        className='flex mt-1 text-lime-400 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-cyan-950 py-1 px-2 outline-none placeholder:text-almost-white placeholder:text-xl focus:border-emerald-700 focus:bg-transparent focus:text-cyan-950 focus:placeholder:text-cyan-950' />
                 </label>
-                <label className='text-xs text-white '>
-                    Сколько новой продукции будет произведено из 1 кг сданных отходов:
+
+                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center'>
+                    Новая продукция из 1 кг:
                     <input
                         type='text'
                         value={new_from_kg}
                         onChange={(e) => setNewFromKg(e.target.value)}
                         placeholder='Введите вес новой продукции'
-                        className='mt-1 text-lime-300 w-full rounded-lg bg-cyan-950 border-cyan-950  py-1 px-2 text-xs outline-none placeholder:text-zinc-300' />
+                        className='flex mt-1 text-lime-400 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-cyan-950 py-1 px-2 outline-none placeholder:text-almost-white placeholder:text-xl focus:border-emerald-700 focus:bg-transparent focus:text-cyan-950 focus:placeholder:text-cyan-950' />
                 </label>
 
-                <div className='flex gap-8 items-center justify-center mt-4'>
+                <div className='flex gap-8 items-center justify-center mt-4 '>
                     {
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className='flex justify-center items-center bg-cyan-950 border-cyan-950 text-xs text-white rounded-sm py-2 px-4'>
-                            Добавить
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
+                            disabled={disabled}
+                        >
+                            Изменить
                         </button>
                     }
 
+                    <Link to={'/mark'}>
                     <button
                         type={'button'}
                         onClick={clearFormHandler}
-                        className='flex justify-center items-center bg-pink-950 text-xs text-white rounded-sm py-2 px-4'>
+                        className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
                         Отменить
                     </button>
+                        </Link>
                 </div>
             </form>
         </div>

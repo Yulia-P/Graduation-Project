@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import SimpleMDE from 'react-simplemde-editor';
 import {useDispatch, useSelector} from 'react-redux';
+import { useNavigate} from "react-router-dom";
 import {useParams} from "react-router-dom";
 import 'easymde/dist/easymde.min.css';
 import axios from "../utils/axios";
@@ -10,14 +11,13 @@ import {updateArticles} from "../redux/features/articles/articleSlice";
 
 export const UpArticlesPage = () => {
     // const { user } = useSelector((state) => state.auth)
-
-    const { status } = useSelector((state) => state.articles)
-
     const dispatch = useDispatch()
-
+    const navigate = useNavigate();
+    const { status } = useSelector((state) => state.articles)
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
     const [image_url, setImage_url] = useState('')
+    const [disabled, setDisabled] = useState(true)
 
     const params = useParams()
 
@@ -26,7 +26,6 @@ export const UpArticlesPage = () => {
         setTitle(data.title)
         setText(data.text)
         setImage_url(data.image_url)
-
     }, [params.id])
 
     // const navigate = useNavigate();
@@ -37,8 +36,6 @@ export const UpArticlesPage = () => {
 
 
     const inputFileRef = React.useRef(null);
-
-
     const handleChangeFile = async (event) => {
         try {
             const formData = new FormData();
@@ -48,7 +45,6 @@ export const UpArticlesPage = () => {
             console.log(data);
             setImage_url(data.url);
             toast(`Файл загружен ${image_url}`)
-
         } catch (e) {
             console.warn(e);
             toast('Ошибка загрузки файла')
@@ -71,20 +67,21 @@ export const UpArticlesPage = () => {
             setTitle('')
             setText('')
             setImage_url('')
+            navigate(`/${params.id}`)
         } catch (error) {
             console.log(error)
         }
     }
 
     useEffect(() => {
-        if (status) {
-            toast(status)
+        if (status) toast(status)
+        // fetchArticles()
+        if (text.trim() && title.trim()) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
         }
-    }, [status])
-
-    useEffect(() => {
-        fetchArticles()
-    }, [fetchArticles])
+    }, [status, fetchArticles,  text, title])
 
     const options = React.useMemo(
         () => ({
@@ -148,12 +145,13 @@ export const UpArticlesPage = () => {
             <div
                 className={'flex mr-3'}
             >
-                <button className={' my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black'}
+                <button className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black ${disabled ? 'invisible' : ''}`}
                         onClick={submitHandler}
                         size="large"
-                        variant="contained">
+                        variant="contained"
+                        disabled={disabled}>
                     Сохранить </button>
-                <a href="/">
+                <a href={`/${params.id}`}>
                     <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
                             size="large">Отмена</button>
                 </a>

@@ -10,6 +10,8 @@ const RatingsController = {
 
             if (v_check_article != null) {
                 db.models.Ratings.findAll({
+                    attributes: ["id", "article_id", "commentator", "comment", "date_of_add"],
+                    order: [['id', 'DESC']],
                     include: [{
                         model: db.models.Users,
                         required: true,
@@ -78,6 +80,7 @@ const RatingsController = {
                         article_id: req.params.article_id,
                         commentator: req.userId,
                         comment: req.body.comment,
+                        date_of_add: Date.now(),
                     })
                     // const comment = await db.models.Ratings.findAll({
                     //     include: [{

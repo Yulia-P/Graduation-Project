@@ -13,10 +13,10 @@ export const MainPage = () => {
     return (
         <section className={'w-full flex-col xl:flex-row flex mt-6 justify-between'}>
             <div className={'relative order-2 xl:order-1 text-center w-full xl:w-2/4 xl:text-left xl:mt-40 mt-12'}>
-                <h1 className={'text-3xl xl:text-8xl font-black'}>
+                <h1 className={'text-3xl xl:text-8xl text-cyan-950 font-semibold'}>
                     ЭкоБудущее
                 </h1>
-                <p className={'text-medium-gray text-lg my-10 whitespace-pre-line'}>
+                <p className={'text-cyan-950 opacity-75 text-lg my-10 whitespace-pre-line'}>
                     {`представляет собой инициативу,\n направленную на повышение осведомленности о раздельном\n сборе бытовых отходов и активное привлечение людей к этим важным действиям`}
                 </p>
                 <Link to={'/articles'}><Button isFilled={true} className={''}>Читать</Button></Link>

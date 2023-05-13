@@ -4,6 +4,7 @@ import axios from '../../../utils/axios'
 const initialState = {
     secretkeys:[],
     loading:false,
+    status_sk: null,
 }
 
 export const addSecretKey = createAsyncThunk(
@@ -28,14 +29,18 @@ export const secretkeySlice = createSlice({
         // Добавить секретный ключ
         [addSecretKey.pending]: (state) => {
             state.loading = true
+            state.status_sk = null
         },
         [addSecretKey.fulfilled]: (state, action) => {
             state.loading = false
             // state.articles.push(action.payload)
             state.secret_key = action.payload.secret_key
+            state.status_sk = action.payload.message
         },
-        [addSecretKey.rejected]: (state) => {
+        [addSecretKey.rejected]: (state, action) => {
             state.loading = false
+            state.status_sk = action.payload.message
+
         },
     }
 })

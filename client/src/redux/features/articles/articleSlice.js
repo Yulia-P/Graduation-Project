@@ -100,13 +100,15 @@ export const articleSlice = createSlice({
         // Получиение всех статей
         [getArticles.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [getArticles.fulfilled]: (state, action) => {
             state.loading = false
             state.article = action.payload.article
         },
-        [getArticles.rejected]: (state) => {
+        [getArticles.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         //Удаление статьи
         [removeArticles.pending]: (state) => {
@@ -153,8 +155,6 @@ export const articleSlice = createSlice({
             state.status = action.payload.message
             state.loading = false
         },
-
-
     },
 })
 

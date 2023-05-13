@@ -15,12 +15,10 @@ import {MarksPage} from "./pages/MarksPage";
 import {ReceptionPage} from "./pages/ReceptionPage";
 import {AllDiscointPage} from "./pages/AllDiscointPage";
 import {AddPointPage} from "./pages/AddPointPage";
-import {AddSecretKeyPage} from "./pages/AddSecretKeyPage";
 import {AddDisсountPage} from "./pages/AddDisсountPage";
 import {AddMarksPage} from "./pages/AddMarksPage";
-import {AddWeightPage} from "./pages/AddWeightPage";
 import {UpdatePointPage} from "./pages/UpdatePointPage";
-import {UpdatePointKeyPage} from "./pages/UpdatePointKeyPage";
+import {UpdateSecretKeyPage} from "./pages/UpdateSecretKeyPage";
 import {UpdateDiscountPage} from "./pages/UpdateDiscountPage";
 import {UpdateMarkPage} from "./pages/UpdateMarkPage";
 import {Wrapper} from "./components/Wrapper";
@@ -28,6 +26,7 @@ import {Header} from "./components/Header";
 import {AllArticlesPage} from "./pages/AllArticlesPage";
 import {AddArticlesPage} from "./pages/AddArticlesPage";
 import {UpArticlesPage} from "./pages/UpArticlesPage";
+import {PointsMarksPage} from "./pages/PointsMarksPage";
 
 function App() {
 
@@ -65,20 +64,21 @@ function App() {
 
                 <Route path='mark' element={<MarksPage/>}/>
                 <Route path='newmark' element={<AddMarksPage/>}/>
-                <Route path='newweight' element={<AddWeightPage/>}/>
+                <Route path=':id/editmark' element={<UpdateMarkPage/>}/>
+                <Route path=':id/pointsmark' element={<PointsMarksPage/>}/>
+                {/*<Route path='newweight' element={<AddWeightPage/>}/>*/}
+
 
                 <Route path='point' element={<PointPage/>}/>
                 <Route path='newpoint' element={<AddPointPage/>}/>
-                <Route path='newkey' element={<AddSecretKeyPage/>}/>
+                <Route path=':id/editpoint' element={<UpdatePointPage/>}/>
+                <Route path=':id/editpointk' element={<UpdateSecretKeyPage/>}/>
+                {/*<Route path='newkey' element={<AddSecretKeyPage/>}/>*/}
 
                 <Route path='mydiscount' element={<MyDiscountPage/>}/>
                 <Route path='alldisсount' element={<AllDiscointPage/>}/>
                 <Route path='newdisсount' element={<AddDisсountPage/>}/>
-
-                {/*<Route path=':id/editpoint' element={<UpdatePointPage/>}/>*/}
-                {/*<Route path=':id/editpointk' element={<UpdatePointKeyPage/>}/>*/}
-                {/*<Route path=':id/editdiscount' element={<UpdateDiscountPage/>}/>*/}
-                {/*<Route path=':id/editmark' element={<UpdateMarkPage/>}/>*/}
+                <Route path=':id/editdiscount' element={<UpdateDiscountPage/>}/>
 
             </Routes>
             <ToastContainer position='bottom-right' />

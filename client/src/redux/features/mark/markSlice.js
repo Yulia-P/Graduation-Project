@@ -4,6 +4,7 @@ import axios from '../../../utils/axios'
 const initialState = {
     marks:[],
     loading:false,
+    status: null,
 }
 
 export const getMark = createAsyncThunk(
@@ -69,30 +70,37 @@ export const markSlice = createSlice({
         // Получить отходы
         [getMark.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [getMark.fulfilled]: (state, action) => {
             state.loading = false
             state.marks = action.payload.marks
+            // state.status = action.payload.message
         },
-        [getMark.rejected]: (state) => {
+        [getMark.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Удаление отходов
         [removeMark.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [removeMark.fulfilled]: (state, action) => {
             state.loading = false;
             state.marks = state.marks.filter(
                 (mark) => mark.id !== action.payload.id
             );
+            state.status = action.payload.message
         },
-        [removeMark.rejected]: (state) => {
+        [removeMark.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Добавление отходов
         [addMark.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [addMark.fulfilled]: (state, action) => {
             state.loading = false
@@ -101,13 +109,16 @@ export const markSlice = createSlice({
             state.points_per_kg = action.payload.points_per_kg
             state.new_from_kg = action.payload.new_from_kg
             state.image_link = action.payload.image_link
+            state.status = action.payload.message
         },
-        [addMark.rejected]: (state) => {
+        [addMark.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
         // Обновление отходов
         [updateMark.pending]: (state) => {
             state.loading = true
+            state.status = null
         },
         [updateMark.fulfilled]: (state, action) => {
             state.loading = false
@@ -115,9 +126,11 @@ export const markSlice = createSlice({
                 (mark) => mark.id === action.payload.id,
             )
             state.marks[index] = action.payload
+            state.status = action.payload.message
         },
-        [updateMark.rejected]: (state) => {
+        [updateMark.rejected]: (state, action) => {
             state.loading = false
+            state.status = action.payload.message
         },
     }
 })

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Paper from '@mui/material/Paper';
 import SimpleMDE from 'react-simplemde-editor';
 import {useDispatch, useSelector} from 'react-redux';
-// import { useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import 'easymde/dist/easymde.min.css';
 import axios from "../utils/axios";
 import {toast} from "react-toastify";
@@ -20,8 +20,10 @@ export const AddArticlesPage = () => {
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
     const [image_url, setImage_url] = useState('')
+    const [disabled, setDisabled] = useState(true)
 
-    // const navigate = useNavigate();
+
+    const navigate = useNavigate();
     //
     // const [loading,
     //     // isLoading,
@@ -29,7 +31,6 @@ export const AddArticlesPage = () => {
 
 
     const inputFileRef = React.useRef(null);
-
 
     const handleChangeFile = async (event) => {
         try {
@@ -64,16 +65,20 @@ export const AddArticlesPage = () => {
             setText('')
             setTitle('')
             setImage_url('')
+            // navigate('/articles')
         } catch (error) {
             console.log(error)
         }
     }
 
     useEffect(() => {
-        if (status) {
-            toast(status)
+        if (status) toast(status)
+        if (text.trim() && title.trim()) {
+            setDisabled(false)
+        } else {
+            setDisabled(true)
         }
-    }, [status])
+    }, [status, text, title])
 
     const options = React.useMemo(
         () => ({
@@ -89,6 +94,7 @@ export const AddArticlesPage = () => {
         }),
         [],
     );
+
 
     return (
         <Paper className={'mt-5 bg-green-100'}>
@@ -131,10 +137,11 @@ export const AddArticlesPage = () => {
                 value={text} onChange={onChange}
                 options={options} />
             <div className={'flex mr-3'}>
-                <button className={' my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black'}
+                <button className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black ${disabled ? 'invisible' : ''}`}
                     onClick={submitHandler}
                     size="large"
-                    variant="contained">
+                    variant="contained"
+                    disabled={disabled}>
                     Сохранить </button>
                 <a href="/">
                     <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}

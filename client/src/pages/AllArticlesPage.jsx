@@ -2,15 +2,20 @@ import React, {useEffect} from 'react'
 import {ArticleItem} from "../components/ArticleItem";
 import {useDispatch, useSelector} from "react-redux";
 import {getArticles} from "../redux/features/articles/articleSlice";
+import { toast } from 'react-toastify'
+
 
 export const AllArticlesPage = () => {
         const dispatch = useDispatch()
-        const {article} = useSelector((state) => state.articles)
+    const { status } = useSelector((state) => state.articles)
+
+    const {article} = useSelector((state) => state.articles)
 
         useEffect(() => {
             dispatch(getArticles({}));
+            if (status) toast(status)
             // window.location.reload();
-        }, [dispatch])
+        }, [dispatch, status, article])
 
         if(!article.length){
             return(

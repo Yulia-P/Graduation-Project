@@ -13,7 +13,7 @@ export const AllDiscointItem = ({alldiscount}) => {
         try {
             dispatch(removeAllDiscount(alldiscount.id))
             toast('Пункт сдачи отходов был удален')
-            window.location.reload();
+            // window.location.reload();
             // navigate('/')
         } catch (e) {
             console.log(e)
@@ -29,30 +29,28 @@ export const AllDiscointItem = ({alldiscount}) => {
     )
 }
 return (
-    <div className={'flex flex-col gap-2 break-all h-15 '}>
-        <div className={'text-white text-xl  w-70 '}>
+    <div className={'flex flex-col items-center justify-center bg-gradient-to-br from-amber-100 to-lime-100 xl:ml-10  rounded-lg gap-2 break-words xl:w-72 xl:h-44 xl:py-3 xl:px-3'}>
+        <div className={'text-cyan-950 xl:text-2xl font-bold xl:pl-3 opacity-70 text-xl pl-2 hover:text-cyan-800'}>
             {alldiscount.discount}
         </div>
-        <div className={' text-cyan-950 opacity-95'}>
+        <div className={'text-cyan-950 opacity-95 xl:text-xl xl:pl-2 text-xs pl-1'}>
             Баллы: {alldiscount.count_for_dnt}
         </div>
-        <div className={' text-cyan-950 opacity-95'}>
+        <div className={'text-cyan-950 opacity-95 xl:text-xl xl:pl-2 text-xs pl-1'}>
             Промокод: {alldiscount.promo_code}
         </div>
-        <div className={'flex flex-wrap gap-3 mt-4'}>
-        <button className={'flex items-center justify-center gap-2 text-white opacity-50'}>
+        <div className={'flex xl:text-2xl flex-wrap gap-3 mt-2'}>
+        <button className={'flex items-center justify-center gap-2 text-lime-950 opacity-60 hover:text-red-800 hover:opacity-100'}>
             <Link to={`/${alldiscount.id}/editdiscount`}>
                 <AiTwotoneEdit />
             </Link>
         </button>
         <button
             onClick={removeAllDiscountHandler}
-            className={'flex items-center  text-white opacity-50'}>
+            className={'flex items-center opacity-50 text-lime-950 opacity-60 hover:text-red-800 hover:opacity-100'}>
             <AiFillDelete />
         </button>
         </div>
-
-
     </div>
 )
 }
