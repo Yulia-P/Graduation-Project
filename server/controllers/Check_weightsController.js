@@ -18,17 +18,26 @@ const Check_weightsController = {
                 where: { rubbish: req.body.rubbish_w}
             })
 
-            if (v_check_key_w == null) {
-                db.models.Check_weights.create({
-                    rubbish_id: o_rubbish.id,
-                    weight: req.body.weight,
-                    key_of_weight: o_key_of_weight,
-                })
+            if (o_rubbish == null){
+                res.json({
+                    message: `Такого ${req.body.rubbish_w} вида вторсырья нет сначала добавить его во вторсырье`
+                });
+                return;
             }
+            else {
 
-            res.json({
-                message: 'Ключ добавлен'
-            });
+                if (v_check_key_w == null) {
+                    await db.models.Check_weights.create({
+                        rubbish_id: o_rubbish.id,
+                        weight: req.body.weight,
+                        key_of_weight: o_key_of_weight,
+                    })
+                }
+
+                res.json({
+                    message: 'Ключ добавлен'
+                });
+            }
 
         } catch (error) {
             console.log(error);

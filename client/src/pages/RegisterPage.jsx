@@ -10,7 +10,6 @@ export const RegisterPage = () => {
     const [username, setUserName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [disabled, setDisabled] = useState(true)
 
     const dispatch = useDispatch()
 
@@ -41,15 +40,6 @@ export const RegisterPage = () => {
     }
   }
 
-    useEffect(() => {
-        if (email.trim() && password.trim() && username.trim() ) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [email, password])
-
-
     return (
     <form onSubmit={e => e.preventDefault()}
       className={'xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-4 pt-12 rounded-lg '}>
@@ -79,11 +69,14 @@ export const RegisterPage = () => {
           className={'flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-sm xl:placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50'} />
       </label>
       <div className={'flex gap-8 justify-center mt-4'}>
-        <button type={'submit'}
-                onClick={handleSubmit}
-                className={`text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 ${disabled ? 'invisible' : ''}`}
-                disabled={disabled}
-        >Регистрация</button>
+        {(username && email && password)
+            ?
+          <button type={'submit'}
+                  onClick={handleSubmit}
+                  className={`text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 `}
+          >Регистрация</button>
+            : <></>
+        }
         <Link to={'/login'}
           className={'flex justify-center items-center text-sm xl:text-xl text-lime-700'}>Есть аккаунт?</Link>
       </div>

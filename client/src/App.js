@@ -27,6 +27,7 @@ import {AllArticlesPage} from "./pages/AllArticlesPage";
 import {AddArticlesPage} from "./pages/AddArticlesPage";
 import {UpArticlesPage} from "./pages/UpArticlesPage";
 import {PointsMarksPage} from "./pages/PointsMarksPage";
+// import {TestPage} from "./pages/TestPage";
 
 function App() {
 
@@ -50,6 +51,8 @@ function App() {
         <Wrapper>
             <Header/>
             <Routes>
+                {/*<Route path='test' element={<TestPage/>}/>*/}
+
                 <Route path='login' element={<LoginPage/>}/>
                 <Route path='register' element={<RegisterPage/>}/>
 

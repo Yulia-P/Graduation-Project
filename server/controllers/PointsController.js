@@ -115,7 +115,6 @@ const PointsController = {
                 where: { point_name: req.body.point_name }
             })
 
-
             if (v_check_address == null) {
                 if (v_check_point_name == null) {
                     const v_find_used = await db.models.Keys.findOne({
@@ -123,7 +122,6 @@ const PointsController = {
                     })
 
                     if (v_find_used != null) {
-
                         const c_point = await db.models.Points.create({
                             address: req.body.address,
                             time_of_work: req.body.time_of_work,
@@ -138,6 +136,7 @@ const PointsController = {
                         }, {
                             where: { id: v_find_used.id }
                         })
+
                         const v_point_id = c_point.null
                         console.log(v_point_id)
 
@@ -145,15 +144,23 @@ const PointsController = {
                             const i_rubbish = await db.models.Marks.findOne({
                                 where: { rubbish: arrayOfStrings[j] }
                             })
-                            const o_rubbish_id = i_rubbish.id
-                            console.log(o_rubbish_id)
+                            if (i_rubbish==null){
+                                res.json({
+                                    message: `Такого ${arrayOfStrings[j]} вида вторсырья нет сначала добавить его во вторсырье`
+                                });
+                                return;
+                            }
+                            else {
+                                const o_rubbish_id = i_rubbish.id
+                                console.log(o_rubbish_id)
 
-                            await db.models.Points_marks.create({
-                                points_id: v_point_id,
-                                marks_id: o_rubbish_id,
-                            })
+                                await db.models.Points_marks.create({
+                                    points_id: v_point_id,
+                                    marks_id: o_rubbish_id,
+                                })
+                            }
+
                         }
-
                         res.json({
                             message: 'Пунк сдачи отходов добавлен'
                         });

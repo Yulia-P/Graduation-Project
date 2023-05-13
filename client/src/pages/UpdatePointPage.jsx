@@ -8,8 +8,6 @@ import {toast} from "react-toastify";
 
 export const UpdatePointPage = () => {
 
-    const [disabled, setDisabled] = useState(true)
-
     const dispatch = useDispatch()
     const [time_of_work, setTimeOfWork] = useState('')
     const { status } = useSelector((state) => state.point)
@@ -38,12 +36,9 @@ export const UpdatePointPage = () => {
     useEffect(() => {
         fetchPoint()
         if (status) toast(status)
-        if (time_of_work.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [fetchPoint, status, time_of_work])
+    }, [
+        // fetchPoint,
+        status])
 
     return (
         <div>
@@ -62,24 +57,30 @@ export const UpdatePointPage = () => {
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
+                    {(time_of_work)
+                        ?
                         <Link to={'/point'}>
                             <button
                                 type={'button'}
                                 onClick={submitHandler}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                                disabled={disabled}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}
                             >
                                 Изменить
                             </button>
                         </Link>
+                        :
+                        <></>
                     }
-                    <button
-                        type={'button'}
-                        onClick={clearFormHandler}
-                        className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
-                        Отменить
-                    </button>
+
+                    <Link to={'/point'}>
+                        <button
+                            type={'button'}
+                            onClick={clearFormHandler}
+                            className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
+                            Отменить
+                        </button>
+                    </Link>
+
                 </div>
 
             </form>

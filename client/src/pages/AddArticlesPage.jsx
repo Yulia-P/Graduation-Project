@@ -20,8 +20,6 @@ export const AddArticlesPage = () => {
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
     const [image_url, setImage_url] = useState('')
-    const [disabled, setDisabled] = useState(true)
-
 
     const navigate = useNavigate();
     //
@@ -73,12 +71,8 @@ export const AddArticlesPage = () => {
 
     useEffect(() => {
         if (status) toast(status)
-        if (text.trim() && title.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [status, text, title])
+
+    }, [status])
 
     const options = React.useMemo(
         () => ({
@@ -137,12 +131,19 @@ export const AddArticlesPage = () => {
                 value={text} onChange={onChange}
                 options={options} />
             <div className={'flex mr-3'}>
-                <button className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black ${disabled ? 'invisible' : ''}`}
-                    onClick={submitHandler}
-                    size="large"
-                    variant="contained"
-                    disabled={disabled}>
-                    Сохранить </button>
+                {(text && title)
+                    ?
+                    <button
+                        className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black `}
+                        onClick={submitHandler}
+                        size="large"
+                        variant="contained"
+                    >
+                        Сохранить </button>
+                    :
+                    <></>
+                }
+
                 <a href="/">
                     <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
                         size="large">Отмена</button>

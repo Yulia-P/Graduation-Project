@@ -12,10 +12,10 @@ export const AllArticlesPage = () => {
     const {article} = useSelector((state) => state.articles)
 
         useEffect(() => {
-            dispatch(getArticles({}));
+            dispatch(getArticles());
             if (status) toast(status)
             // window.location.reload();
-        }, [dispatch, status, article])
+        }, [dispatch, status])
 
         if(!article.length){
             return(
@@ -28,7 +28,8 @@ export const AllArticlesPage = () => {
             <div className={'max-w-[900px] mx-auto py-10 '}>
                 <div className={'flex justify-between gap-8'}>
                     <div className={'flex flex-col gap-10 '}>
-                        {article?.map((articles, idx) => (<ArticleItem key={idx} articles={articles}/>))}
+                        {article?.map((articles) => (
+                            <ArticleItem key={articles.id} articles={articles}/>))}
                     </div>
                 </div>
             </div>

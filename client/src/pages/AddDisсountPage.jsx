@@ -16,7 +16,6 @@ export const AddDisсountPage = () => {
     const [discount, setDiscount] = useState('')
     const [count_for_dnt, setCountForDnt] = useState('')
     const [promo_code, setPromoCode] = useState('')
-    const [disabled, setDisabled] = useState(true)
     const navigate = useNavigate();
 
     const submitHandler = async () => {
@@ -43,12 +42,7 @@ export const AddDisсountPage = () => {
 
     useEffect(() => {
         if (status) toast(status)
-        if (promo_code.trim() && count_for_dnt.trim() && discount.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [status, promo_code, count_for_dnt, discount])
+    }, [status])
 
     return(
         <div>
@@ -89,16 +83,17 @@ export const AddDisсountPage = () => {
 
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
+                    {(discount && count_for_dnt && promo_code)
+                        ?
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                            disabled={disabled}
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}
                         >
-
                             Добавить
                         </button>
+                        :
+                        <></>
                     }
 
                     <button

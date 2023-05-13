@@ -10,7 +10,6 @@ export const UpdateSecretKeyPage = () => {
     const [secret_key, setSecretKey] = useState('')
     const { status } = useSelector((state) => state.secretkey)
     const params = useParams()
-    const [disabled_s, setDisabledS] = useState(true)
 
     const submitHandler = () => {
         try {
@@ -29,11 +28,6 @@ export const UpdateSecretKeyPage = () => {
 
     useEffect(() => {
         if (status) toast(status)
-        if (secret_key.trim()) {
-            setDisabledS(false)
-        } else {
-            setDisabledS(true)
-        }
     }, [status, secret_key])
 
     return (
@@ -55,24 +49,27 @@ export const UpdateSecretKeyPage = () => {
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
+                    {(secret_key)
+                        ?
                         <Link to={'/point'}>
                             <button
                                 type={'button'}
                                 onClick={submitHandler}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled_s ? 'invisible' : ''}`}
-                                disabled={disabled_s}>
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}                             >
                                 Изменить
                             </button>
                         </Link>
+                        : <></>
                     }
+                    <Link to={'/point'}>
                     <button
                         type={'button'}
                         onClick={clearFormHandler}
                         className='bg-pink-950 text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-pink-950'>
                         Отменить
                     </button>
-                </div>
+                </Link>
+        </div>
             </form>
         </div>
     )

@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [disabled, setDisabled] = useState(true)
 
     const { status } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
@@ -29,14 +28,6 @@ export const LoginPage = () => {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        if (email.trim() && password.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [email, password])
 
     return (
         <form
@@ -66,14 +57,17 @@ export const LoginPage = () => {
             </label>
 
             <div className='flex gap-8 justify-center mt-4'>
-                <button
-                    type='submit'
-                    onClick={handleSubmit}
-                    className={`text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 border-cyan-950 ${disabled ? 'invisible' : ''}`}
-                    disabled={disabled}
-                >
-                    Войти
-                </button>
+                {(email && password)
+                    ?
+                    <button
+                        type='submit'
+                        onClick={handleSubmit}
+                        className={`text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 border-cyan-950 `}
+                    >
+                        Войти
+                    </button>
+                    : <></>
+                }
 
                 <Link
                     to='/register'

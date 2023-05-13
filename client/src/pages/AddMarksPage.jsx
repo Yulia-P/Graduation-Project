@@ -35,17 +35,9 @@ export const AddMarksPage = ( ) => {
     useEffect(() => {
         if (status) toast(status)
         if (status_weight) toast(status_weight)
-        if (rubbish.trim() && points_per_kg.trim() && new_from_kg.trim() ) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-        if (rubbish_w.trim() && weight.trim() && key_of_weight.trim()  ) {
-            setDisabledS(false)
-        } else {
-            setDisabledS(true)
-        }
-    }, [status, status_weight, rubbish, points_per_kg, new_from_kg, rubbish_w, weight, key_of_weight])
+    }, [status, status_weight
+        // , rubbish, points_per_kg, new_from_kg, rubbish_w, weight, key_of_weight
+    ])
 
     const handleChangeFile = async (event) => {
         try {
@@ -144,7 +136,8 @@ export const AddMarksPage = ( ) => {
                         Вторсырье:
                         <input
                             type='text'
-                            value={rubbish} onChange={(e) => setRubbish(e.target.value)}
+                            value={rubbish}
+                            onChange={(e) => setRubbish(e.target.value)}
                             placeholder='Введите вид отхода'
                             className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                     </label>
@@ -170,15 +163,16 @@ export const AddMarksPage = ( ) => {
                     </label>
 
                     <div className='flex gap-8 items-center justify-center mt-4'>
-                        {
+                        {(new_from_kg && points_per_kg && rubbish)
+                            ?
                             <button
                                 type={'button'}
                                 onClick={submitHandler}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                                disabled={disabled}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}
                             >
                                 Добавить
                             </button>
+                            : <></>
                         }
 
                         <button
@@ -228,15 +222,17 @@ export const AddMarksPage = ( ) => {
                     </label>
 
                     <div className='flex gap-8 items-center justify-center mt-4'>
-                        {
+                        {(key_of_weight && weight && rubbish_w )
+                            ?
                             <button
                                 type={'button'}
                                 onClick={submitHandlerWeight}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled_s ? 'invisible' : ''}`}
-                                disabled={disabled_s}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}
                             >
                                 Добавить
                             </button>
+                            :
+                            <></>
                         }
 
                         <button

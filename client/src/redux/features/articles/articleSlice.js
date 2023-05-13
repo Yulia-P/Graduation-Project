@@ -24,9 +24,10 @@ export const createArticles = createAsyncThunk(
 
 export const getArticles = createAsyncThunk(
     'articles/getArticles',
-    async ({title, text, image_url}) => {
+    async () => {
         try {
             const { data } = await axios.get('/articles')
+            console.log(data)
             return data
         } catch (error) {
             console.log(error)

@@ -1,29 +1,29 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 // import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addPoint} from "../redux/features/point/pointSlice";
 import {addSecretKey} from "../redux/features/secretkey/secretkeySlice";
 import { toast } from 'react-toastify'
 import { useNavigate} from "react-router-dom";
+// import axios from "../utils/axios";
+import {getMark} from "../redux/features/mark/markSlice";
+import {CheckBoxItem} from "../components/CheckBoxItem";
 
 export const AddPointPage = () => {
 
-    const dispatch = useDispatch()
-
     const { status } = useSelector((state) => state.point)
     const { status_sk } = useSelector((state) => state.secretkey)
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [address, setAddress] = useState('')
     const [time_of_work, setTimeOfWork] = useState('')
     const [rubbish, setRubbish] = useState('')
     const [link_to_map, setLinkToMap] = useState('')
     const [point_name, setPointName] = useState('')
-    const [disabled, setDisabled] = useState(true)
 
     const [secret_key, setSecretKey] = useState('')
-    const [disabled_s, setDisabledS] = useState(true)
 
+    const dispatch = useDispatch()
 
     const submitHandler = async () => {
         try {
@@ -55,7 +55,6 @@ export const AddPointPage = () => {
         }
     }
 
-
     const clearFormHandler = () => {
         setAddress('')
         setTimeOfWork('')
@@ -69,23 +68,18 @@ export const AddPointPage = () => {
     }
 
     useEffect(() => {
+        dispatch(getMark())
         if (status) toast(status)
+
+    }, [status, status_sk])
+
+    useEffect(() => {
+        dispatch(getMark())
         if (status_sk) toast(status_sk)
-        if (address.trim() && time_of_work.trim() && rubbish.trim() && link_to_map.trim() && point_name.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-        if (secret_key.trim()) {
-            setDisabledS(false)
-        } else {
-            setDisabledS(true)
-        }
-    }, [status, status_sk, address, time_of_work, rubbish, link_to_map, point_name, secret_key])
+    }, [status_sk])
 
     return (
         <section className={'w-full flex-col xl:flex-row flex  justify-between'}>
-        {/*<div className={'flex items-center  justify-center '}>*/}
             <div className={'relative items-center justify-center pl-20 xl:pl-48 order-1 text-center w-full xl:w-2/4 xl:text-left xl:mt-0 mt-8'}>
                 <form
                     className='flex flex-col xl:w-96 pt-5 pb-5 w-80 mt-16 border-2 border-green-500  rounded-lg '
@@ -113,15 +107,15 @@ export const AddPointPage = () => {
                         className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
                 </label>
 
-                <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
-                    Виды вторсырья:
-                    <input
-                        type='text'
-                        value={rubbish}
-                        onChange={(e) => setRubbish(e.target.value)}
-                        placeholder='Введите вторсырье...'
-                        className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
-                </label>
+                    <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
+                        Виды вторсырья:
+                        <input
+                            type='text'
+                            value={rubbish}
+                            onChange={(e) => setRubbish(e.target.value)}
+                            placeholder='Введите вторсырье...'
+                            className='flex mt-1 text-cyan-950 xl:w-80 w-64 xl:text-2xl rounded-lg border-2 border-cyan-950 bg-transparent py-1 px-2 outline-none placeholder:text-medium-gray placeholder:text-xl focus:border-emerald-700 focus:bg-emerald-700 focus:text-almost-white focus:placeholder:text-amber-50' />
+                    </label>
 
                 <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
                 Время работы:
@@ -144,17 +138,16 @@ export const AddPointPage = () => {
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
+                    {(point_name && address && rubbish && time_of_work && link_to_map)
+                        ?
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                            disabled={disabled}
-                        >
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}>
                             Добавить
                         </button>
+                        : <></>
                     }
-
                     <button
                         type={'button'}
                         onClick={clearFormHandler}
@@ -184,14 +177,16 @@ export const AddPointPage = () => {
                     </label>
 
                     <div className='flex gap-8 items-center justify-center mt-4'>
-                        {
+                        {(secret_key) ?
                             <button
                                 type={'button'}
                                 onClick={submitHandlerKey}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled_s ? 'invisible' : ''}`}
-                                disabled={disabled_s}>
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg`}
+                            >
                                 Добавить
                             </button>
+                            :
+                            <></>
                         }
 
                         <button

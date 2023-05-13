@@ -16,9 +16,7 @@ export const UpdateDiscountPage = () => {
     const [count_for_dnt, setCountForDnt] = useState('')
     const [promo_code, setPromoCode] = useState('')
     const { status } = useSelector((state) => state.alldiscount)
-    const [disabled, setDisabled] = useState(true)
-
-
+    // const [disabled, setDisabled] = useState(true)
 
     const fetchDiscount = useCallback(async () => {
         const { data } = await axios.get(`/Discounts/${params.id}`)
@@ -50,12 +48,9 @@ export const UpdateDiscountPage = () => {
     useEffect(() => {
         fetchDiscount();
         if (status) toast(status);
-        if (typeof promo_code === 'string' && typeof count_for_dnt === 'string' && typeof discount === 'string' && promo_code.trim() && count_for_dnt.trim() && discount.trim()) {
-            setDisabled(false);
-        } else {
-            setDisabled(true);
-        }
-    }, [fetchDiscount, status, promo_code, count_for_dnt, discount]);
+    }, [
+        // fetchDiscount,
+        status]);
 
 
     return (
@@ -96,21 +91,21 @@ export const UpdateDiscountPage = () => {
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4'>
-                    {
-                        // <Link
-                        //     to='/alldisсount'>
+
+                        {(promo_code && count_for_dnt && discount)
+                        ?
                             <button
                                 type={'button'}
                                 onClick={submitHandler}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                                disabled={disabled}
-
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg `}
                             >
-
                                 Изменить
                             </button>
-                        // </Link>
+                            :
+                            <></>
                     }
+
+
 
 
                     <Link

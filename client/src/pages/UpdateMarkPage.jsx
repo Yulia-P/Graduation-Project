@@ -11,13 +11,13 @@ import { toast } from 'react-toastify'
 export const UpdateMarkPage = () => {
 
     const dispatch = useDispatch()
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { status } = useSelector((state) => state.mark)
     const [rubbish, setRubbish] = useState('')
     const [points_per_kg, setPointsPerKg] = useState('')
     const [new_from_kg, setNewFromKg] = useState('')
     const [image_link, setImageLink] = useState('')
-    const [disabled, setDisabled] = useState(true)
+    // const [disabled, setDisabled] = useState(true)
 
 
     const params = useParams()
@@ -46,13 +46,13 @@ export const UpdateMarkPage = () => {
         }
     }
 
-    useEffect(() => {
-        if (rubbish.trim() && typeof points_per_kg === 'string' && typeof new_from_kg === 'string' && new_from_kg.trim()) {
-            setDisabled(false);
-        } else {
-            setDisabled(true);
-        }
-    }, [rubbish, points_per_kg, new_from_kg]);
+    // useEffect(() => {
+    //     if (rubbish.trim() && typeof points_per_kg === 'string' && typeof new_from_kg === 'string' && new_from_kg.trim()) {
+    //         setDisabled(false);
+    //     } else {
+    //         setDisabled(true);
+    //     }
+    // }, [rubbish, points_per_kg, new_from_kg]);
 
 
 
@@ -82,7 +82,9 @@ export const UpdateMarkPage = () => {
     useEffect(() => {
         fetchMark()
         if (status) toast(status)
-    }, [fetchMark, status])
+    }, [
+        // fetchMark,
+        status])
 
     const onClickRemoveImage = () => {
         setImageLink('');
@@ -148,15 +150,16 @@ export const UpdateMarkPage = () => {
                 </label>
 
                 <div className='flex gap-8 items-center justify-center mt-4 '>
-                    {
+                    {(new_from_kg && points_per_kg && rubbish)
+                        ?
                         <button
                             type={'button'}
                             onClick={submitHandler}
-                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg ${disabled ? 'invisible' : ''}`}
-                            disabled={disabled}
+                            className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg`}
                         >
                             Изменить
                         </button>
+                        : <></>
                     }
 
                     <Link to={'/mark'}>

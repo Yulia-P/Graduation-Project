@@ -75,13 +75,16 @@ export const UpArticlesPage = () => {
 
     useEffect(() => {
         if (status) toast(status)
-        // fetchArticles()
-        if (text.trim() && title.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [status, fetchArticles,  text, title])
+        fetchArticles()
+        // if (text.trim() && title.trim()) {
+        //     setDisabled(false)
+        // } else {
+        //     setDisabled(true)
+        // }
+    }, [status
+        // , fetchArticles
+        // , text, title
+    ])
 
     const options = React.useMemo(
         () => ({
@@ -138,19 +141,22 @@ export const UpArticlesPage = () => {
             />
 
             <SimpleMDE
-                // className={styles.editor}
                 value={text}
                 onChange={onChange}
                 options={options} />
-            <div
-                className={'flex mr-3'}
-            >
-                <button className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black ${disabled ? 'invisible' : ''}`}
-                        onClick={submitHandler}
-                        size="large"
-                        variant="contained"
-                        disabled={disabled}>
-                    Сохранить </button>
+            <div className={'flex mr-3'}>
+                {(text && title)
+                    ?
+                    <button className={`my-4 ml-10 text-medium-gray px-5 py-2 text-white bg-black rounded-lg font-bold  mx-0 hover:bg-transparent hover:text-almost-black border-2 border-almost-black`}
+                            onClick={submitHandler}
+                            size="large"
+                            variant="contained">
+                        Сохранить </button>
+                    :
+                    <></>
+                }
+
+
                 <a href={`/${params.id}`}>
                     <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
                             size="large">Отмена</button>

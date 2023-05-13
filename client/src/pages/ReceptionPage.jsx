@@ -14,7 +14,7 @@ export const ReceptionPage = () => {
     // const [type_waste, setType_waste] = useState('')
     const [station_key, setStationKey] = useState('')
     const [key_of_weight, setKeyOfWeight] = useState('')
-    const [disabled, setDisabled] = useState(true)
+    // const [disabled, setDisabled] = useState(true)
 
     const { status } = useSelector((state) => state.reception)
 
@@ -42,13 +42,13 @@ export const ReceptionPage = () => {
         }
     }
 
-    useEffect(() => {
-        if (station_key.trim() && key_of_weight.trim()) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [station_key, key_of_weight])
+    // useEffect(() => {
+    //     if (station_key.trim() && key_of_weight.trim()) {
+    //         setDisabled(false)
+    //     } else {
+    //         setDisabled(true)
+    //     }
+    // }, [station_key, key_of_weight])
 
     const clearFormHandler = () => {
         // setWeight('')
@@ -90,15 +90,18 @@ export const ReceptionPage = () => {
                     </label>
 
                     <div className='flex gap-8 items-center justify-center mt-4'>
-                        {
+                        {(key_of_weight && station_key)
+                            ?
                             <button
                                 type={'button'}
                                 onClick={submitHandler}
-                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white bg-cyan-950 rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-cyan-950 ${disabled ? 'invisible' : ''}`}
-                                disabled={disabled}
+                                className={`text-medium-gray px-2 py-1 xl:px-5 xl:py-2 text-white bg-cyan-950 rounded-lg mx-0 hover:bg-transparent hover:text-almost-black border-2 border-cyan-950 `}
+                                // disabled={disabled}
                             >
                                 Добавить
                             </button>
+                            :
+                            <></>
                         }
                         <button
                             type={'button'}
