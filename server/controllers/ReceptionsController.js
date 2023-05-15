@@ -74,13 +74,13 @@ const ReceptionsController = {
                             where: { is_used: 0 }
                         })
 
-                        // db.models.Points.update({
-                        //     key_id: v_find_used.id
-                        // }, { where: { id: v_find_key_point.id } })
-                        //
-                        // db.models.Keys.update({
-                        //     used: 1,
-                        // }, { where: { id: v_find_used.id } })
+                        await db.models.Points.update({
+                            key_id: v_find_used.id
+                        }, { where: { id: v_find_key_point.id } })
+
+                        await db.models.Keys.update({
+                            used: 1,
+                        }, { where: { id: v_find_used.id } })
 
                         res.json({
                             o_new_kg,
