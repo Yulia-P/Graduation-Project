@@ -9,13 +9,10 @@ module.exports = function checkRole(req, res, next) {
     } else {
         try {
             const decoded = jwt.verify(token, accessKey);
-            // console.log(decoded)
             req.role = decoded.role;
             const v_role = decoded.role
-            // console.log(v_role)
             if(v_role === 'admin')
             {
-                console.log('HELLO')
                 next();
             }
             else {
@@ -23,8 +20,6 @@ module.exports = function checkRole(req, res, next) {
                     message: 'Нет доступа(роль)'
                 })
             }
-            // req.role === 'admin';
-
         } catch (e) {
             return res.json({
                 message: 'Нет доступа(роль)',

@@ -7,6 +7,7 @@ import 'easymde/dist/easymde.min.css';
 import axios from "../utils/axios";
 import {toast} from "react-toastify";
 import {createArticles} from "../redux/features/articles/articleSlice";
+import {loginUser} from "../redux/features/auth/authSlice";
 
 
 export const AddArticlesPage = () => {
@@ -54,20 +55,34 @@ export const AddArticlesPage = () => {
         setText(value);
     }, []);
 
-    const submitHandler = () => {
+    // const submitHandler = () => {
+    //     try {
+    //         dispatch(createArticles({ title, text, image_url }))
+    //         console.log(title);
+    //         console.log(text);
+    //         console.log(image_url);
+    //         setText('')
+    //         setTitle('')
+    //         setImage_url('')
+    //         // navigate('/articles')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
         try {
-            dispatch(createArticles({ title, text, image_url }))
-            console.log(title);
-            console.log(text);
-            console.log(image_url);
-            setText('')
-            setTitle('')
-            setImage_url('')
-            // navigate('/articles')
+            const response = await dispatch(createArticles({ title, text, image_url }));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     useEffect(() => {
         if (status) toast(status)

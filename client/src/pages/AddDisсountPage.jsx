@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 // import {Link, useNavigate} from "react-router-dom";
-import { useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {addDiscount} from "../redux/features/alldiscount/alldiscountSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addDiscount } from "../redux/features/alldiscount/alldiscountSlice";
 import { toast } from 'react-toastify'
+import {loginUser} from "../redux/features/auth/authSlice";
 
 
 export const AddDisсountPage = () => {
@@ -18,20 +19,34 @@ export const AddDisсountPage = () => {
     const [promo_code, setPromoCode] = useState('')
     const navigate = useNavigate();
 
-    const submitHandler = async () => {
+    // const submitHandler = async () => {
+    //     try {
+    //         dispatch(addDiscount({ discount, count_for_dnt, promo_code }))
+    //         console.log(discount);
+    //         console.log(count_for_dnt);
+    //         console.log(promo_code);
+    //         setDiscount('')
+    //         setCountForDnt('')
+    //         setPromoCode('')
+    //         // navigate('/alldisсount')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
         try {
-            dispatch(addDiscount({ discount, count_for_dnt, promo_code}))
-            console.log(discount);
-            console.log(count_for_dnt);
-            console.log(promo_code);
-            setDiscount('')
-            setCountForDnt('')
-            setPromoCode('')
-            // navigate('/alldisсount')
+            const response = await dispatch(addDiscount({ discount, count_for_dnt, promo_code }));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     const clearFormHandler = () => {
         setDiscount('')
@@ -44,7 +59,7 @@ export const AddDisсountPage = () => {
         if (status) toast(status)
     }, [status])
 
-    return(
+    return (
         <div>
             <form
                 className='xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-4 pt-12 rounded-lg '

@@ -12,12 +12,10 @@ const Check_weightsController = {
             const v_check_key_w = await db.models.Check_weights.findOne({
                 where: { key_of_weight: o_key_of_weight }
             })
-
             const o_rubbish = await db.models.Marks.findOne({
                 attributes: ["id"],
                 where: { rubbish: req.body.rubbish_w}
             })
-
             if (o_rubbish == null){
                 res.json({
                     message: `Такого ${req.body.rubbish_w} вида вторсырья нет сначала добавить его во вторсырье`
@@ -25,7 +23,6 @@ const Check_weightsController = {
                 return;
             }
             else {
-
                 if (v_check_key_w == null) {
                     await db.models.Check_weights.create({
                         rubbish_id: o_rubbish.id,
@@ -33,12 +30,10 @@ const Check_weightsController = {
                         key_of_weight: o_key_of_weight,
                     })
                 }
-
                 res.json({
                     message: 'Ключ добавлен'
                 });
             }
-
         } catch (error) {
             console.log(error);
             res.json({

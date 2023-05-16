@@ -2,32 +2,47 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../redux/features/auth/authSlice'
-// import { checkIsAuth } from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const [validationErrors, setValidationErrors] = useState(null);
+
     const { status } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { user } = useSelector((state) => state.auth)
-
-    // const isAuth = useSelector(checkIsAuth)
 
     useEffect(() => {
         if (status) toast(status)
         if (user) navigate('/')
     }, [status, user, navigate])
 
-    const handleSubmit = () => {
+    // const handleSubmit = () => {
+    //     try {
+    //         dispatch(loginUser({ email, password }))
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            dispatch(loginUser({ email, password }))
+            const response = await dispatch(loginUser({ email, password }));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
+
 
     return (
         <form

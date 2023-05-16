@@ -16,21 +16,13 @@ const ArticlesController = {
                     model: db.models.Users,
                     required: true,
                     attributes: ["id", "username"]
-                }]
-            }
-            )
+                }]})
             if (!article) {
                 return res.json({ message: 'Статей нет' })
             }
             else {
                 res.json({ article })
             }
-            // .then(expense => {
-            //     res.set("Content-Type", "application/json");
-            //     res.send(JSON.stringify(expense)),
-            //         console.log(JSON.stringify(expense))
-            // })
-
         } catch (error) {
             console.log(error);
             res.json({

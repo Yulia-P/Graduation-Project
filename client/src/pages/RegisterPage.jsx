@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { registerUser } from '../redux/features/auth/authSlice'
+import {loginUser, registerUser} from '../redux/features/auth/authSlice'
 // import { checkIsAuth} from '../redux/features/auth/authSlice'
 
 import { toast } from 'react-toastify'
@@ -29,16 +29,32 @@ export const RegisterPage = () => {
   }, [status, user, navigate])
   // error
 
-  const handleSubmit = () => {
+  // const handleSubmit = () => {
+  //   try {
+  //     dispatch(registerUser({ username, email, password }))
+  //     setPassword('')
+  //     setEmail('')
+  //     setUserName('')
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      dispatch(registerUser({ username, email, password }))
-      setPassword('')
-      setEmail('')
-      setUserName('')
+      const response = await dispatch(registerUser({ username, email, password }));
+      // setPassword('')
+      // setEmail('')
+      // setUserName('')
+      if (response.payload && response.payload.length > 0) {
+        const validationErrors = response.payload.map((error) => error.msg);
+        toast.error(validationErrors.join(', '));
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
     return (
     <form onSubmit={e => e.preventDefault()}

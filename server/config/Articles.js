@@ -29,9 +29,7 @@ const Sequelize = require('sequelize')
 const Model = Sequelize.Model;
 
 class Articles extends Model { }
-
 const { Users } = require('../config/Users')
-
 Articles.init(
     {
             id: { type: Sequelize.INTEGER, primaryKey: true, unique: true, autoIncrementIdentity: true, required: true },
@@ -44,7 +42,6 @@ Articles.init(
     },
     { sequelize, modelName: 'Articles', tableName: 'articles', timestamps: false }
 );
-
 Users.hasMany(Articles, { foreignKey: 'author' });
 Articles.belongsTo(Users, { foreignKey: 'author' });
 module.exports = { Articles };

@@ -8,6 +8,7 @@ import { useNavigate} from "react-router-dom";
 // import axios from "../utils/axios";
 import {getMark} from "../redux/features/mark/markSlice";
 import {CheckBoxItem} from "../components/CheckBoxItem";
+import {loginUser} from "../redux/features/auth/authSlice";
 
 export const AddPointPage = () => {
 
@@ -25,35 +26,64 @@ export const AddPointPage = () => {
 
     const dispatch = useDispatch()
 
-    const submitHandler = async () => {
-        try {
-            dispatch(addPoint({ address, time_of_work, rubbish, link_to_map, point_name}))
-            console.log(address);
-            console.log(time_of_work);
-            console.log(rubbish);
-            console.log(link_to_map);
-            console.log(point_name);
-            setAddress('')
-            setTimeOfWork('')
-            setRubbish('')
-            setLinkToMap('')
-            setPointName('')
-            // navigate('/point')
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // const submitHandler = async () => {
+    //     try {
+    //         dispatch(addPoint({ address, time_of_work, rubbish, link_to_map, point_name}))
+    //         console.log(address);
+    //         console.log(time_of_work);
+    //         console.log(rubbish);
+    //         console.log(link_to_map);
+    //         console.log(point_name);
+    //         setAddress('')
+    //         setTimeOfWork('')
+    //         setRubbish('')
+    //         setLinkToMap('')
+    //         setPointName('')
+    //         // navigate('/point')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-    const submitHandlerKey = async () => {
+    const submitHandler = async (e) => {
+        e.preventDefault();
         try {
-            dispatch(addSecretKey({ secret_key}))
-            console.log(secret_key);
-            setSecretKey('')
-            // navigate('/point')
+            const response = await dispatch(addPoint({ address, time_of_work, rubbish, link_to_map, point_name}));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
+
+    // const submitHandlerKey = async () => {
+    //     try {
+    //         dispatch(addSecretKey({ secret_key}))
+    //         console.log(secret_key);
+    //         setSecretKey('')
+    //         // navigate('/point')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const submitHandlerKey = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await dispatch(addSecretKey({ secret_key}));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const clearFormHandler = () => {
         setAddress('')

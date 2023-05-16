@@ -20,9 +20,11 @@ export const ReceptionPage = () => {
 
 
     useEffect(() => {
-        console.log(response);
+        // console.log(response);
         if (status) toast(status)
-    }, [response, status]);
+    }, [
+        // response,
+        status]);
 
     const submitHandler = async () => {
         try {

@@ -7,6 +7,7 @@ import {addMark} from "../redux/features/mark/markSlice";
 import axios from "../utils/axios";
 import {toast} from "react-toastify";
 import {addWeight} from "../redux/features/weight/weightSlice";
+import {loginUser} from "../redux/features/auth/authSlice";
 
 
 export const AddMarksPage = ( ) => {
@@ -22,14 +23,10 @@ export const AddMarksPage = ( ) => {
     const [weight, setWeight] = useState('')
     const [key_of_weight, setKeyOfWeight] = useState('')
 
-    const [disabled, setDisabled] = useState(true)
-    const [disabled_s, setDisabledS] = useState(true)
-
-
     const { status } = useSelector((state) => state.mark)
     const { status_weight } = useSelector((state) => state.weight)
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -55,37 +52,66 @@ export const AddMarksPage = ( ) => {
         }
     };
 
-    const submitHandler = async () => {
-        try {
-            dispatch(addMark({ rubbish, points_per_kg, new_from_kg, image_link}))
-            console.log(rubbish);
-            console.log(points_per_kg);
-            console.log(new_from_kg);
-            console.log(image_link);
-            setRubbish('')
-            setPointsPerKg('')
-            setNewFromKg('')
-            setImageLink('')
-            // navigate('/mark')
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // const submitHandler = async () => {
+    //     try {
+    //         dispatch(addMark({ rubbish, points_per_kg, new_from_kg, image_link}))
+    //         console.log(rubbish);
+    //         console.log(points_per_kg);
+    //         console.log(new_from_kg);
+    //         console.log(image_link);
+    //         setRubbish('')
+    //         setPointsPerKg('')
+    //         setNewFromKg('')
+    //         setImageLink('')
+    //         // navigate('/mark')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-    const submitHandlerWeight = async () => {
+    const submitHandler = async (e) => {
+        e.preventDefault();
         try {
-            dispatch(addWeight({ rubbish_w, weight, key_of_weight}))
-            console.log(rubbish_w);
-            console.log(weight);
-            console.log(key_of_weight);
-            setRubbishW('')
-            setWeight('')
-            setKeyOfWeight('')
-            // navigate('/mark')
+            const response = await dispatch(addMark({ rubbish, points_per_kg, new_from_kg, image_link}));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
+
+    // const submitHandlerWeight = async () => {
+    //     try {
+    //         dispatch(addWeight({ rubbish_w, weight, key_of_weight}))
+    //         console.log(rubbish_w);
+    //         console.log(weight);
+    //         console.log(key_of_weight);
+    //         setRubbishW('')
+    //         setWeight('')
+    //         setKeyOfWeight('')
+    //         // navigate('/mark')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const submitHandlerWeight = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await dispatch(addWeight({ rubbish_w, weight, key_of_weight}));
+
+            if (response.payload && response.payload.length > 0) {
+                const validationErrors = response.payload.map((error) => error.msg);
+                toast.error(validationErrors.join(', '));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const clearFormHandler = () => {
         setRubbish('')

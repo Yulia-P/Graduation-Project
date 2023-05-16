@@ -3,15 +3,15 @@ const ArticlesController = require("../controllers/ArticlesController");
 const cheсkAuth = require('../utils/checkAuth');
 const checkRole = require("../utils/checkRole");
 
-// const validator = require('../validations/ArticlesValidations');
-// const ValidError = require('../utils/HandleErrors');
+const validator = require('../validations/ArticlesValidations');
+const ValidError = require('../utils/HandleErrors');
 // const { route } = require('./AuthRouter');
 
 let router = express.Router()
 
 router.get   ('/articles',                      ArticlesController.getArticles);
 router.get   ('/articles/:id',                  ArticlesController.getArticle);
-router.post  ('/articles',           cheсkAuth, ArticlesController.addArticles);
+router.post  ('/articles',           cheсkAuth, validator.addArticles, ValidError, ArticlesController.addArticles);
 router.put   ('/articles/:id',       cheсkAuth, ArticlesController.updateArticles);
 router.delete('/articles/:id',       cheсkAuth, ArticlesController.deleteArticles);
 router.put   ('/like/:id',           cheсkAuth, ArticlesController.like);
