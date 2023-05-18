@@ -33,7 +33,7 @@ export const DISCOUNTS = [
 
 export const DISCOUNTSAdmin = [
     {text: 'Скидки', icon: <BsPercent/>, link: '/alldisсount' },
-    {text: 'Мои скидки', icon: <BsPercent/>, link: '/mydiscount' },
+    // {text: 'Мои скидки', icon: <BsPercent/>, link: '/mydiscount' },
     {text: 'Добавить скидку', icon: <AiOutlinePlus/>, link: '/newdisсount' },
 ];
 

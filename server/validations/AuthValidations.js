@@ -11,3 +11,7 @@ exports.LoginUser  = [
     body('email', 'Неверный формат почты').isEmail().normalizeEmail(),
     body('email', 'Укажите почту').isLength({min: 3}),
 ];
+
+exports.changeUsername  = [
+    body('newun', 'Слишком короткое имя пользователя, минимум 5 символов').isLength({min: 5}),
+];

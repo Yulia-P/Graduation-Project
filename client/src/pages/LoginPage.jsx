@@ -91,6 +91,22 @@ export const LoginPage = () => {
                     Нет аккаунта ?
                 </Link>
             </div>
+            <div className='flex gap-8 justify-center mt-4'>
+                <Link
+                    to='/change/username'>
+                <button
+                    className={`flex flex-wrap text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 border-cyan-950  text-sm`}>
+                    Изменить username
+                </button>
+                </Link>
+                <Link
+                    to='/change/pass'>
+                    <button
+                        className={`flex flex-wrap text-white bg-cyan-950 px-2 py-1 xl:px-5 xl:py-2 border-2 border-cyan-950 rounded-lg hover:bg-transparent hover:text-almost-black border-2 border-cyan-950  text-sm`}>
+                        Изменить password
+                    </button>
+                </Link>
+            </div>
         </form>
     )
 }

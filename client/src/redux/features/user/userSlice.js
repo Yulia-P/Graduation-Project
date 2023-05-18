@@ -20,6 +20,36 @@ export const getUser = createAsyncThunk(
     }
 )
 
+export const changeUsername = createAsyncThunk(
+    'user/changeUsername',
+    async (updatedUsername) => {
+        try {
+            const {data} = await axios.put('/user', updatedUsername,
+                )
+            return data
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const changePass = createAsyncThunk(
+    'user/changePass',
+    async (updatedPass) => {
+        try {
+            const {data} = await axios.put('/user/pass', updatedPass,
+            )
+            return data
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+
+
 export const getUserM = createAsyncThunk(
     'user/getUser',
     async () => {
@@ -63,6 +93,40 @@ export const userSlice = createSlice({
             // state.status = action.payload.message
         },
         [getUserM.rejected]: (state, action) => {
+            state.loading = false
+            state.status = action.payload.message
+        },
+        //
+        [changeUsername.pending]: (state) => {
+            state.loading = true
+            state.status = null
+        },
+        [changeUsername.fulfilled]: (state, action) => {
+            state.loading = false
+            const index = state.users.findIndex(
+                (user) => user.id === action.payload.id,
+            )
+            state.users[index] = action.payload
+            state.status = action.payload.message
+        },
+        [changeUsername.rejected]: (state, action) => {
+            state.loading = false
+            state.status = action.payload.message
+        },
+        //
+        [changePass.pending]: (state) => {
+            state.loading = true
+            state.status = null
+        },
+        [changePass.fulfilled]: (state, action) => {
+            state.loading = false
+            const index = state.users.findIndex(
+                (user) => user.id === action.payload.id,
+            )
+            state.users[index] = action.payload
+            state.status = action.payload.message
+        },
+        [changePass.rejected]: (state, action) => {
             state.loading = false
             state.status = action.payload.message
         },

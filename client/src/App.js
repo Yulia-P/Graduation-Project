@@ -27,6 +27,8 @@ import {AllArticlesPage} from "./pages/AllArticlesPage";
 import {AddArticlesPage} from "./pages/AddArticlesPage";
 import {UpArticlesPage} from "./pages/UpArticlesPage";
 import {PointsMarksPage} from "./pages/PointsMarksPage";
+import {ChangeUsername} from "./pages/ChangeUsername";
+import {ChangePassPage} from "./pages/ChangePassPage";
 // import {TestPage} from "./pages/TestPage";
 
 function App() {
@@ -55,6 +57,8 @@ function App() {
 
                 <Route path='login' element={<LoginPage/>}/>
                 <Route path='register' element={<RegisterPage/>}/>
+                <Route path='change/username' element={<ChangeUsername/>}/>
+                <Route path='change/pass' element={<ChangePassPage/>}/>
 
                 <Route path='/' element={<MainPage/>}/>
 

@@ -17,9 +17,9 @@ export const registerUser = createAsyncThunk(
                 email,
                 password,
             })
-            if (data.accessToken) {
-                window.localStorage.setItem('accessToken', data.accessToken)
-            }
+            // if (data.accessToken) {
+            //     window.localStorage.setItem('accessToken', data.accessToken)
+            // }
             return data
         } catch (error) {
             console.log(error)

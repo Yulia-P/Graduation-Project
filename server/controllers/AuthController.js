@@ -55,11 +55,11 @@ const AuthController = {
                     const mailOptions = {
                         from: 'ecofuturework@gmail.com',
                         to: send_mail,
-                        subject: 'Активация аккаунта на http://localhost:8082/',
+                        subject: 'Активация аккаунта на сайте ЭкоБудещее',
                         html:
                             `
                             <div>
-                            <h1>Для активации перейдите по ссылке</h1>
+                            <h1 >Для активации перейдите по ссылке</h1>
                             <a href="${send_link}">${send_link}</a>
                             </div>
                             `
@@ -67,26 +67,26 @@ const AuthController = {
 
                     let info = await transporter.sendMail(mailOptions)
 
-                    const accessToken = jwt.sign({ id: candidate.null, username: candidate.username, role: candidate.role }, accessKey, { expiresIn: 30 * 60 })
-                    const refreshToken = jwt.sign({ id: candidate.null, username: candidate.username, role: candidate.role }, refreshKey, { expiresIn: 24 * 60 * 60 })
-
-
-                    res.cookie('accessToken', accessToken, {
-                        httpOnly: true,
-                        sameSite: 'strict'
-                    })
-                    res.cookie('refreshToken', refreshToken, {
-                        httpOnly: true,
-                        sameSite: 'strict'
-                    })
+                    // const accessToken = jwt.sign({ id: candidate.null, username: candidate.username, role: candidate.role }, accessKey, { expiresIn: 30 * 60 })
+                    // const refreshToken = jwt.sign({ id: candidate.null, username: candidate.username, role: candidate.role }, refreshKey, { expiresIn: 24 * 60 * 60 })
+                    //
+                    //
+                    // res.cookie('accessToken', accessToken, {
+                    //     httpOnly: true,
+                    //     sameSite: 'strict'
+                    // })
+                    // res.cookie('refreshToken', refreshToken, {
+                    //     httpOnly: true,
+                    //     sameSite: 'strict'
+                    // })
                     res.json({
-                        message: 'Регистрация прошла успешно',
-                        accessToken,
-                        user: {
-                            id: candidate.null,
-                            username: candidate.username,
-                            role: candidate.role
-                        }
+                        message: 'Мы выслали вам письмо на указанную почту для ее подтверждения',
+                        // accessToken,
+                        // user: {
+                        //     id: candidate.null,
+                        //     username: candidate.username,
+                        //     role: candidate.role
+                        // }
                     });
                 }
                 else {
@@ -199,7 +199,7 @@ const AuthController = {
             await db.models.Users.update({
                 is_activated: true,
             }, { where: { id: v_find_user.id } })
-            return res.redirect('http://localhost:3000/')
+            return res.redirect('http://localhost:3000/login')
 
             res.json({
                 message: 'Вы подтвердили свою почту'

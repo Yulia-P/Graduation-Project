@@ -40,7 +40,7 @@ export const Header = () => {
                 </NavItem>
                 )}
 
-                {user && (
+                {user?.role === "user" &&  (
                  <Link to={'/reception'}> <NavItem text={'Прием вторсырья'}/> </Link>
                 )}
 
@@ -75,6 +75,12 @@ export const Header = () => {
                 </NavItem>
                 )}
             </nav>
+
+            {user && (
+            <div className={'xl:flex ml-auto space-x-5 mt-3 text-xl text-cyan-950 opacity-90'}>
+                {user.username}
+            </div>
+            )}
 
             {user ? (
                 <div className={'hidden xl:flex ml-auto space-x-5 mt-1'}>
