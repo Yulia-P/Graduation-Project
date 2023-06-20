@@ -1,20 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react'
-// import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addPoint} from "../redux/features/point/pointSlice";
 import {addSecretKey} from "../redux/features/secretkey/secretkeySlice";
 import { toast } from 'react-toastify'
-import { useNavigate} from "react-router-dom";
-// import axios from "../utils/axios";
 import {getMark} from "../redux/features/mark/markSlice";
-import {CheckBoxItem} from "../components/CheckBoxItem";
-import {loginUser} from "../redux/features/auth/authSlice";
 
 export const AddPointPage = () => {
 
     const { status } = useSelector((state) => state.point)
     const { status_sk } = useSelector((state) => state.secretkey)
-    // const navigate = useNavigate();
 
     const [address, setAddress] = useState('')
     const [time_of_work, setTimeOfWork] = useState('')

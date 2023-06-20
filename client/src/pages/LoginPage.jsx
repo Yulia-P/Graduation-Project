@@ -47,7 +47,7 @@ export const LoginPage = () => {
     return (
         <form
             onSubmit={(e) => e.preventDefault()}
-            className='xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-14 pt-20 rounded-lg '>
+            className='xl:w-96 w-80 h-96 mx-auto mt-24 border-2 border-green-500 xl:pt-6 pt-20 rounded-lg '>
             <h1 className='text-lime-900 font-bold xl:text-3xl text-2xl opacity-80 text-center'>Авторизация</h1>
             <label className='flex flex-col xl:text-xl text-xs xl:text-2xl text-lime-900 items-center justify-center mt-3'>
                 Почта

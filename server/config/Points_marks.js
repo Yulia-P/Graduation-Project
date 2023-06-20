@@ -3,7 +3,6 @@ const Sequelize = require('sequelize')
 const Model = Sequelize.Model;
 
 class Points_marks extends Model{}
-
 const {Marks} = require('../config/Marks')
 const {Points} = require('../config/Points')
 

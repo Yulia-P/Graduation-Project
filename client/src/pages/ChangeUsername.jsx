@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 import {changeUsername} from "../redux/features/user/userSlice";
 
@@ -13,7 +12,7 @@ export const ChangeUsername = () => {
 
     const { status } = useSelector((state) => state.user)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     useEffect(() => {
         if (status) toast(status)

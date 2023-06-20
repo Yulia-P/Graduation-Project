@@ -138,27 +138,20 @@ const ArticlesController = {
             const v_check_id_articles = await db.models.Articles.findOne({
                 where: { id: req.params.id },
             })
-
             if (v_check_id_articles != null) {
                 const article = await db.models.Articles.destroy({ where: { id: req.params.id } })
-                res.
-                    // status(200).
-                    json({
+                res.json({
                         message: 'Статья удалена'
                     });
             }
             else {
-                res.
-                    // status(500).
-                    json({
+                res.json({
                         message: 'Не удалось удалить статью',
                     });
             }
         } catch (error) {
             console.log(error);
-            res.
-                // status(500).
-                json({
+            res.json({
                     message: 'Не удалось удалить статью',
                 });
         }
@@ -208,35 +201,27 @@ const ArticlesController = {
 
     like: async (req, res) => {
         try {
-            //like
             const i_user = req.userId
             const i_article = req.params.id
-
             const v_likes = await db.models.Likes.findOne({
                 where: {
                     [Op.and]: [{ user_id: i_user }, { article_id: i_article }],
                 }
             })
-
             if (!v_likes) {
                 const likes = await db.models.Likes.create({
                     user_id: i_user,
                     article_id: i_article,
                 })
-
                 const count_of_likes = await db.models.Likes.findAndCountAll({
                     attributes: ['article_id'],
                     where: { article_id: i_article }
                 })
-
-                // console.log(count_of_likes.count)
-
                 const update_like = await db.models.Articles.update({
                     likes: count_of_likes.count
                 }, {
                     where: { id: req.params.id }
                 })
-
                 db.models.Articles.findAll({
                     attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
                     include: [{
@@ -250,7 +235,6 @@ const ArticlesController = {
                         expense
                     });
                 })
-
             }
             else {
                 const likes = await db.models.Likes.destroy({
@@ -258,20 +242,15 @@ const ArticlesController = {
                         [Op.and]: [{ user_id: i_user }, { article_id: i_article }],
                     }
                 })
-
                 const count_of_likes = await db.models.Likes.findAndCountAll({
                     attributes: ['article_id'],
                     where: { article_id: i_article }
                 })
-
-                // console.log(count_of_likes.count)
-
                 const update_like = await db.models.Articles.update({
                     likes: count_of_likes.count
                 }, {
                     where: { id: req.params.id }
                 })
-
                 db.models.Articles.findAll({
                     attributes: ["id", "title", "text", "date_of_pub", "image_url", "likes"],
                     include: [{
@@ -293,6 +272,5 @@ const ArticlesController = {
             });
         }
     },
-
 }
 module.exports = ArticlesController

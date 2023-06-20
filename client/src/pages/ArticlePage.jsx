@@ -54,7 +54,7 @@ export const ArticlePage = () => {
       dispatch(removeArticles(params.id))
       toast('Статья была удалена')
       navigate('/articles')
-      // window.location.reload();
+      window.location.reload();
     } catch (e) {
       console.log(e)
     }

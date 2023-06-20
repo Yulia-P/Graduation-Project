@@ -6,8 +6,6 @@ const initialState = {
     loading:false,
     status: null,
     valid: null,
-
-
 }
 
 export const getAllDiscounts= createAsyncThunk(
@@ -89,7 +87,6 @@ export const myUsedDiscount  = createAsyncThunk(
         }
     },
 )
-
 
 export const alldiscountSlice = createSlice({
     name: 'alldiscount',

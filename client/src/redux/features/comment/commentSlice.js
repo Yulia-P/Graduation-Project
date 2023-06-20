@@ -5,7 +5,6 @@ const initialState = {
     comments:[],
     loading:false,
     status_com: null,
-
 }
 
 export const createComment = createAsyncThunk(

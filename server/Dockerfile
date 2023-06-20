@@ -1,6 +1,6 @@
 FROM node:18.0.0
 
-WORKDIR /vesuviusserver
+WORKDIR /ecofutureserver
 
 COPY ../package.json package.json
 COPY ../package-lock.json package-lock.json

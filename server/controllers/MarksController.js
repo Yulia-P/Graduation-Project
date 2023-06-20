@@ -84,6 +84,7 @@ const MarksController = {
     editMarks: async (req, res) => {
         try {
             await db.models.Marks.update({
+                rubbish: req.body.rubbish,
                 points_per_kg: req.body.points_per_kg,
                 new_from_kg: req.body.new_from_kg,
                 image_link: req.body.image_link,

@@ -33,27 +33,31 @@ const UsersController = {
                 where: {username: req.body.username}
             })
 
+            console.log(v_user)
+
             const isValidPass = await bcrypt.compare(req.body.password, v_user.password_hash);
 
-            if (!isValidPass) {
+            console.log(isValidPass)
+
+            if (isValidPass!=true) {
                 res.json({ message: 'Неверное имя пользователя или пароль' })
             }
-
 
             else {
                 const v_new_username = await db.models.Users.findOne({
                     attributes: ['username'],
                     where: {username: i_n_username}
                 })
+                console.log(v_new_username)
 
                 if(v_new_username==null) {
                     const o_new_username = await db.models.Users.update({
                         username: i_n_username},
                         {where: {username: req.body.username}
                     })
-
-                    console.log(o_new_username)
-
+        //
+        //             console.log(o_new_username)
+        //
                     res.json({
                         message: 'Имя пользователя изменено'
                     });
@@ -71,6 +75,7 @@ const UsersController = {
             });
         }
     },
+
     changePass: async (req, res) => {
         try{
 

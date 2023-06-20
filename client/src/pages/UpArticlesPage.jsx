@@ -67,7 +67,7 @@ export const UpArticlesPage = () => {
             setTitle('')
             setText('')
             setImage_url('')
-            navigate(`/${params.id}`)
+            // navigate(`/${params.id}`)
         } catch (error) {
             console.log(error)
         }

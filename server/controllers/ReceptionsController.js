@@ -38,12 +38,10 @@ const ReceptionsController = {
                             where: { id: v_check_key_w.rubbish_id }
                         })
 
-                        //Считаем
                         const v_weight = v_check_key_w.weight;
                         const o_new_points = v_weight * v_rubbish.points_per_kg;
                         const o_new_kg = v_weight * v_rubbish.new_from_kg;
 
-                        //Считаем новые баллы для пользователя
                         const i_user_points = await db.models.Users.findOne({
                             attributes: ["points"],
                             where: { id: req.userId }
@@ -51,14 +49,12 @@ const ReceptionsController = {
 
                         const o_new_points_user = o_new_points + i_user_points.points
 
-                        //Обновляем баллы пользователя
                         db.models.Users.update({
                             points: o_new_points_user
                         }, {
                             where: { id: req.userId }
                         })
 
-                        //Добавляем запись об этой сдаче
                         db.models.Receptions.create({
                             user_id: req.userId,
                             accrued: o_new_points,
@@ -69,7 +65,6 @@ const ReceptionsController = {
                             weight_key: v_check_key_w.id
                         })
 
-                        //Обновляем код пункта чтобы пользователь не мог еще раз его использовать
                         const v_find_used = await db.models.Keys.findOne({
                             where: { is_used: 0 }
                         })
@@ -78,8 +73,9 @@ const ReceptionsController = {
                             key_id: v_find_used.id
                         }, { where: { id: v_find_key_point.id } })
 
+                        console.log(v_find_used)
                         await db.models.Keys.update({
-                            used: 1,
+                            is_used: 1,
                         }, { where: { id: v_find_used.id } })
 
                         res.json({
@@ -94,7 +90,6 @@ const ReceptionsController = {
                             message: 'Ключ веса не действителен'
                         });
                     }
-
                 }
                 else {
                     res.json({
@@ -116,6 +111,4 @@ const ReceptionsController = {
         }
     },
 }
-
-
 module.exports = ReceptionsController

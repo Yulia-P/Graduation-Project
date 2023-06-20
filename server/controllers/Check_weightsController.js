@@ -1,5 +1,7 @@
 const db = require('../config/db')
 const bcrypt = require('bcrypt')
+const { Op } = require("sequelize");
+
 
 const Check_weightsController = {
 
@@ -16,6 +18,11 @@ const Check_weightsController = {
                 attributes: ["id"],
                 where: { rubbish: req.body.rubbish_w}
             })
+            const v_rub_w = await db.models.Check_weights.findOne({
+                where: {
+                    [Op.and]: [{rubbish_id: o_rubbish.id}, {weight: req.body.weight}]
+                }
+            })
             if (o_rubbish == null){
                 res.json({
                     message: `Такого ${req.body.rubbish_w} вида вторсырья нет сначала добавить его во вторсырье`
@@ -23,16 +30,29 @@ const Check_weightsController = {
                 return;
             }
             else {
-                if (v_check_key_w == null) {
-                    await db.models.Check_weights.create({
-                        rubbish_id: o_rubbish.id,
-                        weight: req.body.weight,
-                        key_of_weight: o_key_of_weight,
-                    })
+                if (v_rub_w == null) {
+                    if (v_check_key_w == null) {
+                        await db.models.Check_weights.create({
+                            rubbish_id: o_rubbish.id,
+                            weight: req.body.weight,
+                            key_of_weight: o_key_of_weight,
+                        })
+                        res.json({
+                            message: 'Ключ добавлен'
+                        });
+                    }
+                    else{
+                        res.json({
+                            message: 'Ключ уже добавлен, введите новый'
+                        });
+                    }
                 }
-                res.json({
-                    message: 'Ключ добавлен'
-                });
+                else{
+                    res.json({
+                        message: 'Ключ уже добавлен, для этого вторсырья и веса'
+                    });
+                }
+
             }
         } catch (error) {
             console.log(error);

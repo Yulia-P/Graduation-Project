@@ -92,7 +92,7 @@ export const AddArticlesPage = () => {
     const options = React.useMemo(
         () => ({
             spellChecker: false,
-            maxHeight: '400px',
+            maxHeight: '300px',
             autofocus: true,
             placeholder: 'Введите текст...',
             status: false,
@@ -142,6 +142,7 @@ export const AddArticlesPage = () => {
             />
 
             <SimpleMDE
+                className={'font-bold text-2xl'}
                 // className={styles.editor}
                 value={text} onChange={onChange}
                 options={options} />
@@ -160,7 +161,7 @@ export const AddArticlesPage = () => {
                 }
 
                 <a href="/">
-                    <button className={'my-4 ml-10 text-medium-gray px-5 py-2'}
+                    <button className={'my-4 ml-10 text-red-950 font-bold text-xl px-5 py-2'}
                         size="large">Отмена</button>
                 </a>
             </div>

@@ -55,10 +55,10 @@ const AuthController = {
                     const mailOptions = {
                         from: 'ecofuturework@gmail.com',
                         to: send_mail,
-                        subject: 'Активация аккаунта на сайте ЭкоБудещее',
+                        subject: 'Активация аккаунта на сайте ЭкоБудущее',
                         html:
                             `
-                            <div>
+                            <div> 
                             <h1 >Для активации перейдите по ссылке</h1>
                             <a href="${send_link}">${send_link}</a>
                             </div>
